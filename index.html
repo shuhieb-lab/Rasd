@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد</title>
+<title>رَصْد — Build 0.2</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -39,6 +39,20 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
 .notice{background:#ecfeff;border:1px solid #a5f3fc;padding:12px;border-radius:14px} .report{background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px}
 .splash{position:fixed;inset:0;background:white;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
 .splash img{width:180px;height:180px;border-radius:32px} .splash h2{font-size:34px;margin:0;color:var(--navy)} .splash p{color:var(--primary);font-weight:700}
+
+.home-hero{background:linear-gradient(135deg,#17324d,#0f766e);color:#fff;border:0}
+.home-hero h2{margin:0 0 8px}.home-hero .btn{background:#fff;color:#17324d}
+.metric{background:#fff;border:1px solid var(--border);border-radius:16px;padding:12px}
+.metric b{display:block;font-size:24px;margin-top:5px}
+.schedule-wrap{overflow:auto}.schedule-table{min-width:780px}.schedule-table select{min-width:115px;padding:8px}
+.session-head{position:sticky;top:0;z-index:12;background:#fff;border:1px solid var(--border);border-radius:16px;padding:12px;margin-bottom:10px}
+.session-student{position:relative;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.status-pill{padding:6px 9px;border-radius:999px;font-size:12px;font-weight:800;background:#dcfce7;color:#166534}
+.status-pill.absent{background:#e5e7eb;color:#475569}.status-pill.late{background:#fef3c7;color:#92400e}
+.toast{position:fixed;left:14px;right:14px;bottom:92px;z-index:90;background:#172033;color:#fff;padding:12px;border-radius:14px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.toast button{padding:7px 11px}
+.focus-mode header,.focus-mode nav,.focus-mode .fab{display:none!important}.focus-mode .app{padding-bottom:0}.focus-mode main{padding-top:10px}
+
 @media(max-width:520px){.grid{grid-template-columns:repeat(2,1fr)} .class-title{font-size:19px} .beh-grid{grid-template-columns:1fr 1fr}}
 @media print{header,nav,.fab,.no-print{display:none!important} body{background:#fff} .app{padding:0;max-width:none} main{padding:0} .report{border:0}}
 </style>
@@ -50,14 +64,15 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
 <main id="view"></main>
 <button id="fab" class="fab">＋</button>
 <nav id="nav">
-<button data-page="classes" class="active"><span>🏫</span>الصفوف</button>
-<button data-page="students"><span>👥</span>الطلاب</button>
+<button data-page="home" class="active"><span>🏠</span>الرئيسية</button>
+<button data-page="classes"><span>🏫</span>الفصول</button>
 <button data-page="wheel"><span>🎡</span>العجلة</button>
 <button data-page="exams"><span>📝</span>الاختبارات</button>
 <button data-page="settings"><span>⚙️</span>الإعدادات</button>
 </nav>
 </div>
 <div id="modal" class="modal hidden"><div class="sheet"><div id="modalBody"></div></div></div>
+<div id="toast" class="toast hidden"><span id="toastText"></span><button id="undoBtn" class="btn light">تراجع</button></div>
 <script>
 const DEFAULT_BEHAVIORS = [
 {name:'صح',value:1},{name:'أتقن',value:2},{name:'حفظ',value:1},{name:'مميز',value:2},
@@ -69,27 +84,133 @@ const DEFAULT_BEHAVIORS = [
 let data = JSON.parse(localStorage.getItem('rasdData')||'null') || {
  classes:[], students:[], logs:[], exams:{}, behaviors:DEFAULT_BEHAVIORS, selectedClass:null,
  teacher:{name:'',school:'',subject:'العلوم',whatsappMessage:'السلام عليكم، نرفق لكم التقرير الدراسي للطالب: {student}'},
- wheel:{remaining:[],history:[]}
+ wheel:{remaining:[],history:[]}, schedule:{}, periodTimes:{}, sessions:[]
 };
+data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.sessions=data.sessions||[];
+const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
+const PERIODS=[1,2,3,4,5,6,7];
+let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){localStorage.setItem('rasdData',JSON.stringify(data))}
 const view=document.getElementById('view'), modal=document.getElementById('modal'), body=document.getElementById('modalBody');
-let page='classes';
+let page='home';
 function cls(){return data.classes.find(c=>c.id===data.selectedClass)}
 function students(){return data.students.filter(s=>s.classId===data.selectedClass).sort((a,b)=>a.name.localeCompare(b.name,'ar'))}
 function setTitle(t,s=''){document.getElementById('pageTitle').textContent=t;document.getElementById('pageSub').textContent=s}
 function openModal(html){body.innerHTML=html;modal.classList.remove('hidden')}
 function closeModal(){modal.classList.add('hidden')}
+function toast(msg,undo){
+ document.getElementById('toastText').textContent=msg;
+ document.getElementById('toast').classList.remove('hidden');
+ lastUndo=undo||null;
+ clearTimeout(window.__toastTimer);
+ window.__toastTimer=setTimeout(()=>document.getElementById('toast').classList.add('hidden'),5000);
+}
+document.getElementById('undoBtn').onclick=()=>{if(lastUndo)lastUndo();document.getElementById('toast').classList.add('hidden')};
+function todayName(){const map={0:'الأحد',1:'الاثنين',2:'الثلاثاء',3:'الأربعاء',4:'الخميس'};return map[new Date().getDay()]||null}
+function minutesNow(){const d=new Date();return d.getHours()*60+d.getMinutes()}
+function timeToMinutes(t){if(!t)return null;const [h,m]=t.split(':').map(Number);return h*60+m}
+function currentScheduledSlot(){
+ const day=todayName(); if(!day)return null;
+ const daySchedule=data.schedule[day]||{};
+ const now=minutesNow();
+ for(const p of PERIODS){
+   const tm=data.periodTimes[p]||{},start=timeToMinutes(tm.start),end=timeToMinutes(tm.end);
+   if(daySchedule[p] && start!==null && end!==null && now>=start && now<=end) return {period:p,classId:daySchedule[p],live:true};
+ }
+ const first=PERIODS.find(p=>daySchedule[p]);
+ return first?{period:first,classId:daySchedule[first],live:false}:null;
+}
+function sessionStatus(studentId){
+ return currentSession?.attendance?.[studentId]||'present';
+}
+
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal()})
 function render(){
+ document.body.classList.toggle('focus-mode',page==='session');
  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
  document.getElementById('fab').classList.toggle('hidden',!['classes','students'].includes(page));
+ if(page==='home')renderHome();
  if(page==='classes')renderClasses();
  if(page==='students')renderStudents();
+ if(page==='session')renderSession();
  if(page==='wheel')renderWheel();
  if(page==='exams')renderExams();
  if(page==='settings')renderSettings();
  if(page==='report')renderReport(window.reportStudentId);
 }
+
+function renderHome(){
+ setTitle('رَصْد','اليوم الدراسي');
+ const slot=currentScheduledSlot(),c=slot?data.classes.find(x=>x.id===slot.classId):null;
+ const today=todayName(),todayCount=today?Object.values(data.schedule[today]||{}).filter(Boolean).length:0;
+ view.innerHTML=`<div class="card home-hero">
+   <h2>مرحباً ${data.teacher.name||'بك'} 👋</h2>
+   <div>${new Date().toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
+   <hr style="border-color:#ffffff44">
+   <h3>${slot?.live?'الحصة الحالية':'الحصة المقترحة'}</h3>
+   ${c?`<div class="class-title">${c.name}</div><div>الحصة ${slot.period}</div><button class="btn" id="quickStart" style="margin-top:12px">▶ بدء الحصة</button>`:
+   `<p>لم يتم إعداد جدول اليوم بعد</p><button class="btn" id="goSchedule">إعداد الجدول</button>`}
+ </div>
+ <div class="grid" style="margin-top:12px">
+  <div class="metric">الفصول<b>${data.classes.length}</b></div>
+  <div class="metric">الطلاب<b>${data.students.length}</b></div>
+  <div class="metric">حصص اليوم<b>${todayCount}</b></div>
+  <div class="metric">الحصص المحفوظة<b>${data.sessions.length}</b></div>
+ </div>
+ <div class="card" style="margin-top:12px"><h3>اختصارات</h3><div class="grid">
+   <button class="btn secondary" data-go="classes">الفصول</button>
+   <button class="btn secondary" data-go="wheel">العجلة</button>
+   <button class="btn secondary" data-go="exams">الاختبارات</button>
+   <button class="btn secondary" data-go="settings">الإعدادات</button>
+ </div></div>`;
+ document.getElementById('quickStart')?.addEventListener('click',()=>startSession(c.id,slot.period));
+ document.getElementById('goSchedule')?.addEventListener('click',()=>{page='settings';render();setTimeout(()=>document.getElementById('scheduleCard')?.scrollIntoView(),100)});
+ document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{page=b.dataset.go;render()});
+}
+function startSession(classId,period){
+ data.selectedClass=classId;
+ currentSession={id:crypto.randomUUID(),classId,period,date:new Date().toISOString(),attendance:{},ended:false};
+ data.sessions.push(currentSession);save();page='session';render();
+}
+function pickSessionPeriod(classId){
+ openModal(`<h2>اختر رقم الحصة</h2><div class="grid">${PERIODS.map(p=>`<button class="btn secondary" data-period="${p}">الحصة ${p}</button>`).join('')}</div>`);
+ document.querySelectorAll('[data-period]').forEach(b=>b.onclick=()=>{closeModal();startSession(classId,+b.dataset.period)});
+}
+function toggleAttendance(studentId){
+ const old=sessionStatus(studentId),next=old==='present'?'absent':old==='absent'?'late':'present';
+ currentSession.attendance[studentId]=next;save();render();
+ const label=next==='absent'?'غائب':next==='late'?'متأخر':'حاضر';
+ toast(`تم تسجيل الطالب ${label}`,()=>{currentSession.attendance[studentId]=old;save();render()});
+}
+function sessionBehaviorMenu(studentId){
+ const s=data.students.find(x=>x.id===studentId);
+ openModal(`<h2>${s.name}</h2><p class="muted">اختر السلوك لتسجيله في هذه الحصة</p><div class="beh-grid">${data.behaviors.map((b,i)=>`<button class="beh ${b.value<0?'negative':''}" data-session-b="${i}">${b.name}<span class="points">${b.value>0?'+':''}${b.value}</span></button>`).join('')}</div><div class="field"><label>ملاحظة اختيارية</label><textarea id="sessionNote"></textarea></div><button class="btn secondary" id="saveSessionNote">حفظ الملاحظة</button> <button class="btn light" id="closeSessionMenu">إغلاق</button>`);
+ document.querySelectorAll('[data-session-b]').forEach(btn=>btn.onclick=()=>{
+   const b=data.behaviors[+btn.dataset.sessionB],log={id:crypto.randomUUID(),studentId,sessionId:currentSession.id,name:b.name,value:b.value,task:!!b.task,date:new Date().toISOString()};
+   data.logs.push(log);save();closeModal();render();
+   toast(`تم تسجيل ${b.name} للطالب ${s.name}`,()=>{data.logs=data.logs.filter(x=>x.id!==log.id);save();render()});
+ });
+ document.getElementById('saveSessionNote').onclick=()=>{const n=document.getElementById('sessionNote').value.trim();if(n)data.logs.push({id:crypto.randomUUID(),studentId,sessionId:currentSession.id,name:'ملاحظة',note:n,value:0,date:new Date().toISOString()});save();closeModal();render()};
+ document.getElementById('closeSessionMenu').onclick=closeModal;
+}
+function renderSession(){
+ const c=data.classes.find(x=>x.id===currentSession?.classId);if(!c){page='home';return render()}
+ setTitle('الحصة','');
+ const list=data.students.filter(s=>s.classId===c.id).sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+ view.innerHTML=`<div class="session-head"><div class="row"><div><div class="class-title">${c.name}</div><div class="muted">الحصة ${currentSession.period} — ${new Date(currentSession.date).toLocaleString('ar-SA')}</div></div><button class="btn danger" id="endSession">إنهاء الحصة</button></div></div>
+ <div class="notice" style="margin-bottom:10px">اضغط على حالة الطالب لتغييرها: حاضر ← غائب ← متأخر. اضغط مطولاً على بطاقة الطالب لتسجيل السلوك.</div>
+ ${list.map(s=>{const st=sessionStatus(s.id),label=st==='absent'?'غائب':st==='late'?'متأخر':'حاضر';return `<div class="card student session-student" data-session-student="${s.id}"><img class="avatar" src="${s.photo||'icon-192.png'}"><div class="student-info"><div class="student-name">${s.name}</div><div class="muted">النقاط: ${totalPoints(s.id)} | المهام: ${taskPoints(s.id)}/20</div></div><button class="status-pill ${st}" data-status="${s.id}">${label}</button></div>`}).join('')}`;
+ document.querySelectorAll('[data-status]').forEach(b=>b.onclick=e=>{e.stopPropagation();toggleAttendance(b.dataset.status)});
+ document.querySelectorAll('[data-session-student]').forEach(card=>{
+   const id=card.dataset.sessionStudent;
+   const start=()=>{longPressTimer=setTimeout(()=>sessionBehaviorMenu(id),520)};
+   const cancel=()=>clearTimeout(longPressTimer);
+   card.addEventListener('touchstart',start,{passive:true});card.addEventListener('touchend',cancel);card.addEventListener('touchmove',cancel);
+   card.addEventListener('contextmenu',e=>{e.preventDefault();sessionBehaviorMenu(id)});
+ });
+ document.getElementById('endSession').onclick=()=>{currentSession.ended=true;save();currentSession=null;page='home';render();toast('تم حفظ الحصة بنجاح')};
+}
+
 function renderClasses(){
  setTitle('رَصْد','الصفوف الدراسية');
  if(!data.classes.length) view.innerHTML='<div class="notice">لا توجد فصول مضافة بعد<br>اضغط على زر + لإضافة أول فصل</div>';
@@ -104,9 +225,9 @@ function renderStudents(){
  const c=cls(); if(!c){page='classes';return render()}
  setTitle(c.name,c.stage);
  const list=students();
- view.innerHTML=`<div class="row" style="margin-bottom:12px"><button class="btn secondary" id="dailyBtn">متابعة الحصة</button><button class="btn light" id="searchBtn">بحث</button></div>`+
+ view.innerHTML=`<div class="row" style="margin-bottom:12px"><button class="btn secondary" id="dailyBtn">بدء حصة</button><button class="btn light" id="searchBtn">بحث</button></div>`+
  (list.length?list.map(s=>`<div class="card student"><img class="avatar" src="${s.photo||'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100%" height="100%" fill="%23e2e8f0"/><circle cx="50" cy="38" r="18" fill="%2394a3b8"/><rect x="22" y="60" width="56" height="28" rx="14" fill="%2394a3b8"/></svg>'}"><div class="student-info"><div class="student-name">${s.name}</div><div class="muted">النقاط: ${totalPoints(s.id)} | المهام: ${taskPoints(s.id)}/20</div></div><button class="btn light student-actions" data-id="${s.id}">⋮</button></div>`).join(''):'<div class="notice">لا يوجد طلاب في هذا الفصل</div>');
- document.getElementById('dailyBtn').onclick=()=>openDaily();
+ document.getElementById('dailyBtn').onclick=()=>pickSessionPeriod(c.id);
  document.getElementById('searchBtn').onclick=()=>openSearch();
  document.querySelectorAll('.student-actions').forEach(b=>b.onclick=()=>studentActions(b.dataset.id));
 }
@@ -168,10 +289,18 @@ function renderExams(){
 function renderSettings(){
  setTitle('الإعدادات','تخصيص رَصْد');
  view.innerHTML=`<div class="card"><h3>بيانات المعلم</h3><div class="field"><label>الاسم</label><input id="tname" value="${data.teacher.name||''}"></div><div class="field"><label>المدرسة</label><input id="school" value="${data.teacher.school||''}"></div><div class="field"><label>المادة</label><input id="subject" value="${data.teacher.subject||''}"></div><button class="btn" id="saveTeacher">حفظ</button></div>
+
+ <div class="card" id="scheduleCard" style="margin-top:12px"><h3>الجدول الأسبوعي — 7 حصص</h3>
+ <p class="muted">اختر الفصل لكل حصة، ويمكنك إدخال وقت البداية والنهاية حتى يتعرف رَصْد على الحصة الحالية تلقائياً.</p>
+ <div class="schedule-wrap"><table class="schedule-table"><thead><tr><th>اليوم</th>${PERIODS.map(p=>`<th>${p}</th>`).join('')}</tr></thead><tbody>${DAYS.map(d=>`<tr><th>${d}</th>${PERIODS.map(p=>`<td><select data-day="${d}" data-p="${p}"><option value="">فراغ</option>${data.classes.map(c=>`<option value="${c.id}" ${(data.schedule[d]||{})[p]===c.id?'selected':''}>${c.name}</option>`).join('')}</select></td>`).join('')}</tr>`).join('')}</tbody></table></div>
+ <h4>أوقات الحصص</h4>${PERIODS.map(p=>`<div class="row" style="margin-bottom:8px"><b>الحصة ${p}</b><input type="time" data-time-start="${p}" value="${data.periodTimes[p]?.start||''}"><input type="time" data-time-end="${p}" value="${data.periodTimes[p]?.end||''}"></div>`).join('')}
+ <button class="btn" id="saveSchedule">حفظ الجدول</button></div>
+
  <div class="card" style="margin-top:12px"><h3>نص رسالة واتساب</h3><textarea id="wmsg" rows="4">${data.teacher.whatsappMessage}</textarea><button class="btn" id="saveMsg">حفظ</button></div>
  <div class="card" style="margin-top:12px"><h3>قيم السلوكيات</h3>${data.behaviors.map((b,i)=>`<div class="row" style="margin-bottom:8px"><span>${b.name}</span><input type="number" step="0.5" class="behValue" data-i="${i}" value="${b.value}"></div>`).join('')}<button class="btn secondary" id="saveBeh">حفظ القيم</button></div>
  <div class="card" style="margin-top:12px"><h3>النسخ الاحتياطي</h3><button class="btn light" id="exportData">تصدير البيانات</button> <button class="btn danger" id="resetData">مسح جميع البيانات</button></div>`;
  saveTeacher.onclick=()=>{data.teacher.name=tname.value;data.teacher.school=school.value;data.teacher.subject=subject.value;save();alert('تم الحفظ')};
+ saveSchedule.onclick=()=>{document.querySelectorAll('[data-day]').forEach(s=>{data.schedule[s.dataset.day]=data.schedule[s.dataset.day]||{};data.schedule[s.dataset.day][s.dataset.p]=s.value});PERIODS.forEach(p=>{data.periodTimes[p]={start:document.querySelector(`[data-time-start="${p}"]`).value,end:document.querySelector(`[data-time-end="${p}"]`).value}});save();alert('تم حفظ الجدول')};
  saveMsg.onclick=()=>{data.teacher.whatsappMessage=wmsg.value;save();alert('تم الحفظ')};
  saveBeh.onclick=()=>{document.querySelectorAll('.behValue').forEach(i=>data.behaviors[+i.dataset.i].value=+i.value);save();alert('تم الحفظ')};
  exportData.onclick=()=>{const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(data,null,2));a.download='rasd-backup.json';a.click()};
@@ -180,9 +309,9 @@ function renderSettings(){
 function renderReport(id){
  const s=data.students.find(x=>x.id===id),c=data.classes.find(x=>x.id===s.classId),e=data.exams[id]||{},logs=data.logs.filter(l=>l.studentId===id).sort((a,b)=>b.date.localeCompare(a.date));
  setTitle('تقرير الطالب',s.name);
- const final=(e.p1||0)+(e.p2||0)+(e.final||0)+taskPoints(id);
+ const final=(e.p1||0)+(e.p2||0)+(e.final||0)+taskPoints(id); const abs=data.sessions.filter(se=>se.attendance?.[id]==='absent').length,late=data.sessions.filter(se=>se.attendance?.[id]==='late').length;
  view.innerHTML=`<div class="report"><div class="row"><img class="avatar" src="${s.photo||'icon-192.png'}"><div><h2>${s.name}</h2><div>${c.name} - ${c.stage}</div></div></div><hr>
- <div class="grid"><div class="card"><b>نقاط المتابعة</b><h2>${totalPoints(id)}</h2></div><div class="card"><b>المهام الأدائية</b><h2>${taskPoints(id)} /20</h2></div><div class="card"><b>الفتري الأول</b><h2>${e.p1||0} /20</h2></div><div class="card"><b>الفتري الثاني</b><h2>${e.p2||0} /20</h2></div><div class="card"><b>نهاية الفصل</b><h2>${e.final||0} /40</h2></div><div class="card"><b>المجموع</b><h2>${final} /100</h2></div></div>
+ <div class="grid"><div class="card"><b>الغياب</b><h2>${abs}</h2></div><div class="card"><b>التأخر</b><h2>${late}</h2></div><div class="card"><b>نقاط المتابعة</b><h2>${totalPoints(id)}</h2></div><div class="card"><b>المهام الأدائية</b><h2>${taskPoints(id)} /20</h2></div><div class="card"><b>الفتري الأول</b><h2>${e.p1||0} /20</h2></div><div class="card"><b>الفتري الثاني</b><h2>${e.p2||0} /20</h2></div><div class="card"><b>نهاية الفصل</b><h2>${e.final||0} /40</h2></div><div class="card"><b>المجموع</b><h2>${final} /100</h2></div></div>
  <h3>سجل المتابعة</h3>${logs.length?logs.map(l=>`<p>${new Date(l.date).toLocaleDateString('ar-SA')} — ${l.name} (${l.value>0?'+':''}${l.value})</p>`).join(''):'<p class="muted">لا توجد سجلات</p>'}
  <div class="no-print"><button class="btn" id="printReport">حفظ/طباعة PDF</button> <button class="btn secondary" id="waReport">فتح واتساب</button> <button class="btn light" id="backStudents">رجوع</button></div></div>`;
  printReport.onclick=()=>window.print(); backStudents.onclick=()=>{page='students';render()};
