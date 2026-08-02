@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v0.5.1</title>
+<title>رَصْد — v0.6</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -102,6 +102,41 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
 .student-card-rich{padding:16px}
 .student-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
+
+.session-toolbar{
+ display:flex;align-items:center;gap:10px;justify-content:space-between;
+ background:#fff;border:1px solid var(--border);border-radius:16px;
+ padding:12px;margin-bottom:10px;position:sticky;top:0;z-index:12
+}
+.session-stats{
+ display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0
+}
+.session-stat{
+ background:#fff;border:1px solid var(--border);border-radius:14px;
+ padding:10px;text-align:center
+}
+.session-stat b{display:block;font-size:22px;margin-top:4px}
+.session-card{
+ display:flex;align-items:center;gap:12px;padding:14px;
+ background:#fff;border:1px solid var(--border);border-radius:18px;
+ margin-bottom:10px;transition:.2s ease
+}
+.session-card.absent{opacity:.65;background:#f1f5f9}
+.session-card.late{background:#fff7ed}
+.session-card.present{background:#fff}
+.session-name{font-size:18px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.session-actions{display:flex;gap:8px;align-items:center}
+.session-status-btn{
+ min-width:82px;border:0;border-radius:999px;padding:8px 10px;font-weight:900
+}
+.session-status-btn.present{background:#dcfce7;color:#166534}
+.session-status-btn.late{background:#fef3c7;color:#92400e}
+.session-status-btn.absent{background:#e5e7eb;color:#475569}
+.summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.summary-item{background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:12px}
+.summary-item b{display:block;font-size:24px;margin-top:4px}
+.summary-highlight{background:linear-gradient(135deg,#17324d,#0f766e);color:#fff;border:0}
+
 @media(max-width:520px){.grid{grid-template-columns:repeat(2,1fr)} .class-title{font-size:19px} .beh-grid{grid-template-columns:1fr 1fr}}
 @media print{header,nav,.fab,.no-print{display:none!important} body{background:#fff} .app{padding:0;max-width:none} main{padding:0} .report{border:0}}
 </style>
@@ -139,7 +174,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v0.5.1';
+const APP_VERSION='v0.6';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -274,8 +309,10 @@ function pickSessionPeriod(classId){
  document.querySelectorAll('[data-period]').forEach(b=>b.onclick=()=>{closeModal();startSession(classId,+b.dataset.period)});
 }
 function toggleAttendance(studentId){
- const old=sessionStatus(studentId),next=old==='present'?'absent':old==='absent'?'late':'present';
- currentSession.attendance[studentId]=next;save();render();
+ const old=sessionStatus(studentId),next=old==='present'?'late':old==='late'?'absent':'present';
+ currentSession.attendance[studentId]=next;
+ save();
+ render();
  const label=next==='absent'?'غائب':next==='late'?'متأخر':'حاضر';
  toast(`تم تسجيل الطالب ${label}`,()=>{currentSession.attendance[studentId]=old;save();render()});
 }
@@ -331,13 +368,74 @@ function quickEvaluation(studentId){
  document.getElementById('closeQuickEval').onclick=closeModal;
 }
 
+
+function buildSessionSummary(session){
+ const classList=data.students.filter(s=>s.classId===session.classId);
+ const present=classList.filter(s=>(session.attendance?.[s.id]||'present')==='present').length;
+ const late=classList.filter(s=>(session.attendance?.[s.id]||'present')==='late').length;
+ const absent=classList.filter(s=>(session.attendance?.[s.id]||'present')==='absent').length;
+ const sessionLogs=data.logs.filter(l=>l.sessionId===session.id);
+ const scoreMap={};
+ sessionLogs.forEach(l=>{scoreMap[l.studentId]=(scoreMap[l.studentId]||0)+(l.value||0)});
+ let topStudentId=null,topScore=-Infinity;
+ Object.entries(scoreMap).forEach(([id,score])=>{if(score>topScore){topScore=score;topStudentId=id}});
+ const topStudent=data.students.find(s=>s.id===topStudentId);
+ const noteCounts={};
+ sessionLogs.filter(l=>l.value<0 || l.note).forEach(l=>{const key=l.note||l.name;noteCounts[key]=(noteCounts[key]||0)+1});
+ let commonNote='لا توجد ملاحظات';
+ if(Object.keys(noteCounts).length){
+   commonNote=Object.entries(noteCounts).sort((a,b)=>b[1]-a[1])[0][0];
+ }
+ return {present,late,absent,topStudent:topStudent?.name||'لا يوجد',topScore:topScore===-Infinity?0:topScore,commonNote};
+}
+
+function showSessionSummary(session){
+ const c=data.classes.find(x=>x.id===session.classId);
+ const s=buildSessionSummary(session);
+ openModal(`<h2>ملخص الحصة</h2><p class="muted">${c?.name||''} — الحصة ${session.period}</p>
+ <div class="summary-grid">
+   <div class="summary-item"><span>الحاضرون</span><b>${s.present}</b></div>
+   <div class="summary-item"><span>المتأخرون</span><b>${s.late}</b></div>
+   <div class="summary-item"><span>الغائبون</span><b>${s.absent}</b></div>
+   <div class="summary-item"><span>سجلات التقييم</span><b>${data.logs.filter(l=>l.sessionId===session.id).length}</b></div>
+ </div>
+ <div class="summary-item summary-highlight" style="margin-top:10px"><span>أعلى طالب نقاطاً في الحصة</span><b>${s.topStudent}${s.topScore?` (+${s.topScore})`:''}</b></div>
+ <div class="summary-item" style="margin-top:10px"><span>أكثر ملاحظة ظهرت</span><b style="font-size:18px">${s.commonNote}</b></div>
+ <button class="btn" id="closeSummary" style="margin-top:12px">العودة للرئيسية</button>`);
+ document.getElementById('closeSummary').onclick=()=>{closeModal();page='home';render()};
+}
+
 function renderSession(){
- const c=data.classes.find(x=>x.id===currentSession?.classId);if(!c){page='home';return render()}
+ const c=data.classes.find(x=>x.id===currentSession?.classId);
+ if(!c){page='home';return render()}
  setTitle('الحصة','');
  const list=data.students.filter(s=>s.classId===c.id).sort((a,b)=>a.name.localeCompare(b.name,'ar'));
- view.innerHTML=`<div class="session-head"><div class="row"><div><div class="class-title">${c.name}</div><div class="muted">الحصة ${currentSession.period} — ${new Date(currentSession.date).toLocaleString('ar-SA')}</div></div><button class="btn danger" id="endSession">إنهاء الحصة</button></div></div>
- <div class="notice" style="margin-bottom:10px">اضغط على بطاقة الطالب للتقييم السريع، واضغط مطولاً لعرض جميع السلوكيات. اضغط على الحالة لتغييرها: حاضر ← غائب ← متأخر.</div>
- ${list.map(s=>{const st=sessionStatus(s.id),label=st==='absent'?'غائب':st==='late'?'متأخر':'حاضر';return `<div class="card student session-student" data-session-student="${s.id}">${avatarHtml(s)}<div class="student-info"><div class="student-name">${s.name}</div><div class="muted">النقاط: ${totalPoints(s.id)} | المهام: ${taskPoints(s.id)}/20</div></div><button class="status-pill ${st}" data-status="${s.id}">${label}</button></div>`}).join('')}`;
+ const count=(status)=>list.filter(s=>(currentSession.attendance?.[s.id]||'present')===status).length;
+ view.innerHTML=`<div class="session-toolbar">
+   <div class="grow"><div class="class-title">${c.name}</div><div class="muted">الحصة ${currentSession.period} — ${new Date(currentSession.date).toLocaleString('ar-SA')}</div></div>
+   <button class="btn danger" id="endSession">إنهاء الحصة</button>
+ </div>
+ <div class="session-stats">
+   <div class="session-stat"><span>حاضر</span><b id="presentCount">${count('present')}</b></div>
+   <div class="session-stat"><span>متأخر</span><b id="lateCount">${count('late')}</b></div>
+   <div class="session-stat"><span>غائب</span><b id="absentCount">${count('absent')}</b></div>
+ </div>
+ <div class="notice" style="margin-bottom:10px">اضغط على بطاقة الطالب للتقييم السريع. اضغط مطولاً لعرض السلوكيات التفصيلية. واضغط على حالة الطالب للتبديل بين حاضر، متأخر، وغائب.</div>
+ <div id="sessionStudents">
+ ${list.map(s=>{
+   const st=sessionStatus(s.id),label=st==='absent'?'غائب':st==='late'?'متأخر':'حاضر';
+   return `<div class="session-card ${st}" data-session-student="${s.id}">
+     ${avatarHtml(s)}
+     <div class="grow">
+       <div class="session-name">${s.name}</div>
+       <div class="muted">النقاط: ${totalPoints(s.id)} | المهام: ${taskPoints(s.id)}/20</div>
+     </div>
+     <div class="session-actions">
+       <button class="session-status-btn ${st}" data-status="${s.id}">${label}</button>
+     </div>
+   </div>`;
+ }).join('')}
+ </div>`;
  document.querySelectorAll('[data-status]').forEach(b=>b.onclick=e=>{e.stopPropagation();toggleAttendance(b.dataset.status)});
  document.querySelectorAll('[data-session-student]').forEach(card=>{
    const id=card.dataset.sessionStudent;let longOpened=false;
@@ -349,10 +447,15 @@ function renderSession(){
    card.addEventListener('click',e=>{if(!('ontouchstart' in window)&&!e.target.closest('[data-status]'))quickEvaluation(id)});
    card.addEventListener('contextmenu',e=>{e.preventDefault();sessionBehaviorMenu(id)});
  });
- document.getElementById('endSession').onclick=()=>{currentSession.ended=true;save();currentSession=null;page='home';render();toast('تم حفظ الحصة بنجاح')};
+ document.getElementById('endSession').onclick=()=>{
+   currentSession.ended=true;
+   currentSession.endedAt=new Date().toISOString();
+   save();
+   const finished={...currentSession,attendance:{...currentSession.attendance}};
+   currentSession=null;
+   showSessionSummary(finished);
+ };
 }
-
-
 function renderClasses(){
  setTitle('الفصول','إدارة الصفوف');
  if(!data.classes.length){view.innerHTML='<div class="notice">لا توجد فصول مضافة بعد<br>اضغط على زر + لإضافة أول فصل</div>';return}
