@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v4.9</title>
+<title>رَصْد — v4.9.1</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -5453,6 +5453,100 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   .premium-nav button{font-size:10px!important}
 }
 
+
+/* ===== إصلاح شريط التنقل السفلي v4.9.1 ===== */
+#nav.premium-nav{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  width:100%!important;
+  min-height:78px!important;
+  padding:7px 8px calc(7px + env(safe-area-inset-bottom))!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+
+#nav.premium-nav button{
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:64px!important;
+  padding:2px 1px!important;
+  margin:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:3px!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  text-align:center!important;
+  line-height:1!important;
+  font-family:inherit!important;
+  font-size:10.5px!important;
+  font-weight:800!important;
+  letter-spacing:0!important;
+}
+
+#nav.premium-nav .premium-icon-wrap{
+  flex:0 0 32px!important;
+  width:32px!important;
+  height:32px!important;
+  display:block!important;
+  margin:0 auto!important;
+}
+
+#nav.premium-nav .premium-nav-icon{
+  width:32px!important;
+  height:32px!important;
+  display:block!important;
+}
+
+#nav.premium-nav .nav-label{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  text-overflow:clip!important;
+  text-align:center!important;
+  font-size:10.5px!important;
+  line-height:1.2!important;
+  margin:0!important;
+  padding:0!important;
+  transform:none!important;
+}
+
+#nav.premium-nav button.active .nav-label{
+  font-size:10.5px!important;
+}
+
+@media (max-width:390px){
+  #nav.premium-nav{
+    padding-left:4px!important;
+    padding-right:4px!important;
+  }
+  #nav.premium-nav button,
+  #nav.premium-nav .nav-label,
+  #nav.premium-nav button.active .nav-label{
+    font-size:9.5px!important;
+  }
+  #nav.premium-nav .premium-icon-wrap,
+  #nav.premium-nav .premium-nav-icon{
+    width:30px!important;
+    height:30px!important;
+  }
+}
+
+@media (min-width:600px){
+  #nav.premium-nav button,
+  #nav.premium-nav .nav-label,
+  #nav.premium-nav button.active .nav-label{
+    font-size:12px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -5540,7 +5634,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v4.9';
+const APP_VERSION='v4.9.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
