@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.7</title>
+<title>رَصْد — v1.7.1</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -2264,6 +2264,44 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   100%{transform:none;opacity:1}
 }
 
+
+/* ===== تحسين شريط التراجع v1.7.1 ===== */
+.live-event-toast{display:none!important}
+.live-undo{
+  left:14px!important;
+  right:14px!important;
+  bottom:92px!important;
+  min-height:66px!important;
+  padding:12px 14px!important;
+  border-radius:16px!important;
+}
+.live-undo span{
+  flex:1;
+  font-size:14px;
+  line-height:1.5;
+}
+.live-undo button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-width:94px;
+  padding:10px 14px!important;
+  border-radius:12px!important;
+  font-size:14px;
+}
+.live-undo button::before{
+  content:'↶';
+  font-size:18px;
+  line-height:1;
+}
+.live-undo.success{
+  background:#0f766e!important;
+}
+.live-undo.success button{
+  display:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -2299,7 +2337,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.7';
+const APP_VERSION='v1.7.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -2664,20 +2702,7 @@ function showSessionSummary(session){
 
 
 function showLiveEvent(message){
- let box=document.getElementById('liveEventToast');
- if(!box){
-   box=document.createElement('div');
-   box.id='liveEventToast';
-   box.className='live-event-toast';
-   document.body.appendChild(box);
- }
- box.textContent=message;
- box.classList.remove('show');
- requestAnimationFrame(()=>{
-   box.classList.add('show');
-   clearTimeout(window.liveEventTimer);
-   window.liveEventTimer=setTimeout(()=>box.classList.remove('show'),1800);
- });
+  // تم تعطيل الإشعار العلوي في v1.7.1
 }
 
 
@@ -2690,18 +2715,28 @@ function showLiveUndo(message,undoFn){
    bar.innerHTML='<span id="liveUndoText"></span><button id="liveUndoBtn">تراجع</button>';
    document.body.appendChild(bar);
  }
- document.getElementById('liveUndoText').textContent=message;
+
+ const textEl=document.getElementById('liveUndoText');
+ const btn=document.getElementById('liveUndoBtn');
+
+ bar.classList.remove('success');
+ textEl.textContent=message;
  bar.classList.add('show');
  clearTimeout(window.liveUndoTimer);
 
- const btn=document.getElementById('liveUndoBtn');
  btn.onclick=()=>{
-   bar.classList.remove('show');
    clearTimeout(window.liveUndoTimer);
    undoFn?.();
+   bar.classList.add('success');
+   textEl.textContent='✅ تم التراجع بنجاح';
+   window.liveUndoTimer=setTimeout(()=>{
+     bar.classList.remove('show','success');
+   },1100);
  };
 
- window.liveUndoTimer=setTimeout(()=>bar.classList.remove('show'),5000);
+ window.liveUndoTimer=setTimeout(()=>{
+   bar.classList.remove('show','success');
+ },5000);
 }
 
 function animateNumber(element,from,to){
@@ -2927,7 +2962,6 @@ function renderSession(){
    }
 
    save();
-   showLiveEvent(eventText);
 
    const afterPoints=totalPoints(studentId);
    const pointsEl=document.querySelector(`[data-points-value="${studentId}"]`);
@@ -2956,7 +2990,6 @@ function renderSession(){
      }
      currentSession.liveStats={...beforeStats};
      save();
-     showLiveEvent(`تم التراجع عن آخر إجراء لـ ${student.name}`);
      draw();
    });
 
