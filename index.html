@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v5.3</title>
+<title>رَصْد — v5.3.1</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -5882,6 +5882,36 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   .eval-star-icon{width:31px;height:31px}
 }
 
+
+/* ===== إصلاح محاذاة نص خيارات المهمة v5.3.1 ===== */
+.rasd-choice-grid.three{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:10px!important;
+}
+.rasd-choice{
+  min-width:0!important;
+  overflow:hidden!important;
+}
+.rasd-choice > span:last-child{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+  text-align:center!important;
+  line-height:1.2!important;
+  font-size:14px!important;
+}
+@media(max-width:390px){
+  .rasd-choice-grid.three{
+    gap:7px!important;
+  }
+  .rasd-choice > span:last-child{
+    font-size:12.5px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -5936,7 +5966,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v5.3';
+const APP_VERSION='v5.3.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
