@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.7.3</title>
+<title>رَصْد — v1.8</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -2370,6 +2370,30 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   50%{box-shadow:0 0 0 6px #dc262633}
 }
 
+
+/* ===== نظام الشارات والإنجازات v1.8 ===== */
+.badges-hero{background:linear-gradient(135deg,#17324d,#0f766e);color:#fff;border-radius:22px;padding:16px;display:flex;align-items:center;gap:13px;margin-bottom:12px}
+.badges-hero .avatar-image,.badges-hero .avatar-letter{width:76px!important;height:76px!important;flex-basis:76px!important}
+.badges-progress-card{background:#fff;border:1px solid #dbe5ea;border-radius:17px;padding:13px;margin-bottom:12px}
+.badges-progress-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.badges-progress-track{height:11px;background:#e7edf1;border-radius:999px;overflow:hidden}
+.badges-progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#f59e0b,#facc15)}
+.badges-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.badge-card{position:relative;background:#fff;border:1px solid #dbe5ea;border-radius:17px;padding:12px;min-height:145px;text-align:center}
+.badge-card.unlocked{background:linear-gradient(145deg,#fffdf2,#fff7cf);border-color:#f1d46b}
+.badge-card.locked{opacity:.58;filter:grayscale(.7)}
+.badge-icon{width:58px;height:58px;border-radius:18px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:30px;background:linear-gradient(145deg,#fff6d7,#ffe49a);box-shadow:0 7px 16px #a1620718}
+.badge-card.locked .badge-icon{background:#e8edf1}
+.badge-title{font-weight:900;color:#17324d}
+.badge-desc{font-size:11px;color:#6b7280;margin-top:5px;line-height:1.5}
+.badge-date{font-size:10px;color:#a16207;margin-top:7px;font-weight:800}
+.badge-lock{position:absolute;left:9px;top:9px;font-size:13px}
+.badge-unlock-modal{text-align:center;padding:6px 0}
+.badge-unlock-medal{width:96px;height:96px;border-radius:30px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:52px;background:linear-gradient(145deg,#fff8d8,#ffe58f);box-shadow:0 12px 25px #a1620725;animation:badgePop .5s ease}
+@keyframes badgePop{0%{transform:scale(.6) rotate(-8deg);opacity:0}70%{transform:scale(1.08) rotate(3deg);opacity:1}100%{transform:scale(1);opacity:1}}
+.badge-confetti{font-size:24px;letter-spacing:8px;margin:8px 0;animation:confettiDrop .7s ease}
+@keyframes confettiDrop{from{transform:translateY(-20px);opacity:0}to{transform:none;opacity:1}}
+
 </style>
 </head>
 <body>
@@ -2405,7 +2429,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.7.3';
+const APP_VERSION='v1.8';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -2501,6 +2525,7 @@ function render(){
  if(page==='settings')return renderSettings();
  if(page==='report')return renderReport(window.reportStudentId);
  if(page==='dashboard')return renderClassDashboard();
+ if(page==='badges')return renderStudentBadges(window.badgesStudentId);
 }
 
 function renderHome(){
@@ -3035,6 +3060,7 @@ function renderSession(){
    }
 
    save();
+   setTimeout(()=>checkAndUnlockBadges(studentId),120);
 
    const afterPoints=totalPoints(studentId);
    const pointsEl=document.querySelector(`[data-points-value="${studentId}"]`);
@@ -3816,6 +3842,79 @@ function renderSettings(){
  resetData.onclick=()=>{if(confirm('سيتم حذف جميع البيانات نهائياً')){localStorage.removeItem('rasdData');location.reload()}};
 }
 
+
+const BADGE_DEFINITIONS=[
+ {id:'firstPoint',icon:'✨',title:'البداية المضيئة',description:'الحصول على أول نقطة',check:s=>totalPoints(s.id)>=1},
+ {id:'points10',icon:'🥉',title:'عشر نقاط',description:'الوصول إلى 10 نقاط',check:s=>totalPoints(s.id)>=10},
+ {id:'points25',icon:'🥈',title:'نجم متقدم',description:'الوصول إلى 25 نقطة',check:s=>totalPoints(s.id)>=25},
+ {id:'points50',icon:'🥇',title:'بطل النقاط',description:'الوصول إلى 50 نقطة',check:s=>totalPoints(s.id)>=50},
+ {id:'firstTask',icon:'📘',title:'أول مهمة',description:'إنجاز أول مهمة',check:s=>data.logs.some(l=>l.studentId===s.id&&l.task&&l.value>0)},
+ {id:'tasks10',icon:'📚',title:'منجز المهام',description:'إنجاز 10 مهام',check:s=>data.logs.filter(l=>l.studentId===s.id&&l.task&&l.value>0).length>=10},
+ {id:'participation10',icon:'🙋',title:'نجم المشاركة',description:'تسجيل 10 مشاركات',check:s=>data.logs.filter(l=>l.studentId===s.id&&l.name?.includes('مشاركة')).length>=10},
+ {id:'excellent5',icon:'🌟',title:'سلوك متميز',description:'الحصول على سلوك ممتاز 5 مرات',check:s=>data.logs.filter(l=>l.studentId===s.id&&l.name==='سلوك ممتاز').length>=5},
+ {id:'noLate5',icon:'⏰',title:'منضبط',description:'إكمال 5 حصص دون تأخر',check:s=>{const ss=data.sessions.filter(se=>se.classId===s.classId).slice(-5);return ss.length>=5&&ss.every(se=>se.attendance?.[s.id]!=='late')}},
+ {id:'noAbsent5',icon:'🎯',title:'حضور كامل',description:'إكمال 5 حصص دون غياب',check:s=>{const ss=data.sessions.filter(se=>se.classId===s.classId).slice(-5);return ss.length>=5&&ss.every(se=>se.attendance?.[s.id]!=='absent')}}
+];
+
+function studentBadgeRecords(studentId){
+ const student=data.students.find(s=>s.id===studentId);
+ if(!student)return {};
+ student.badges=student.badges||{};
+ return student.badges;
+}
+
+function checkAndUnlockBadges(studentId,{show=true}={}){
+ const student=data.students.find(s=>s.id===studentId);
+ if(!student)return [];
+ const records=studentBadgeRecords(studentId);
+ const unlocked=[];
+ BADGE_DEFINITIONS.forEach(badge=>{
+   if(!records[badge.id]&&badge.check(student)){
+     records[badge.id]={unlockedAt:new Date().toISOString()};
+     unlocked.push(badge);
+   }
+ });
+ if(unlocked.length){
+   save();
+   if(show)showBadgeUnlock(student,unlocked[0],unlocked.length);
+ }
+ return unlocked;
+}
+
+function showBadgeUnlock(student,badge,totalNew=1){
+ openModal(`<div class="badge-unlock-modal">
+   <div class="badge-confetti">✨ 🎉 ✨</div>
+   <div class="badge-unlock-medal">${badge.icon}</div>
+   <h2 style="margin:0 0 5px">شارة جديدة!</h2>
+   <h3 style="margin:0;color:#a16207">${badge.title}</h3>
+   <p>${student.name}</p>
+   <div class="notice" style="margin-top:10px">${badge.description}</div>
+   ${totalNew>1?`<p class="muted">تم فتح ${totalNew} شارات جديدة</p>`:''}
+   <button class="btn" id="badgeUnlockClose" style="width:100%;margin-top:12px">رائع</button>
+ </div>`);
+ document.getElementById('badgeUnlockClose').onclick=closeModal;
+}
+
+function renderStudentBadges(studentId){
+ const student=data.students.find(s=>s.id===studentId);
+ if(!student){page='students';return render()}
+ const c=data.classes.find(x=>x.id===student.classId);
+ checkAndUnlockBadges(studentId,{show:false});
+ const records=studentBadgeRecords(studentId);
+ const unlockedCount=BADGE_DEFINITIONS.filter(b=>records[b.id]).length;
+ const progress=Math.round(unlockedCount/BADGE_DEFINITIONS.length*100);
+ setTitle('الإنجازات',student.name);
+ view.innerHTML=`
+ <div class="profile-topbar">
+   <button class="profile-back-btn" id="badgesBack" aria-label="رجوع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+   <div></div>
+ </div>
+ <div class="badges-hero">${avatarHtml(student)}<div><h2 style="margin:0 0 5px">${student.name}</h2><div>${c?.name||''}${c?.stage?` — ${c.stage}`:''}</div><div style="margin-top:6px">${unlockedCount} شارات محققة</div></div></div>
+ <div class="badges-progress-card"><div class="badges-progress-head"><b>تقدم الإنجازات</b><span>${progress}%</span></div><div class="badges-progress-track"><div class="badges-progress-fill" style="width:${progress}%"></div></div></div>
+ <div class="badges-grid">${BADGE_DEFINITIONS.map(badge=>{const record=records[badge.id];return `<div class="badge-card ${record?'unlocked':'locked'}"><span class="badge-lock">${record?'✓':'🔒'}</span><div class="badge-icon">${badge.icon}</div><div class="badge-title">${badge.title}</div><div class="badge-desc">${badge.description}</div>${record?`<div class="badge-date">${new Date(record.unlockedAt).toLocaleDateString('ar-SA')}</div>`:''}</div>`}).join('')}</div>`;
+ document.getElementById('badgesBack').onclick=()=>{window.reportStudentId=studentId;page='report';render()};
+}
+
 function buildStudentInsight(studentId){
  const points=totalPoints(studentId);
  const abs=data.sessions.filter(se=>se.attendance?.[studentId]==='absent').length;
@@ -3959,9 +4058,10 @@ function renderReport(id){
  </div>
 
  <div class="profile-actions no-print">
-   <button class="btn" id="printReport">طباعة التقرير</button>
+   <button class="btn" id="openBadges">الإنجازات والشارات</button>
+   <button class="btn secondary" id="printReport">طباعة التقرير</button>
    <button class="btn secondary" id="waReport">مشاركة مع ولي الأمر</button>
-   <button class="btn light" id="backStudents" style="grid-column:1/-1">العودة للطلاب</button>
+   <button class="btn light" id="backStudents">العودة للطلاب</button>
  </div>`;
 
  document.getElementById('profileBack').onclick=()=>{
@@ -3969,6 +4069,7 @@ function renderReport(id){
    render();
  };
 
+ document.getElementById('openBadges').onclick=()=>{window.badgesStudentId=id;page='badges';render()};
  document.getElementById('printReport').onclick=()=>window.print();
 
  document.getElementById('backStudents').onclick=()=>{
