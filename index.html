@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.5</title>
+<title>رَصْد — v1.6</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -2046,6 +2046,153 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   .live-action{font-size:9px;min-height:51px}
 }
 
+
+/* ===== تحسين تجربة الحصة v1.6 ===== */
+.live-event-toast{
+  position:fixed;
+  top:14px;
+  left:50%;
+  transform:translateX(-50%) translateY(-20px);
+  z-index:300;
+  min-width:min(92vw,420px);
+  max-width:92vw;
+  background:#17324d;
+  color:#fff;
+  border-radius:14px;
+  padding:11px 14px;
+  font-weight:900;
+  box-shadow:0 12px 30px #17324d44;
+  opacity:0;
+  pointer-events:none;
+  transition:.22s ease;
+  text-align:center;
+}
+.live-event-toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+.live-student-card.level-excellent{
+  background:linear-gradient(145deg,#ffffff,#f1fff6);
+  border-color:#bde8c9;
+}
+.live-student-card.level-good{
+  background:linear-gradient(145deg,#ffffff,#f5fbff);
+  border-color:#cfe2f4;
+}
+.live-student-card.level-follow{
+  background:linear-gradient(145deg,#ffffff,#fffaf0);
+  border-color:#f1dfad;
+}
+.live-student-card.level-alert{
+  background:linear-gradient(145deg,#ffffff,#fff5f5);
+  border-color:#efc4c4;
+}
+.live-progress-row{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:7px;
+  margin-top:6px;
+}
+.live-progress-label{
+  font-size:10px;
+  color:#6b7280;
+}
+.live-progress-track{
+  height:7px;
+  border-radius:999px;
+  background:#e5edf2;
+  overflow:hidden;
+}
+.live-progress-fill{
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#2563eb,#5da7ff);
+  transition:width .28s ease;
+}
+.live-progress-value{
+  font-size:10px;
+  color:#526174;
+  font-weight:800;
+}
+.live-student-points{
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  font-weight:800;
+  color:#17324d;
+}
+.live-points-pop{
+  animation:pointsPop .38s ease;
+}
+@keyframes pointsPop{
+  0%{transform:scale(1)}
+  45%{transform:scale(1.3);color:#0f766e}
+  100%{transform:scale(1)}
+}
+.live-action.success-pulse{
+  animation:successPulse .42s ease;
+}
+@keyframes successPulse{
+  0%{box-shadow:0 0 0 0 #10b98155}
+  60%{box-shadow:0 0 0 9px #10b98100}
+  100%{box-shadow:none}
+}
+.live-student-card.shake{
+  animation:cardShake .34s ease;
+}
+@keyframes cardShake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-4px)}
+  50%{transform:translateX(4px)}
+  75%{transform:translateX(-2px)}
+}
+.live-student-card.warn-flash{
+  animation:warnFlash .5s ease;
+}
+@keyframes warnFlash{
+  0%,100%{background-color:inherit}
+  50%{background:#fff7d6}
+}
+.live-action-check{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  background:#16a34ae8;
+  color:#fff;
+  font-size:24px;
+  opacity:0;
+  transform:scale(.7);
+  pointer-events:none;
+}
+.live-action{position:relative;overflow:hidden}
+.live-action.done .live-action-check{
+  animation:actionCheck .55s ease;
+}
+@keyframes actionCheck{
+  0%{opacity:0;transform:scale(.7)}
+  30%{opacity:1;transform:scale(1)}
+  80%{opacity:1}
+  100%{opacity:0;transform:scale(1.08)}
+}
+.class-celebration{
+  text-align:center;
+  background:linear-gradient(135deg,#fff8d9,#fff0a8);
+  border:1px solid #f1d46b;
+  border-radius:16px;
+  padding:13px;
+  margin-top:12px;
+  font-weight:900;
+  animation:celebrateIn .5s ease;
+}
+@keyframes celebrateIn{
+  from{opacity:0;transform:scale(.92)}
+  to{opacity:1;transform:scale(1)}
+}
+
 </style>
 </head>
 <body>
@@ -2081,7 +2228,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.5';
+const APP_VERSION='v1.6';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -2444,6 +2591,24 @@ function showSessionSummary(session){
  document.getElementById('closeSummary').onclick=()=>{closeModal();page='home';render()};
 }
 
+
+function showLiveEvent(message){
+ let box=document.getElementById('liveEventToast');
+ if(!box){
+   box=document.createElement('div');
+   box.id='liveEventToast';
+   box.className='live-event-toast';
+   document.body.appendChild(box);
+ }
+ box.textContent=message;
+ box.classList.remove('show');
+ requestAnimationFrame(()=>{
+   box.classList.add('show');
+   clearTimeout(window.liveEventTimer);
+   window.liveEventTimer=setTimeout(()=>box.classList.remove('show'),1800);
+ });
+}
+
 function renderSession(){
  if(!currentSession){
    page='students';
@@ -2505,14 +2670,18 @@ function renderSession(){
 
      holder.innerHTML=items.map(s=>{
        const status=statusOf(s.id);
-       return `<div class="live-student-card" data-live-card="${s.id}">
+       return `<div class="live-student-card level-${studentLevel(s.id).cls}" data-live-card="${s.id}">
          <div class="live-student-head">
            ${avatarHtml(s)}
            <div data-open-profile="${s.id}">
              <div class="live-student-name">${s.name}</div>
              <div class="live-student-meta">
-               <span>${totalPoints(s.id)} نقطة</span>
-               <span>${taskPoints(s.id)}/20 مهام</span>
+               <span class="live-student-points" data-points-value="${s.id}">${totalPoints(s.id)} نقطة</span>
+             </div>
+             <div class="live-progress-row">
+               <span class="live-progress-label">المهام</span>
+               <div class="live-progress-track"><div class="live-progress-fill" style="width:${Math.min(100,taskPoints(s.id)/20*100)}%"></div></div>
+               <span class="live-progress-value">${taskPoints(s.id)}/20</span>
              </div>
            </div>
            <button class="live-status ${status}" data-status-id="${s.id}">
@@ -2522,16 +2691,16 @@ function renderSession(){
 
          <div class="live-actions-grid">
            <button class="live-action positive" data-live-action="participation1" data-student-id="${s.id}">
-             <span class="live-action-icon">${rasdIcon('star',16)}</span>مشاركة +1
+             <span class="live-action-icon">${rasdIcon('star',16)}</span>مشاركة +1<span class="live-action-check">✓</span>
            </button>
            <button class="live-action purple" data-live-action="participation2" data-student-id="${s.id}">
-             <span class="live-action-icon">${rasdIcon('star',16)}</span>مميزة +2
+             <span class="live-action-icon">${rasdIcon('star',16)}</span>مميزة +2<span class="live-action-check">✓</span>
            </button>
            <button class="live-action blue" data-live-action="task" data-student-id="${s.id}">
-             <span class="live-action-icon">${rasdIcon('task',16)}</span>أنجز
+             <span class="live-action-icon">${rasdIcon('task',16)}</span>أنجز<span class="live-action-check">✓</span>
            </button>
            <button class="live-action positive" data-live-action="excellent" data-student-id="${s.id}">
-             <span class="live-action-icon">${rasdIcon('eval',16)}</span>ممتاز
+             <span class="live-action-icon">${rasdIcon('eval',16)}</span>ممتاز<span class="live-action-check">✓</span>
            </button>
            <button class="live-action amber" data-live-action="late" data-student-id="${s.id}">
              <span class="live-action-icon">${rasdIcon('late',16)}</span>متأخر
@@ -2604,17 +2773,40 @@ function renderSession(){
    ensureStats();
    currentSession.liveStats.actions++;
    let log=null;
+   const student=list.find(s=>s.id===studentId);
+   let eventText='';
 
-   if(action==='participation1')log={name:'مشاركة 1/5',value:1};
-   if(action==='participation2')log={name:'مشاركة مميزة',value:2};
-   if(action==='task')log={name:'أنجز المهمة',value:2,task:true};
-   if(action==='excellent')log={name:'سلوك ممتاز',value:2};
-   if(action==='warning')log={name:'تنبيه سلوكي',value:0};
-   if(action==='violation')log={name:'مخالفة سلوكية',value:-1};
+   if(action==='participation1'){
+     log={name:'مشاركة 1/5',value:1};
+     eventText=`⭐ ${student.name} +1 مشاركة`;
+   }
+   if(action==='participation2'){
+     log={name:'مشاركة مميزة',value:2};
+     eventText=`⭐ ${student.name} +2 مشاركة مميزة`;
+   }
+   if(action==='task'){
+     log={name:'أنجز المهمة',value:2,task:true};
+     eventText=`📘 ${student.name} أنجز المهمة`;
+   }
+   if(action==='excellent'){
+     log={name:'سلوك ممتاز',value:2};
+     eventText=`🌟 ${student.name} سلوك ممتاز`;
+   }
+   if(action==='warning'){
+     log={name:'تنبيه سلوكي',value:0};
+     eventText=`⚠️ تم تسجيل تنبيه لـ ${student.name}`;
+   }
+   if(action==='violation'){
+     log={name:'مخالفة سلوكية',value:-1};
+     eventText=`🚫 تم تسجيل مخالفة لـ ${student.name}`;
+   }
 
    if(action==='late'||action==='absent'){
      currentSession.attendance=currentSession.attendance||{};
      currentSession.attendance[studentId]=action;
+     eventText=action==='late'
+       ?`⏰ تم تسجيل تأخر ${student.name}`
+       :`❌ تم تسجيل غياب ${student.name}`;
    }else if(log){
      data.logs.push({
        id:crypto.randomUUID(),
@@ -2627,12 +2819,28 @@ function renderSession(){
    }
 
    save();
-   const card=document.querySelector(`[data-live-card="${studentId}"]`);
-   card?.classList.add('live-flash');
-   setTimeout(()=>card?.classList.remove('live-flash'),350);
-   draw();
- };
+   showLiveEvent(eventText);
 
+   const card=document.querySelector(`[data-live-card="${studentId}"]`);
+   const button=document.querySelector(`[data-live-action="${action}"][data-student-id="${studentId}"]`);
+
+   if(action==='violation'||action==='absent'){
+     card?.classList.add('shake');
+     setTimeout(()=>card?.classList.remove('shake'),380);
+   }else if(action==='late'||action==='warning'){
+     card?.classList.add('warn-flash');
+     setTimeout(()=>card?.classList.remove('warn-flash'),520);
+   }else{
+     button?.classList.add('done','success-pulse');
+     setTimeout(()=>button?.classList.remove('done','success-pulse'),600);
+   }
+
+   const pointsEl=document.querySelector(`[data-points-value="${studentId}"]`);
+   pointsEl?.classList.add('live-points-pop');
+   setTimeout(()=>pointsEl?.classList.remove('live-points-pop'),420);
+
+   setTimeout(draw,260);
+ };
  window.showLiveSessionSummary=()=>{
    clearInterval(window.liveTimerInterval);
    const endedAt=new Date();
@@ -2665,6 +2873,9 @@ function renderSession(){
        ${avatarHtml(topStudent)}
        <div><b>الأكثر مشاركة</b><div>${topStudent.name} · ${byStudent[topStudent.id]} نقاط</div></div>
      </div>`:''}
+
+     ${absent===0?'<div class="class-celebration">🎉 حصة بلا غياب — إنجاز رائع!</div>':''}
+     ${list.length>0 && sessionLogs.filter(l=>l.task&&l.value>0).length>=list.length?'<div class="class-celebration">🏆 جميع الطلاب أنجزوا المهمة</div>':''}
 
      <div class="row" style="margin-top:13px">
        <button class="btn" id="saveSessionSummary">حفظ الحصة</button>
