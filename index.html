@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v0.7.1</title>
+<title>رَصْد — v0.7.2</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -275,6 +275,101 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   display:flex;align-items:center;justify-content:center;
   font-size:34px;background:linear-gradient(145deg,#e8f1ff,#d4e2ff)
 }
+
+/* ===== بطاقة الطالب المضغوطة v0.7.2 ===== */
+.student-premium-card{
+  grid-template-columns:auto minmax(0,1fr) auto!important;
+  gap:10px!important;
+  padding:11px 12px!important;
+  border-radius:18px!important;
+  min-height:0!important
+}
+.student-premium-card .avatar-image,
+.student-premium-card .avatar-letter{
+  width:56px!important;height:56px!important;flex-basis:56px!important;
+  font-size:23px!important
+}
+.student-title-row{margin-bottom:6px!important}
+.student-title-row .student-name{font-size:17px!important}
+.student-level-badge{font-size:9px!important;padding:3px 7px!important}
+.student-stats-new{
+  display:flex!important;
+  gap:6px!important;
+  flex-wrap:wrap!important
+}
+.student-stat-new{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:4px!important;
+  width:auto!important;
+  padding:5px 8px!important;
+  border-radius:999px!important;
+  font-size:10px!important;
+  white-space:nowrap!important
+}
+.student-stat-new .mini-icon{
+  display:inline!important;
+  margin:0!important;
+  font-size:14px!important
+}
+.student-side-actions{
+  flex-direction:row!important;
+  align-items:center!important;
+  gap:6px!important
+}
+.student-evaluate-btn,
+.student-menu-btn{
+  width:38px!important;height:38px!important;
+  min-width:38px!important;padding:0!important;
+  border-radius:50%!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  font-size:0!important
+}
+.student-evaluate-btn::before{
+  content:'★';
+  font-size:18px;
+  color:#0f766e
+}
+.student-menu-btn::before{
+  content:'•••';
+  font-size:15px;
+  letter-spacing:1px
+}
+.students-actions{
+  grid-template-columns:1.15fr 1fr!important;
+  gap:8px!important;
+  margin-bottom:10px!important
+}
+.action-tile{
+  min-height:54px!important;
+  padding:9px 10px!important;
+  border-radius:16px!important;
+  font-size:15px!important
+}
+.action-tile .rasd-icon{
+  width:32px!important;height:32px!important;
+  flex-basis:32px!important;font-size:18px!important
+}
+.students-search input{
+  height:49px!important;
+  border-radius:15px!important
+}
+.students-count{
+  padding:6px 10px!important;
+  font-size:12px!important
+}
+@media(max-width:520px){
+  .student-premium-card{
+    grid-template-columns:auto minmax(0,1fr) auto!important
+  }
+  .student-side-actions{
+    grid-column:auto!important;
+    flex-direction:column!important
+  }
+  .student-side-actions button{flex:none!important}
+  .student-stats-new{display:flex!important}
+}
+
 @media(max-width:520px){
   .student-premium-card{grid-template-columns:auto minmax(0,1fr);padding:12px}
   .student-side-actions{grid-column:1/-1;flex-direction:row}
@@ -319,7 +414,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v0.7.1';
+const APP_VERSION='v0.7.2';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -717,10 +812,10 @@ function renderStudents(){
            <span class="student-level-badge ${lvl.cls}">${lvl.label}</span>
          </div>
          <div class="student-stats-new">
-           <div class="student-stat-new"><span class="mini-icon">⭐</span><b>${totalPoints(s.id)}</b> نقطة</div>
-           <div class="student-stat-new"><span class="mini-icon">📘</span><b>${taskPoints(s.id)}/20</b> مهمة</div>
-           <div class="student-stat-new"><span class="mini-icon">🔴</span><b>${abs}</b> غياب</div>
-           <div class="student-stat-new"><span class="mini-icon">🟠</span><b>${late}</b> تأخر</div>
+           <div class="student-stat-new"><span class="mini-icon">⭐</span><b>${totalPoints(s.id)}</b></div>
+           <div class="student-stat-new"><span class="mini-icon">📘</span><b>${taskPoints(s.id)}/20</b></div>
+           <div class="student-stat-new"><span class="mini-icon">●</span><b>${abs}</b></div>
+           <div class="student-stat-new"><span class="mini-icon">◷</span><b>${late}</b></div>
          </div>
        </div>
        <div class="student-side-actions">
