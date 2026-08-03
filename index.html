@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v0.8.1</title>
+<title>رَصْد — v0.8.2</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -512,6 +512,154 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   }
 }
 
+
+/* ===== بطاقة الطالب الجديدة v0.8.2 ===== */
+.student-premium-card{
+  display:grid!important;
+  grid-template-columns:58px minmax(0,1fr) 34px!important;
+  grid-template-areas:
+    "avatar main menu"
+    "stats stats stats"
+    "eval eval eval";
+  gap:8px 10px!important;
+  padding:11px 12px 12px!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  border:1px solid #dce6ec!important;
+  box-shadow:0 6px 18px #17324d0b!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+.student-premium-card::before{
+  content:'';
+  position:absolute;
+  top:0;right:0;bottom:0;
+  width:4px;
+  background:linear-gradient(#0f8b7f,#67cbbf);
+}
+.student-premium-card .avatar-image,
+.student-premium-card .avatar-letter{
+  grid-area:avatar!important;
+  width:58px!important;
+  height:58px!important;
+  flex-basis:58px!important;
+  align-self:start!important;
+}
+.student-main{
+  grid-area:main!important;
+  min-width:0!important;
+  align-self:center!important;
+}
+.student-title-row{
+  display:block!important;
+  margin:0!important;
+}
+.student-title-row .student-name{
+  font-size:18px!important;
+  font-weight:900!important;
+  line-height:1.25!important;
+  margin:0 0 5px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.student-level-badge{
+  display:inline-flex!important;
+  align-items:center!important;
+  padding:3px 7px!important;
+  font-size:9px!important;
+  border-radius:999px!important;
+}
+.student-side-actions{
+  grid-area:menu!important;
+  display:block!important;
+  align-self:start!important;
+}
+.student-menu-btn{
+  width:32px!important;
+  height:32px!important;
+  min-width:32px!important;
+  border-radius:50%!important;
+  padding:0!important;
+  background:#f8fafc!important;
+  border:1px solid #dce6ec!important;
+  font-size:0!important;
+}
+.student-menu-btn::before{
+  content:'•••';
+  font-size:12px;
+  color:#17324d;
+  letter-spacing:1px;
+}
+.student-stats-new{
+  grid-area:stats!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:5px!important;
+  width:100%!important;
+  margin:0!important;
+}
+.student-stat-new{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:4px!important;
+  width:100%!important;
+  min-width:0!important;
+  padding:6px 3px!important;
+  border-radius:10px!important;
+  background:#f8fafc!important;
+  border:1px solid #e1e9ee!important;
+  font-size:10px!important;
+  color:#536174!important;
+  white-space:nowrap!important;
+}
+.student-stat-new .mini-icon{
+  display:inline!important;
+  margin:0!important;
+  font-size:13px!important;
+}
+.student-stat-new:nth-child(1){background:#fff9e8!important}
+.student-stat-new:nth-child(2){background:#eef7ff!important}
+.student-stat-new:nth-child(3){background:#fff0f0!important}
+.student-stat-new:nth-child(4){background:#fff7e8!important}
+.student-evaluate-btn{
+  grid-area:eval!important;
+  width:100%!important;
+  height:36px!important;
+  min-width:0!important;
+  border-radius:11px!important;
+  padding:0 12px!important;
+  background:#e7f5f2!important;
+  color:#08756c!important;
+  font-size:13px!important;
+  font-weight:900!important;
+  border:0!important;
+}
+.student-evaluate-btn::before{
+  content:'★';
+  font-size:14px;
+  margin-left:5px;
+}
+@media(max-width:390px){
+  .student-premium-card{
+    grid-template-columns:52px minmax(0,1fr) 32px!important;
+  }
+  .student-premium-card .avatar-image,
+  .student-premium-card .avatar-letter{
+    width:52px!important;
+    height:52px!important;
+    flex-basis:52px!important;
+  }
+  .student-title-row .student-name{
+    font-size:16px!important;
+  }
+  .student-stat-new{
+    font-size:9px!important;
+    padding:5px 2px!important;
+  }
+}
+
 @media(max-width:520px){
   .student-premium-card{
     grid-template-columns:56px minmax(0,1fr) 34px!important;
@@ -584,7 +732,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v0.8.1';
+const APP_VERSION='v0.8.2';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -982,10 +1130,10 @@ function renderStudents(){
            <span class="student-level-badge ${lvl.cls}">${lvl.label}</span>
          </div>
          <div class="student-stats-new">
-           <div class="student-stat-new"><span class="mini-icon">★</span><b>${totalPoints(s.id)}</b> نقطة</div>
-           <div class="student-stat-new"><span class="mini-icon">▣</span><b>${taskPoints(s.id)}/20</b> مهمة</div>
-           <div class="student-stat-new"><span class="mini-icon">✖</span><b>${abs}</b> غياب</div>
-           <div class="student-stat-new"><span class="mini-icon">◷</span><b>${late}</b> تأخر</div>
+           <div class="student-stat-new"><span class="mini-icon">★</span><b>${totalPoints(s.id)}</b></div>
+           <div class="student-stat-new"><span class="mini-icon">▣</span><b>${taskPoints(s.id)}/20</b></div>
+           <div class="student-stat-new"><span class="mini-icon">✖</span><b>${abs}</b></div>
+           <div class="student-stat-new"><span class="mini-icon">◷</span><b>${late}</b></div>
          </div>
        </div>
        <div class="student-side-actions">
