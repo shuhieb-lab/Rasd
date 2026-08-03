@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v5.2</title>
+<title>رَصْد — v5.2.1</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -5760,6 +5760,68 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
  .report-heading-icon,.rp-premium-icon,.rp-section-premium-icon{print-color-adjust:exact;-webkit-print-color-adjust:exact}
 }
 
+
+/* ===== إصلاح بطاقات الإنجازات v5.2.1 ===== */
+.badges-grid{align-items:stretch!important}
+.badge-card{
+  min-height:126px!important;
+  padding:13px 10px 11px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  overflow:hidden!important;
+  animation:badgeCardEnter .35s ease both;
+  animation-delay:var(--badge-delay,0ms);
+}
+.badge-card.unlocked{background:linear-gradient(145deg,#fffdf5,#fff3bd)!important}
+.badge-status{
+  position:absolute;top:9px;left:9px;min-width:45px;padding:3px 7px;
+  border-radius:999px;background:rgba(255,255,255,.82);border:1px solid currentColor;
+  font-size:8px;font-weight:900;line-height:1.2;
+}
+.badge-card.unlocked .badge-status{color:#8a6400}
+.badge-card.locked .badge-status{color:#7b8795}
+.premium-badge-center{width:auto!important;height:auto!important;margin:0 auto 7px!important;background:transparent!important}
+.badge-premium-main-icon{
+  width:49px;height:49px;display:block;border-radius:15px;
+  filter:drop-shadow(0 6px 8px rgba(81,44,152,.18));
+  animation:badgeIconPop .38s cubic-bezier(.2,.8,.2,1) both;
+  animation-delay:calc(var(--badge-delay,0ms) + 80ms);
+}
+.badge-title{
+  width:100%;margin:0!important;color:#172b4d;font-size:14px!important;
+  font-weight:950!important;line-height:1.35!important;text-align:center!important;
+}
+.badge-desc{
+  width:100%;margin-top:4px!important;color:#667085;font-size:9px!important;
+  line-height:1.35!important;text-align:center!important;
+}
+.badge-date{margin-top:5px!important;font-size:8px!important;color:#8a6a14!important}
+.badge-card.locked{opacity:.52!important;filter:grayscale(.65)!important}
+.badge-card.badge-behavior{border-color:#86d8aa!important}
+.badge-card.badge-behavior.unlocked{background:linear-gradient(145deg,#f3fff8,#ddf8e9)!important}
+.badge-card.badge-learning{border-color:#9dc4f5!important}
+.badge-card.badge-learning.unlocked{background:linear-gradient(145deg,#f5f9ff,#e5f0ff)!important}
+.badge-card.badge-participation{border-color:#f5b77f!important}
+.badge-card.badge-participation.unlocked{background:linear-gradient(145deg,#fff9f3,#ffead5)!important}
+.badge-card.badge-achievement{border-color:#cfb4f7!important}
+.badge-card.badge-achievement.unlocked{background:linear-gradient(145deg,#fbf8ff,#eee5ff)!important}
+.badge-card.badge-behavior .badge-premium-main-icon{filter:hue-rotate(65deg) drop-shadow(0 6px 8px rgba(22,150,90,.17))}
+.badge-card.badge-learning .badge-premium-main-icon{filter:hue-rotate(175deg) drop-shadow(0 6px 8px rgba(61,111,199,.17))}
+.badge-card.badge-participation .badge-premium-main-icon{filter:hue-rotate(300deg) drop-shadow(0 6px 8px rgba(232,123,39,.17))}
+@keyframes badgeCardEnter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+@keyframes badgeIconPop{0%{opacity:0;transform:scale(.72)}75%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+@media(max-width:390px){
+  .badge-card{min-height:118px!important}
+  .badge-premium-main-icon{width:45px;height:45px}
+  .badge-title{font-size:13px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .badge-card,.badge-premium-main-icon{animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -5814,7 +5876,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v5.2';
+const APP_VERSION='v5.2.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -8201,6 +8263,14 @@ function showBadgeUnlock(student,badge,totalNew=1){
  document.getElementById('badgeUnlockClose').onclick=closeModal;
 }
 
+
+function badgeVisualTheme(badgeId){
+ if(['noLate5','noAbsent5','excellent5'].includes(badgeId))return 'behavior';
+ if(['firstTask','tasks10'].includes(badgeId))return 'learning';
+ if(['participation10'].includes(badgeId))return 'participation';
+ return 'achievement';
+}
+
 function renderStudentBadges(studentId){
  const student=data.students.find(s=>s.id===studentId);
  if(!student){page='students';return render()}
@@ -8217,7 +8287,17 @@ function renderStudentBadges(studentId){
  </div>
  <div class="badges-hero">${avatarHtml(student)}<div><h2 style="margin:0 0 5px">${student.name}</h2><div>${c?.name||''}${c?.stage?` — ${c.stage}`:''}</div><div style="margin-top:6px">${unlockedCount} شارات محققة</div><div class="badges-level-box">${levelHtml(studentId)}</div></div></div>
  <div class="badges-progress-card"><div class="badges-progress-head"><b>تقدم الإنجازات</b><span>${progress}%</span></div><div class="badges-progress-track"><div class="badges-progress-fill" style="width:${progress}%"></div></div></div>
- <div class="badges-grid">${BADGE_DEFINITIONS.map(badge=>{const record=records[badge.id];return `<div class="badge-card ${record?'unlocked':'locked'}"><span class="badge-lock">${record?'✓':'🔒'}</span><div class="badge-icon">${badge.icon}</div><div class="badge-title">${badge.title}</div><div class="badge-desc">${badge.description}</div>${record?`<div class="badge-date">${new Date(record.unlockedAt).toLocaleDateString('ar-SA')}</div>`:''}</div>`}).join('')}</div>`;
+ <div class="badges-grid">${BADGE_DEFINITIONS.map((badge,index)=>{
+ const record=records[badge.id];
+ const theme=badgeVisualTheme(badge.id);
+ return `<div class="badge-card badge-${theme} ${record?'unlocked':'locked'}" style="--badge-delay:${index*45}ms">
+   <div class="badge-status">${record?'محققة':'مقفلة'}</div>
+   <div class="badge-icon premium-badge-center">${premiumIcon('report_achievement','badge-premium-main-icon')}</div>
+   <div class="badge-title">${badge.title}</div>
+   <div class="badge-desc">${badge.description}</div>
+   ${record?`<div class="badge-date">${new Date(record.unlockedAt).toLocaleDateString('ar-SA')}</div>`:''}
+ </div>`;
+}).join('')}</div>`;
  document.getElementById('badgesBack').onclick=()=>{window.reportStudentId=studentId;page='report';render()};
 }
 
