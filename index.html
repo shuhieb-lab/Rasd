@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v4.4.1</title>
+<title>رَصْد — v4.5</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -5224,6 +5224,18 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   }
 }
 
+
+/* ===== ربط الحصة بالوقت الفعلي v4.5 ===== */
+.home-live-time{
+  margin-top:3px;
+  color:#d9fffa;
+  font-size:13px;
+  font-weight:900;
+}
+@media(max-height:760px){
+  .home-live-time{font-size:11px;margin-top:1px}
+}
+
 </style>
 </head>
 <body>
@@ -5278,7 +5290,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v4.4.1';
+const APP_VERSION='v4.5';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -5346,15 +5358,30 @@ function todayName(){const map={0:'الأحد',1:'الاثنين',2:'الثلا�
 function minutesNow(){const d=new Date();return d.getHours()*60+d.getMinutes()}
 function timeToMinutes(t){if(!t)return null;const [h,m]=t.split(':').map(Number);return h*60+m}
 function currentScheduledSlot(){
- const day=todayName(); if(!day)return null;
+ const day=todayName(); if(!day)return {type:'none'};
  const daySchedule=data.schedule[day]||{};
  const now=minutesNow();
- for(const p of PERIODS){
-   const tm=data.periodTimes[p]||{},start=timeToMinutes(tm.start),end=timeToMinutes(tm.end);
-   if(daySchedule[p] && start!==null && end!==null && now>=start && now<=end) return {period:p,classId:daySchedule[p],live:true};
- }
- const first=PERIODS.find(p=>daySchedule[p]);
- return first?{period:first,classId:daySchedule[first],live:false}:null;
+ const slots=PERIODS.map(p=>{
+  const tm=data.periodTimes[p]||{};
+  const start=timeToMinutes(tm.start),end=timeToMinutes(tm.end);
+  return {period:p,classId:daySchedule[p],start,end};
+ }).filter(s=>s.classId&&s.start!==null&&s.end!==null)
+   .sort((a,b)=>a.start-b.start);
+
+ const current=slots.find(s=>now>=s.start&&now<s.end);
+ if(current)return {...current,type:'current',minutesLeft:Math.max(0,current.end-now)};
+
+ const next=slots.find(s=>s.start>now);
+ if(next)return {...next,type:'next',minutesUntil:Math.max(0,next.start-now)};
+
+ return {type:'none'};
+}
+function formatScheduleTime(total){
+ if(total===null||total===undefined)return '';
+ let h=Math.floor(total/60)%24,m=total%60;
+ const period=h>=12?'م':'ص';
+ h=h%12||12;
+ return `${h}:${String(m).padStart(2,'0')} ${period}`;
 }
 function sessionStatus(studentId){
  return currentSession?.attendance?.[studentId]||'present';
@@ -5431,7 +5458,7 @@ function dailyTipIndex(offset=0){
 
 function renderHome(){
  setTitle('رَصْد','اليوم الدراسي');
- const slot=currentScheduledSlot(),c=slot?data.classes.find(x=>x.id===slot.classId):null;
+ const slot=currentScheduledSlot(),c=slot.classId?data.classes.find(x=>x.id===slot.classId):null;
  const today=todayName(),todayCount=today?Object.values(data.schedule[today]||{}).filter(Boolean).length:0;
  window.homeTipOffset=window.homeTipOffset||0;
  const tipIndex=dailyTipIndex(window.homeTipOffset);
@@ -5440,9 +5467,21 @@ function renderHome(){
    <div class="version-badge" style="background:#ffffff22;color:#fff;margin-bottom:10px">رَصْد ${APP_VERSION}</div><h2>مرحباً ${data.teacher.name||'بك'} 👋</h2>
    <div>${new Date().toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
    <hr style="border-color:#ffffff44">
-   <h3>${slot?.live?'الحصة الحالية':'الحصة المقترحة'}</h3>
-   ${c?`<div class="class-title">${c.name}</div><div>الحصة ${slot.period}</div><button class="btn" id="quickStart" style="margin-top:12px">▶ بدء الحصة</button>`:
-   `<p>لم يتم إعداد جدول اليوم بعد</p><button class="btn" id="goSchedule">إعداد الجدول</button>`}
+   ${slot.type==='current'?`
+   <h3>🟢 الحصة الحالية</h3>
+   <div class="class-title">${c?.name||''}</div>
+   <div>الحصة ${slot.period}</div>
+   <div class="home-live-time">⏰ متبقي ${slot.minutesLeft} دقيقة</div>
+   <button class="btn" id="quickStart" style="margin-top:8px">▶ بدء الحصة</button>`:
+   slot.type==='next'?`
+   <h3>🟠 الحصة القادمة</h3>
+   <div class="class-title">${c?.name||''}</div>
+   <div>الحصة ${slot.period} — ${formatScheduleTime(slot.start)}</div>
+   <div class="home-live-time">⏰ تبدأ بعد ${slot.minutesUntil} دقيقة</div>
+   <button class="btn" id="quickStart" style="margin-top:8px">▶ فتح الفصل</button>`:
+   `<h3>لا توجد حصة الآن</h3>
+   <p>انتهى جدول اليوم أو لم يتم ضبط أوقات الحصص.</p>
+   <button class="btn" id="goSchedule">إعداد الجدول</button>`}
  </div>
  <div class="grid" style="margin-top:12px">
   <div class="metric">الفصول<b>${data.classes.length}</b></div>
@@ -5459,12 +5498,22 @@ function renderHome(){
      <button class="btn secondary" id="nextDailyTip">فكرة أخرى ←</button>
    </div>
  </div></div>`;
- document.getElementById('quickStart')?.addEventListener('click',()=>startSession(c.id,slot.period));
+ document.getElementById('quickStart')?.addEventListener('click',()=>{
+  if(!c)return;
+  data.selectedClass=c.id;
+  save();
+  if(slot.type==='current')startSession(c.id,slot.period);
+  else{page='classes';render()}
+ });
  document.getElementById('goSchedule')?.addEventListener('click',()=>{page='settings';render();setTimeout(()=>document.getElementById('scheduleCard')?.scrollIntoView(),100)});
  document.getElementById('nextDailyTip')?.addEventListener('click',()=>{
   window.homeTipOffset=(window.homeTipOffset||0)+1;
   renderHome();
  });
+ clearTimeout(window.__homeClockTimer);
+ window.__homeClockTimer=setTimeout(()=>{
+  if(page==='home')renderHome();
+ },(60-new Date().getSeconds())*1000+100);
 }
 function startSession(classId,period){
  data.selectedClass=classId;
