@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v2.5</title>
+<title>رَصْد — v2.6</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -4083,6 +4083,244 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   @page{size:A4 portrait;margin:7mm}
 }
 
+
+/* ===== تقرير ولي الأمر الرسمي v2.6 ===== */
+@media print{
+  .parent-report-page{display:none!important}
+
+  .parent-print-report{
+    display:block!important;
+    width:196mm!important;
+    height:283mm!important;
+    overflow:hidden!important;
+    direction:rtl!important;
+    color:#17324d!important;
+    font-family:Tahoma,Arial,sans-serif!important;
+    background:#fff!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+
+  .rp-page{
+    height:100%!important;
+    display:grid!important;
+    grid-template-rows:48mm 18mm 38mm 55mm 47mm 45mm 12mm!important;
+    gap:2.2mm!important;
+  }
+
+  /* الهيدر الرئيسي بهوية رَصْد */
+  .rp-hero{
+    position:relative!important;
+    overflow:hidden!important;
+    border-radius:7mm!important;
+    padding:4.5mm 6mm!important;
+    display:grid!important;
+    grid-template-columns:30mm 1fr 34mm!important;
+    gap:4mm!important;
+    align-items:center!important;
+    color:#fff!important;
+    background:
+      radial-gradient(circle at 8% 10%,rgba(255,255,255,.15) 0 20mm,transparent 20.3mm),
+      linear-gradient(135deg,#149c9a 0%,#087f86 48%,#18506f 100%)!important;
+    box-shadow:0 3mm 8mm rgba(24,80,111,.18)!important;
+  }
+
+  .rp-hero:after{
+    content:'رَصْد'!important;
+    position:absolute!important;
+    left:6mm!important;
+    bottom:3mm!important;
+    font-size:18pt!important;
+    font-weight:950!important;
+    color:rgba(255,255,255,.12)!important;
+  }
+
+  .rp-avatar{
+    width:29mm!important;height:29mm!important;border-radius:50%!important;
+    object-fit:cover!important;border:1.5mm solid #fff!important;
+    box-shadow:0 1.5mm 5mm rgba(0,0,0,.2)!important;
+  }
+  .rp-avatar-letter{
+    width:29mm!important;height:29mm!important;border-radius:50%!important;
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    border:1.5mm solid #fff!important;background:rgba(255,255,255,.16)!important;
+    font-size:21pt!important;font-weight:950!important;
+  }
+
+  .rp-name{font-size:20pt!important;font-weight:950!important;line-height:1.12!important}
+  .rp-class{font-size:9pt!important;margin-top:1.3mm!important;opacity:.92!important}
+  .rp-sub{font-size:6.5pt!important;margin-top:.7mm!important;opacity:.78!important}
+  .rp-level{
+    display:inline-flex!important;margin-top:1.5mm!important;padding:1mm 2mm!important;
+    border-radius:999px!important;background:rgba(255,255,255,.15)!important;
+    border:.25mm solid rgba(255,255,255,.18)!important;font-size:7pt!important;font-weight:900!important;
+  }
+
+  .rp-score{
+    width:31mm!important;height:31mm!important;border-radius:50%!important;
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    position:relative!important;
+    background:conic-gradient(#fff calc(var(--rp-score)*1%),rgba(255,255,255,.23) 0)!important;
+    box-shadow:0 1.5mm 4mm rgba(0,0,0,.14)!important;
+  }
+  .rp-score:before{
+    content:''!important;position:absolute!important;width:23mm!important;height:23mm!important;
+    border-radius:50%!important;background:linear-gradient(145deg,#0b8990,#18506f)!important;
+  }
+  .rp-score-inner{position:relative!important;z-index:1!important;text-align:center!important}
+  .rp-score-inner b{display:block!important;font-size:17pt!important;line-height:1!important}
+  .rp-score-inner span{font-size:5.8pt!important}
+
+  /* بطاقة الحالة */
+  .rp-status{
+    border-radius:4mm!important;
+    display:grid!important;grid-template-columns:10mm 1fr!important;
+    gap:2.2mm!important;align-items:center!important;
+    padding:2mm 3.5mm!important;font-size:10.5pt!important;font-weight:950!important;
+  }
+  .rp-status-icon{
+    width:8mm!important;height:8mm!important;border-radius:2.3mm!important;
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    font-size:11pt!important;background:#fff!important;
+  }
+
+  /* بطاقات المؤشرات: بيضاء بالكامل مع هيدر علوي */
+  .rp-metrics{
+    display:grid!important;
+    grid-template-columns:repeat(4,1fr)!important;
+    gap:2.2mm!important;
+  }
+  .rp-metric{
+    min-width:0!important;
+    border-radius:4mm!important;
+    padding:0!important;
+    overflow:hidden!important;
+    background:#fff!important;
+    border:.35mm solid #d8e2e8!important;
+    box-shadow:0 1mm 3mm rgba(23,50,77,.06)!important;
+    display:grid!important;
+    grid-template-rows:11mm 1fr!important;
+  }
+  .rp-metric-head{
+    min-height:11mm!important;
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    gap:1.2mm!important;padding:1.5mm 2mm!important;
+    color:#fff!important;
+    background:linear-gradient(135deg,#087f86,#18506f)!important;
+    font-size:7.5pt!important;font-weight:950!important;
+  }
+  .rp-metric-head .rp-metric-icon{font-size:12pt!important;line-height:1!important}
+  .rp-metric-body{
+    display:flex!important;flex-direction:column!important;justify-content:center!important;
+    align-items:center!important;padding:1.4mm 2mm!important;background:#fff!important;
+  }
+  .rp-metric-value{font-size:16pt!important;font-weight:950!important;margin:0!important;color:#17324d!important}
+  .rp-metric-note{font-size:5.8pt!important;color:#6b7280!important;margin-top:.5mm!important}
+
+  /* البطاقة الرسمية الموحدة */
+  .rp-section{
+    min-height:0!important;
+    background:#fff!important;
+    border:.35mm solid #d8e2e8!important;
+    border-radius:4.5mm!important;
+    overflow:hidden!important;
+    box-shadow:0 1mm 3mm rgba(23,50,77,.055)!important;
+    display:grid!important;
+    grid-template-rows:11mm 1fr!important;
+  }
+  .rp-section-head{
+    height:11mm!important;
+    display:flex!important;align-items:center!important;
+    padding:0 3.5mm!important;
+    color:#fff!important;
+    background:linear-gradient(135deg,#087f86,#18506f)!important;
+    font-size:10pt!important;font-weight:950!important;
+  }
+  .rp-section-body{
+    min-height:0!important;
+    padding:2.5mm 3.5mm!important;
+    background:#fff!important;
+    overflow:hidden!important;
+  }
+
+  /* الرسم */
+  .rp-chart-card{padding:0!important;border:0!important;box-shadow:none!important;background:transparent!important}
+  .rp-chart{
+    height:39mm!important;
+    display:grid!important;grid-template-columns:repeat(8,1fr)!important;
+    gap:1.8mm!important;align-items:end!important;
+    border-bottom:.4mm solid #dbe5ea!important;
+    padding:1.5mm 4mm 0!important;
+  }
+  .rp-chart-item{height:100%!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-end!important}
+  .rp-chart-value{font-size:6pt!important;font-weight:900!important;margin-bottom:.6mm!important}
+  .rp-chart-bar{width:7mm!important;border-radius:2.2mm 2.2mm .6mm .6mm!important;box-shadow:0 .7mm 1.5mm rgba(18,52,79,.1)!important}
+  .rp-chart-date{font-size:4.8pt!important;color:#7b8795!important;margin-top:.6mm!important}
+
+  /* عمودان للقوة والتطوير */
+  .rp-two-col{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:2.2mm!important;
+    min-height:0!important;
+  }
+  .rp-card{
+    padding:0!important;border:0!important;box-shadow:none!important;background:transparent!important;
+    min-height:0!important;
+  }
+  .rp-list{display:grid!important;gap:1.2mm!important}
+  .rp-item{
+    display:grid!important;grid-template-columns:6mm 1fr!important;
+    gap:1.2mm!important;align-items:start!important;font-size:7.5pt!important;
+  }
+  .rp-item-icon{
+    width:6mm!important;height:6mm!important;border-radius:1.8mm!important;
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    font-weight:950!important;background:#edf7f6!important;color:#087f86!important;
+  }
+
+  /* آخر النشاطات + التحليل */
+  .rp-bottom{
+    display:grid!important;grid-template-columns:1fr 1fr!important;
+    gap:2.2mm!important;min-height:0!important;
+  }
+  .rp-events{
+    display:grid!important;grid-template-columns:1fr 1fr!important;
+    gap:1mm!important;
+  }
+  .rp-event{
+    border-radius:2.5mm!important;padding:1.5mm 1.8mm!important;
+    background:#f8fafc!important;border:.25mm solid #e0e7eb!important;
+  }
+  .rp-event-title{font-size:6.8pt!important;font-weight:900!important}
+  .rp-event-date{font-size:4.8pt!important;color:#7b8795!important;margin-top:.4mm!important}
+
+  .rp-analysis{
+    padding:0!important;border-radius:4.5mm!important;overflow:hidden!important;
+    background:#fff!important;border:.35mm solid #d8e2e8!important;
+    display:grid!important;grid-template-rows:11mm 1fr!important;
+  }
+  .rp-analysis-title{
+    height:11mm!important;display:flex!important;align-items:center!important;
+    padding:0 3.5mm!important;color:#fff!important;
+    background:linear-gradient(135deg,#087f86,#18506f)!important;
+    font-size:10pt!important;font-weight:950!important;margin:0!important;
+  }
+  .rp-analysis-text{
+    padding:2.5mm 3.5mm!important;color:#17324d!important;
+    background:#fff!important;font-size:7.4pt!important;line-height:1.65!important;
+  }
+
+  .rp-footer{
+    display:grid!important;grid-template-columns:1fr 1fr!important;
+    gap:16mm!important;align-items:end!important;
+    padding:0 5mm!important;font-size:6.5pt!important;color:#6b7280!important;
+  }
+  .rp-signature{border-top:.3mm dashed #a9b8c2!important;padding-top:1.2mm!important;text-align:center!important}
+
+  @page{size:A4 portrait;margin:7mm}
+}
+
 </style>
 </head>
 <body>
@@ -4137,7 +4375,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v2.5';
+const APP_VERSION='v2.6';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -6165,6 +6403,7 @@ function renderReport(id){
  view.insertAdjacentHTML('beforeend',`
  <div class="parent-print-report">
    <div class="rp-page">
+
      <div class="rp-hero">
        ${s.photo?`<img class="rp-avatar" src="${s.photo}" alt="${s.name}">`:`<div class="rp-avatar-letter">${s.name.charAt(0)}</div>`}
        <div>
@@ -6184,40 +6423,68 @@ function renderReport(id){
      </div>
 
      <div class="rp-metrics">
-       <div class="rp-metric"><div class="rp-metric-icon">⭐</div><div class="rp-metric-label">النقاط</div><div class="rp-metric-value">${totalPoints(id)}</div><div class="rp-metric-note">نقطة</div></div>
-       <div class="rp-metric"><div class="rp-metric-icon">📘</div><div class="rp-metric-label">المهام</div><div class="rp-metric-value">${taskPoints(id)}/20</div><div class="rp-metric-note">المهام المنجزة</div></div>
-       <div class="rp-metric"><div class="rp-metric-icon">📝</div><div class="rp-metric-label">الاختبار الفتري</div><div class="rp-metric-value">${periodicExam}%</div><div class="rp-metric-note">${examLabel(periodicExam)}</div></div>
-       <div class="rp-metric"><div class="rp-metric-icon">🎓</div><div class="rp-metric-label">نهاية الفصل</div><div class="rp-metric-value">${finalExam}%</div><div class="rp-metric-note">${examLabel(finalExam)}</div></div>
+       <div class="rp-metric">
+         <div class="rp-metric-head"><span class="rp-metric-icon">⭐</span><span>النقاط</span></div>
+         <div class="rp-metric-body"><div class="rp-metric-value">${totalPoints(id)}</div><div class="rp-metric-note">نقطة</div></div>
+       </div>
+       <div class="rp-metric">
+         <div class="rp-metric-head"><span class="rp-metric-icon">📘</span><span>المهام</span></div>
+         <div class="rp-metric-body"><div class="rp-metric-value">${taskPoints(id)}/20</div><div class="rp-metric-note">المهام المنجزة</div></div>
+       </div>
+       <div class="rp-metric">
+         <div class="rp-metric-head"><span class="rp-metric-icon">📝</span><span>الاختبار الفتري</span></div>
+         <div class="rp-metric-body"><div class="rp-metric-value">${periodicExam}%</div><div class="rp-metric-note">${examLabel(periodicExam)}</div></div>
+       </div>
+       <div class="rp-metric">
+         <div class="rp-metric-head"><span class="rp-metric-icon">🎓</span><span>نهاية الفصل</span></div>
+         <div class="rp-metric-body"><div class="rp-metric-value">${finalExam}%</div><div class="rp-metric-note">${examLabel(finalExam)}</div></div>
+       </div>
      </div>
 
-     <div class="rp-chart-card">
-       <div class="rp-heading">📈 تطور الأداء</div>
-       <div class="rp-chart">
-         ${chartLogs.length?chartLogs.map((l,i)=>{
-           const h=Math.max(8,Math.round(Math.abs(l.value)/maxChart*44));
-           const colors=['#087f72','#2f80ed','#805ad5','#d69e2e'];
-           const color=l.value<0?'#e05252':colors[i%colors.length];
-           return `<div class="rp-chart-item"><div class="rp-chart-value">${l.value>0?'+':''}${l.value}</div><div class="rp-chart-bar" style="height:${h}mm;background:${color}"></div><div class="rp-chart-date">${new Date(l.date).toLocaleDateString('ar-SA',{day:'numeric',month:'numeric'})}</div></div>`;
-         }).join(''):'<div style="grid-column:1/-1;text-align:center;color:#7b8795;font-size:8pt">لا توجد بيانات كافية بعد</div>'}
+     <div class="rp-section">
+       <div class="rp-section-head">📈 تطور الأداء</div>
+       <div class="rp-section-body">
+         <div class="rp-chart-card">
+           <div class="rp-chart">
+             ${chartLogs.length?chartLogs.map((l,i)=>{
+               const h=Math.max(6,Math.round(Math.abs(l.value)/maxChart*31));
+               const colors=['#087f86','#2f80ed','#805ad5','#d69e2e'];
+               const color=l.value<0?'#e05252':colors[i%colors.length];
+               return `<div class="rp-chart-item"><div class="rp-chart-value">${l.value>0?'+':''}${l.value}</div><div class="rp-chart-bar" style="height:${h}mm;background:${color}"></div><div class="rp-chart-date">${new Date(l.date).toLocaleDateString('ar-SA',{day:'numeric',month:'numeric'})}</div></div>`;
+             }).join(''):'<div style="grid-column:1/-1;text-align:center;color:#7b8795;font-size:8pt">لا توجد بيانات كافية بعد</div>'}
+           </div>
+         </div>
        </div>
      </div>
 
      <div class="rp-two-col">
-       <div class="rp-card strengths">
-         <div class="rp-heading">💚 نقاط القوة</div>
-         <div class="rp-list">${(strengths.length?strengths:['لا توجد بيانات كافية بعد']).slice(0,5).map(x=>`<div class="rp-item"><span class="rp-item-icon">✓</span><span>${x}</span></div>`).join('')}</div>
+       <div class="rp-section">
+         <div class="rp-section-head">💚 نقاط القوة</div>
+         <div class="rp-section-body">
+           <div class="rp-card">
+             <div class="rp-list">${(strengths.length?strengths:['لا توجد بيانات كافية بعد']).slice(0,5).map(x=>`<div class="rp-item"><span class="rp-item-icon">✓</span><span>${x}</span></div>`).join('')}</div>
+           </div>
+         </div>
        </div>
-       <div class="rp-card improve">
-         <div class="rp-heading">📌 جوانب تحتاج إلى تطوير</div>
-         <div class="rp-list">${(improvements.length?improvements:['لا توجد ملاحظات جوهرية حاليًا']).slice(0,5).map(x=>`<div class="rp-item"><span class="rp-item-icon">!</span><span>${x}</span></div>`).join('')}</div>
+
+       <div class="rp-section">
+         <div class="rp-section-head">📌 جوانب تحتاج إلى تطوير</div>
+         <div class="rp-section-body">
+           <div class="rp-card">
+             <div class="rp-list">${(improvements.length?improvements:['لا توجد ملاحظات جوهرية حاليًا']).slice(0,5).map(x=>`<div class="rp-item"><span class="rp-item-icon">!</span><span>${x}</span></div>`).join('')}</div>
+           </div>
+         </div>
        </div>
      </div>
 
      <div class="rp-bottom">
-       <div class="rp-card">
-         <div class="rp-heading">🕘 آخر السلوكيات والنشاطات</div>
-         <div class="rp-events">${(logs.length?logs.slice(0,4):[]).map(l=>`<div class="rp-event"><div class="rp-event-title">${l.name}</div><div class="rp-event-date">${new Date(l.date).toLocaleString('ar-SA')}</div></div>`).join('') || '<div style="color:#7b8795;font-size:8pt">لا توجد نشاطات مسجلة بعد</div>'}</div>
+       <div class="rp-section">
+         <div class="rp-section-head">🕘 آخر السلوكيات والنشاطات</div>
+         <div class="rp-section-body">
+           <div class="rp-events">${(logs.length?logs.slice(0,4):[]).map(l=>`<div class="rp-event"><div class="rp-event-title">${l.name}</div><div class="rp-event-date">${new Date(l.date).toLocaleString('ar-SA')}</div></div>`).join('') || '<div style="color:#7b8795;font-size:8pt">لا توجد نشاطات مسجلة بعد</div>'}</div>
+         </div>
        </div>
+
        <div class="rp-analysis">
          <div class="rp-analysis-title">تحليل أداء الطالب</div>
          <div class="rp-analysis-text">${smartAnalysis}</div>
@@ -6228,6 +6495,7 @@ function renderReport(id){
        <div class="rp-signature">توقيع المعلم</div>
        <div class="rp-signature">توقيع ولي الأمر</div>
      </div>
+
    </div>
  </div>`)
 
