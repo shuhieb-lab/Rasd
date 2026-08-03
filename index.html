@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.4</title>
+<title>رَصْد — v1.5</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -1842,6 +1842,210 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   .week-badge{grid-column:1/-1;justify-self:start}
 }
 
+
+/* ===== الحصة المباشرة v1.5 ===== */
+.live-session-page{
+  padding-bottom:18px;
+}
+.live-session-header{
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:#f5f8fbee;
+  backdrop-filter:blur(10px);
+  padding-bottom:10px;
+}
+.live-session-top{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;
+  align-items:center;
+  background:linear-gradient(135deg,#17324d,#0f766e);
+  color:#fff;
+  border-radius:18px;
+  padding:13px;
+  box-shadow:0 8px 22px #17324d22;
+}
+.live-session-title{
+  font-size:19px;
+  font-weight:900;
+  margin-bottom:4px;
+}
+.live-session-time{
+  opacity:.84;
+  font-size:12px;
+}
+.live-end-btn{
+  border:0;
+  border-radius:13px;
+  background:#fee2e2;
+  color:#991b1b;
+  padding:11px 13px;
+  font-weight:900;
+}
+.live-stats{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:7px;
+  margin-top:9px;
+}
+.live-stat{
+  background:#fff;
+  border:1px solid #dbe5ea;
+  border-radius:13px;
+  padding:8px 4px;
+  text-align:center;
+}
+.live-stat span{
+  display:block;
+  color:#6b7280;
+  font-size:10px;
+}
+.live-stat b{
+  display:block;
+  color:#17324d;
+  margin-top:3px;
+  font-size:18px;
+}
+.live-search{
+  margin:10px 0;
+  position:relative;
+}
+.live-search input{
+  height:46px;
+  border-radius:14px;
+  padding-right:44px;
+}
+.live-search-icon{
+  position:absolute;
+  right:13px;
+  top:50%;
+  transform:translateY(-50%);
+  width:27px;height:27px;border-radius:9px;
+  background:#e8f6f3;color:#0f766e;
+  display:flex;align-items:center;justify-content:center;
+}
+.live-student-card{
+  background:#fff;
+  border:1px solid #dbe5ea;
+  border-radius:18px;
+  padding:11px;
+  margin-bottom:9px;
+  box-shadow:0 5px 16px #17324d0b;
+  transition:.16s ease;
+}
+.live-student-card.live-flash{
+  transform:scale(1.01);
+  border-color:#6dd3c6;
+  box-shadow:0 0 0 5px #0f766e14;
+}
+.live-student-head{
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr) auto;
+  gap:10px;
+  align-items:center;
+  margin-bottom:9px;
+}
+.live-student-card .avatar-image,
+.live-student-card .avatar-letter{
+  width:54px!important;height:54px!important;flex-basis:54px!important;
+  font-size:21px!important;
+}
+.live-student-name{
+  font-weight:900;
+  font-size:16px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.live-student-meta{
+  display:flex;
+  gap:8px;
+  color:#6b7280;
+  font-size:11px;
+  margin-top:4px;
+}
+.live-status{
+  border:0;
+  border-radius:999px;
+  padding:7px 10px;
+  font-weight:900;
+  font-size:11px;
+}
+.live-status.present{background:#dcfce7;color:#166534}
+.live-status.late{background:#fef3c7;color:#92400e}
+.live-status.absent{background:#fee2e2;color:#991b1b}
+.live-actions-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px;
+}
+.live-action{
+  min-width:0;
+  min-height:54px;
+  border:1px solid #dbe5ea;
+  border-radius:12px;
+  background:#f9fbfc;
+  color:#17324d;
+  padding:6px 2px;
+  text-align:center;
+  font-size:10px;
+  font-weight:800;
+}
+.live-action .live-action-icon{
+  width:28px;height:28px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 4px;
+}
+.live-action.positive .live-action-icon{background:#e4f7eb;color:#15803d}
+.live-action.blue .live-action-icon{background:#e8f1ff;color:#2563eb}
+.live-action.amber .live-action-icon{background:#fff2cf;color:#d97706}
+.live-action.red .live-action-icon{background:#ffe3e3;color:#dc2626}
+.live-action.purple .live-action-icon{background:#efe8ff;color:#7c3aed}
+.live-action:active{
+  transform:scale(.96);
+}
+.live-empty{
+  text-align:center;
+  padding:25px 12px;
+  color:#6b7280;
+}
+.session-summary-hero{
+  background:linear-gradient(135deg,#17324d,#0f766e);
+  color:#fff;
+  border-radius:20px;
+  padding:16px;
+  margin-bottom:12px;
+}
+.session-summary-hero h2{margin:0 0 5px}
+.session-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+}
+.session-summary-item{
+  background:#fff;
+  border:1px solid #dbe5ea;
+  border-radius:14px;
+  padding:11px;
+  text-align:center;
+}
+.session-summary-item span{display:block;color:#6b7280;font-size:11px}
+.session-summary-item b{display:block;font-size:22px;margin-top:5px;color:#17324d}
+.session-top-student{
+  display:flex;align-items:center;gap:10px;
+  background:#fff9e6;border:1px solid #f4d77a;
+  border-radius:15px;padding:11px;margin-top:10px;
+}
+.session-top-student .avatar-image,
+.session-top-student .avatar-letter{
+  width:48px!important;height:48px!important;flex-basis:48px!important;
+}
+@media(max-width:390px){
+  .live-actions-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  .live-action{font-size:9px;min-height:51px}
+}
+
 </style>
 </head>
 <body>
@@ -1877,7 +2081,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.4';
+const APP_VERSION='v1.5';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -2241,56 +2445,253 @@ function showSessionSummary(session){
 }
 
 function renderSession(){
- const c=data.classes.find(x=>x.id===currentSession?.classId);
- if(!c){page='home';return render()}
- setTitle('الحصة','');
- const list=data.students.filter(s=>s.classId===c.id).sort((a,b)=>a.name.localeCompare(b.name,'ar'));
- const count=(status)=>list.filter(s=>(currentSession.attendance?.[s.id]||'present')===status).length;
- view.innerHTML=`<div class="session-toolbar">
-   <div class="grow"><div class="class-title">${c.name}</div><div class="muted">الحصة ${currentSession.period}</div></div>
-   <button class="btn danger" id="endSession">إنهاء الحصة</button>
- </div>
- <div class="session-stats">
-   <div class="session-stat"><span>حاضر</span><b>${count('present')}</b></div>
-   <div class="session-stat"><span>متأخر</span><b>${count('late')}</b></div>
-   <div class="session-stat"><span>غائب</span><b>${count('absent')}</b></div>
- </div>
- ${list.map(s=>{
-   const st=sessionStatus(s.id),label=st==='absent'?'غائب':st==='late'?'متأخر':'حاضر';
-   const lvl=studentLevel(s.id);
-   const abs=data.sessions.filter(se=>se.attendance?.[s.id]==='absent').length;
-   const late=data.sessions.filter(se=>se.attendance?.[s.id]==='late').length;
-   return `<div class="student-compact">
-     ${avatarHtml(s)}
-     <div class="student-compact-main">
-       <div class="student-compact-top">
-         <div class="session-name">${s.name}</div>
-         <span class="student-level ${lvl.cls}">${lvl.label}</span>
-       </div>
-       <div class="student-mini-stats">
-         <div class="student-mini-stat"><span class="icon3d amber">⭐</span>${totalPoints(s.id)}</div>
-         <div class="student-mini-stat"><span class="icon3d green">📘</span>${taskPoints(s.id)}/20</div>
-         <div class="student-mini-stat"><span class="icon3d red">✖</span>${abs}</div>
-         <div class="student-mini-stat"><span class="icon3d amber">◷</span>${late}</div>
-       </div>
-     </div>
-     <div class="student-card-actions">
-       <button class="session-status-btn ${st}" data-status="${s.id}">${label}</button>
-       <button class="eval-btn" data-eval="${s.id}">تقييم</button>
-     </div>
-   </div>`;
- }).join('')}`;
- document.querySelectorAll('[data-status]').forEach(b=>b.onclick=e=>{e.stopPropagation();toggleAttendance(b.dataset.status)});
- document.querySelectorAll('[data-eval]').forEach(b=>b.onclick=e=>{e.stopPropagation();quickEvaluationCompact(b.dataset.eval)});
- document.getElementById('endSession').onclick=()=>{
-   currentSession.ended=true;
-   currentSession.endedAt=new Date().toISOString();
-   save();
-   const finished={...currentSession,attendance:{...currentSession.attendance}};
-   currentSession=null;
-   showSessionSummary(finished);
+ if(!currentSession){
+   page='students';
+   return render();
+ }
+
+ document.body.classList.add('focus-mode');
+ const c=data.classes.find(x=>x.id===currentSession.classId);
+ const list=data.students.filter(s=>s.classId===currentSession.classId).sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+ const startedAt=new Date(currentSession.startedAt||currentSession.date||Date.now());
+
+ const ensureStats=()=>{
+   if(!currentSession.liveStats){
+     currentSession.liveStats={pointsAdded:0,actions:0};
+   }
  };
+
+ const statusOf=id=>currentSession.attendance?.[id]||'present';
+
+ const draw=()=>{
+   ensureStats();
+   const present=list.filter(s=>statusOf(s.id)==='present').length;
+   const late=list.filter(s=>statusOf(s.id)==='late').length;
+   const absent=list.filter(s=>statusOf(s.id)==='absent').length;
+
+   view.innerHTML=`
+   <div class="live-session-page">
+     <div class="live-session-header">
+       <div class="live-session-top">
+         <div>
+           <div class="live-session-title">${c?.name||'الحصة المباشرة'}</div>
+           <div class="live-session-time" id="liveTimer">00:00</div>
+         </div>
+         <button class="live-end-btn" id="endLiveSession">إنهاء الحصة</button>
+       </div>
+
+       <div class="live-stats">
+         <div class="live-stat"><span>حاضر</span><b>${present}</b></div>
+         <div class="live-stat"><span>متأخر</span><b>${late}</b></div>
+         <div class="live-stat"><span>غائب</span><b>${absent}</b></div>
+         <div class="live-stat"><span>النقاط المضافة</span><b>${currentSession.liveStats.pointsAdded||0}</b></div>
+       </div>
+
+       <div class="live-search">
+         <span class="live-search-icon">${rasdIcon('search',16)}</span>
+         <input id="liveStudentSearch" placeholder="ابحث عن طالب">
+       </div>
+     </div>
+
+     <div id="liveStudentsList"></div>
+   </div>`;
+
+   const renderCards=(items)=>{
+     const holder=document.getElementById('liveStudentsList');
+     if(!items.length){
+       holder.innerHTML='<div class="live-empty">لا يوجد طلاب مطابقون</div>';
+       return;
+     }
+
+     holder.innerHTML=items.map(s=>{
+       const status=statusOf(s.id);
+       return `<div class="live-student-card" data-live-card="${s.id}">
+         <div class="live-student-head">
+           ${avatarHtml(s)}
+           <div data-open-profile="${s.id}">
+             <div class="live-student-name">${s.name}</div>
+             <div class="live-student-meta">
+               <span>${totalPoints(s.id)} نقطة</span>
+               <span>${taskPoints(s.id)}/20 مهام</span>
+             </div>
+           </div>
+           <button class="live-status ${status}" data-status-id="${s.id}">
+             ${status==='present'?'حاضر':status==='late'?'متأخر':'غائب'}
+           </button>
+         </div>
+
+         <div class="live-actions-grid">
+           <button class="live-action positive" data-live-action="participation1" data-student-id="${s.id}">
+             <span class="live-action-icon">${rasdIcon('star',16)}</span>مشاركة +1
+           </button>
+           <button class="live-action purple" data-live-action="participation2" data-student-id="${s.id}">
+             <span class="live-action-icon">${rasdIcon('star',16)}</span>مميزة +2
+           </button>
+           <button class="live-action blue" data-live-action="task" data-student-id="${s.id}">
+             <span class="live-action-icon">${rasdIcon('task',16)}</span>أنجز
+           </button>
+           <button class="live-action positive" data-live-action="excellent" data-student-id="${s.id}">
+             <span class="live-action-icon">${rasdIcon('eval',16)}</span>ممتاز
+           </button>
+           <button class="live-action amber" data-live-action="late" data-student-id="${s.id}">
+             <span class="live-action-icon">${rasdIcon('late',16)}</span>متأخر
+           </button>
+           <button class="live-action red" data-live-action="absent" data-student-id="${s.id}">
+             <span class="live-action-icon">${rasdIcon('absent',16)}</span>غائب
+           </button>
+           <button class="live-action amber" data-live-action="warning" data-student-id="${s.id}">
+             <span class="live-action-icon">${rasdIcon('late',16)}</span>تنبيه
+           </button>
+           <button class="live-action red" data-live-action="violation" data-student-id="${s.id}">
+             <span class="live-action-icon">${rasdIcon('absent',16)}</span>مخالفة
+           </button>
+         </div>
+       </div>`;
+     }).join('');
+
+     document.querySelectorAll('[data-live-action]').forEach(btn=>{
+       btn.onclick=()=>{
+         const studentId=btn.dataset.studentId;
+         const action=btn.dataset.liveAction;
+         applyLiveAction(studentId,action);
+       };
+     });
+
+     document.querySelectorAll('[data-status-id]').forEach(btn=>{
+       btn.onclick=()=>{
+         const id=btn.dataset.statusId;
+         const current=statusOf(id);
+         const next=current==='present'?'late':current==='late'?'absent':'present';
+         currentSession.attendance=currentSession.attendance||{};
+         currentSession.attendance[id]=next;
+         save();
+         draw();
+       };
+     });
+
+     document.querySelectorAll('[data-open-profile]').forEach(el=>{
+       el.onclick=()=>{
+         window.reportStudentId=el.dataset.openProfile;
+         page='report';
+         document.body.classList.remove('focus-mode');
+         render();
+       };
+     });
+   };
+
+   renderCards(list);
+
+   document.getElementById('liveStudentSearch').oninput=e=>{
+     const q=e.target.value.trim();
+     renderCards(list.filter(s=>s.name.includes(q)));
+   };
+
+   document.getElementById('endLiveSession').onclick=showLiveSessionSummary;
+
+   const updateTimer=()=>{
+     const diff=Math.max(0,Date.now()-startedAt.getTime());
+     const min=Math.floor(diff/60000);
+     const sec=Math.floor((diff%60000)/1000);
+     const el=document.getElementById('liveTimer');
+     if(el)el.textContent=`${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+   };
+   updateTimer();
+   clearInterval(window.liveTimerInterval);
+   window.liveTimerInterval=setInterval(updateTimer,1000);
+ };
+
+ const applyLiveAction=(studentId,action)=>{
+   ensureStats();
+   currentSession.liveStats.actions++;
+   let log=null;
+
+   if(action==='participation1')log={name:'مشاركة 1/5',value:1};
+   if(action==='participation2')log={name:'مشاركة مميزة',value:2};
+   if(action==='task')log={name:'أنجز المهمة',value:2,task:true};
+   if(action==='excellent')log={name:'سلوك ممتاز',value:2};
+   if(action==='warning')log={name:'تنبيه سلوكي',value:0};
+   if(action==='violation')log={name:'مخالفة سلوكية',value:-1};
+
+   if(action==='late'||action==='absent'){
+     currentSession.attendance=currentSession.attendance||{};
+     currentSession.attendance[studentId]=action;
+   }else if(log){
+     data.logs.push({
+       id:crypto.randomUUID(),
+       studentId,
+       sessionId:currentSession.id,
+       date:new Date().toISOString(),
+       ...log
+     });
+     currentSession.liveStats.pointsAdded+=(log.value||0);
+   }
+
+   save();
+   const card=document.querySelector(`[data-live-card="${studentId}"]`);
+   card?.classList.add('live-flash');
+   setTimeout(()=>card?.classList.remove('live-flash'),350);
+   draw();
+ };
+
+ window.showLiveSessionSummary=()=>{
+   clearInterval(window.liveTimerInterval);
+   const endedAt=new Date();
+   const duration=Math.max(1,Math.round((endedAt-startedAt)/60000));
+   const present=list.filter(s=>statusOf(s.id)==='present').length;
+   const late=list.filter(s=>statusOf(s.id)==='late').length;
+   const absent=list.filter(s=>statusOf(s.id)==='absent').length;
+   const sessionLogs=data.logs.filter(l=>l.sessionId===currentSession.id);
+   const byStudent={};
+   sessionLogs.forEach(l=>{
+     byStudent[l.studentId]=(byStudent[l.studentId]||0)+(l.value||0);
+   });
+   const topId=Object.entries(byStudent).sort((a,b)=>b[1]-a[1])[0]?.[0];
+   const topStudent=list.find(s=>s.id===topId);
+
+   openModal(`<div>
+     <div class="session-summary-hero">
+       <h2>ملخص الحصة</h2>
+       <div>${c?.name||''} · ${duration} دقيقة</div>
+     </div>
+
+     <div class="session-summary-grid">
+       <div class="session-summary-item"><span>الحاضرون</span><b>${present}</b></div>
+       <div class="session-summary-item"><span>المتأخرون</span><b>${late}</b></div>
+       <div class="session-summary-item"><span>الغائبون</span><b>${absent}</b></div>
+       <div class="session-summary-item"><span>النقاط المضافة</span><b>${currentSession.liveStats?.pointsAdded||0}</b></div>
+     </div>
+
+     ${topStudent?`<div class="session-top-student">
+       ${avatarHtml(topStudent)}
+       <div><b>الأكثر مشاركة</b><div>${topStudent.name} · ${byStudent[topStudent.id]} نقاط</div></div>
+     </div>`:''}
+
+     <div class="row" style="margin-top:13px">
+       <button class="btn" id="saveSessionSummary">حفظ الحصة</button>
+       <button class="btn light" id="continueSession">متابعة الحصة</button>
+     </div>
+   </div>`);
+
+   document.getElementById('continueSession').onclick=()=>{
+     closeModal();
+     draw();
+   };
+
+   document.getElementById('saveSessionSummary').onclick=()=>{
+     currentSession.endedAt=endedAt.toISOString();
+     save();
+     closeModal();
+     document.body.classList.remove('focus-mode');
+     page='students';
+     currentSession=null;
+     render();
+     toast('تم حفظ الحصة');
+   };
+ };
+
+ draw();
 }
+
 function renderClasses(){
  setTitle('الفصول','إدارة الصفوف');
  if(!data.classes.length){view.innerHTML='<div class="notice">لا توجد فصول مضافة بعد<br>اضغط على زر + لإضافة أول فصل</div>';return}
