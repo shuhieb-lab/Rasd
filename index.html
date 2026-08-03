@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.3.2</title>
+<title>رَصْد — v1.4</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -1662,6 +1662,186 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
 }
 #classDashboardBtn *{pointer-events:none!important}
 
+
+/* ===== لوحة الفصل الذكية v1.4 ===== */
+.class-health-card{
+  display:grid;
+  grid-template-columns:118px minmax(0,1fr);
+  gap:14px;
+  align-items:center;
+  background:#fff;
+  border:1px solid #dbe5ea;
+  border-radius:20px;
+  padding:14px;
+  margin-bottom:12px;
+}
+.health-ring{
+  width:108px;
+  height:108px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  background:conic-gradient(var(--ring-color) calc(var(--health)*1%),#e7edf1 0);
+}
+.health-ring::before{
+  content:'';
+  position:absolute;
+  width:78px;
+  height:78px;
+  border-radius:50%;
+  background:#fff;
+}
+.health-ring-content{
+  position:relative;
+  z-index:1;
+  text-align:center;
+}
+.health-ring-content b{
+  display:block;
+  font-size:24px;
+  color:#17324d;
+}
+.health-ring-content span{
+  font-size:10px;
+  color:#6b7280;
+}
+.health-title{
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+.health-bars{
+  display:grid;
+  gap:7px;
+}
+.health-row{
+  display:grid;
+  grid-template-columns:68px 1fr 38px;
+  align-items:center;
+  gap:7px;
+  font-size:11px;
+}
+.health-bar{
+  height:8px;
+  background:#e7edf1;
+  border-radius:999px;
+  overflow:hidden;
+}
+.health-bar > div{
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#0f766e,#45b7aa);
+}
+.week-student{
+  background:linear-gradient(135deg,#fff9e6,#fff3c4);
+  border:1px solid #f4d77a;
+  border-radius:18px;
+  padding:14px;
+  margin-bottom:12px;
+}
+.week-student-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+.week-student-body{
+  display:grid;
+  grid-template-columns:64px minmax(0,1fr) auto;
+  gap:11px;
+  align-items:center;
+}
+.week-student .avatar-image,
+.week-student .avatar-letter{
+  width:64px!important;
+  height:64px!important;
+  flex-basis:64px!important;
+}
+.week-student-name{
+  font-weight:900;
+  font-size:17px;
+}
+.week-student-reason{
+  color:#6b5b1e;
+  font-size:12px;
+  margin-top:4px;
+}
+.week-badge{
+  background:#fff;
+  border-radius:999px;
+  padding:7px 10px;
+  font-weight:900;
+  color:#a16207;
+  white-space:nowrap;
+}
+.smart-alerts{
+  display:grid;
+  gap:8px;
+}
+.smart-alert{
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr);
+  gap:10px;
+  align-items:start;
+  border:1px solid #e2e8ee;
+  border-radius:14px;
+  padding:10px;
+  background:#fff;
+}
+.smart-alert-icon{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.smart-alert.warn .smart-alert-icon{background:#fff2cf;color:#d97706}
+.smart-alert.danger .smart-alert-icon{background:#ffe3e3;color:#dc2626}
+.smart-alert.good .smart-alert-icon{background:#e2f7e9;color:#15803d}
+.smart-alert b{display:block;margin-bottom:3px}
+.smart-alert p{margin:0;color:#6b7280;font-size:12px}
+.last-activity-card{
+  display:grid;
+  grid-template-columns:50px minmax(0,1fr);
+  gap:11px;
+  align-items:center;
+  background:#f8fafc;
+  border:1px solid #dbe5ea;
+  border-radius:15px;
+  padding:11px;
+}
+.last-activity-icon{
+  width:50px;
+  height:50px;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#e8f6f3;
+  color:#0f766e;
+}
+.last-activity-title{font-weight:900}
+.last-activity-meta{font-size:12px;color:#6b7280;margin-top:4px}
+.class-achievement{
+  margin-top:10px;
+  border-radius:14px;
+  padding:10px 11px;
+  background:#eefbf7;
+  border:1px solid #cdeee4;
+  color:#0f615b;
+  font-weight:800;
+}
+@media(max-width:520px){
+  .class-health-card{grid-template-columns:102px minmax(0,1fr);padding:12px}
+  .health-ring{width:94px;height:94px}
+  .health-ring::before{width:68px;height:68px}
+  .week-student-body{grid-template-columns:56px minmax(0,1fr)}
+  .week-badge{grid-column:1/-1;justify-self:start}
+}
+
 </style>
 </head>
 <body>
@@ -1697,7 +1877,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.3.2';
+const APP_VERSION='v1.4';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -2250,24 +2430,51 @@ function renderClassDashboard(){
  const averagePoints=total?Math.round(list.reduce((sum,s)=>sum+totalPoints(s.id),0)/total):0;
  const averageTasks=total?Math.round(list.reduce((sum,s)=>sum+taskPoints(s.id),0)/total):0;
 
- let attendanceTotal=0,presentTotal=0;
+ let attendanceTotal=0,presentTotal=0,lateTotal=0,absentTotal=0;
  classSessions.forEach(se=>{
    list.forEach(s=>{
      attendanceTotal++;
-     if((se.attendance?.[s.id]||'present')==='present')presentTotal++;
+     const status=se.attendance?.[s.id]||'present';
+     if(status==='present')presentTotal++;
+     if(status==='late')lateTotal++;
+     if(status==='absent')absentTotal++;
    });
  });
  const attendanceRate=attendanceTotal?Math.round(presentTotal/attendanceTotal*100):0;
 
+ const behaviorPositive=classLogs.filter(l=>l.name==='سلوك ممتاز'||l.name==='سلوك جيد').length;
+ const behaviorNegative=classLogs.filter(l=>l.name==='تنبيه سلوكي'||l.name==='مخالفة سلوكية').length;
+ const behaviorTotal=behaviorPositive+behaviorNegative;
+ const behaviorRate=behaviorTotal?Math.round(behaviorPositive/behaviorTotal*100):100;
+
+ const participationLogs=classLogs.filter(l=>l.name?.startsWith('مشاركة'));
+ const participationMax=participationLogs.length*5;
+ const participationScore=participationLogs.reduce((sum,l)=>sum+(l.value||0),0);
+ const participationRate=participationMax?Math.round(participationScore/participationMax*100):0;
+
+ const taskRate=total?Math.round((averageTasks/20)*100):0;
+ const health=Math.round(
+   attendanceRate*.35+
+   taskRate*.25+
+   behaviorRate*.25+
+   participationRate*.15
+ );
+ const healthColor=health>=80?'#16a34a':health>=60?'#d97706':'#dc2626';
+ const healthLabel=health>=80?'ممتازة':health>=60?'جيدة':'تحتاج متابعة';
+
  const ranked=[...list].sort((a,b)=>totalPoints(b.id)-totalPoints(a.id));
  const topStudents=ranked.slice(0,3);
+ const weekStudent=ranked[0]||null;
+
  const followStudents=list
    .map(s=>{
      const abs=classSessions.filter(se=>se.attendance?.[s.id]==='absent').length;
      const late=classSessions.filter(se=>se.attendance?.[s.id]==='late').length;
-     return {student:s,points:totalPoints(s.id),abs,late,score:(abs*3)+(late*2)-totalPoints(s.id)};
+     const recent=data.logs.filter(l=>l.studentId===s.id).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+     const missedTasks=recent.filter(l=>l.task && l.value<=0).length;
+     return {student:s,points:totalPoints(s.id),abs,late,missedTasks,score:(abs*3)+(late*2)+(missedTasks*2)-totalPoints(s.id)};
    })
-   .filter(x=>x.points<8 || x.abs>=2 || x.late>=3)
+   .filter(x=>x.points<8 || x.abs>=2 || x.late>=3 || x.missedTasks>=2)
    .sort((a,b)=>b.score-a.score)
    .slice(0,5);
 
@@ -2278,7 +2485,26 @@ function renderClassDashboard(){
    violation:classLogs.filter(l=>l.name==='مخالفة سلوكية').length
  };
  const maxBehavior=Math.max(1,...Object.values(behaviorCounts));
- const recentLogs=[...classLogs].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,6);
+
+ const recentLogs=[...classLogs].sort((a,b)=>b.date.localeCompare(a.date));
+ const latestLog=recentLogs[0];
+ const latestSession=[...classSessions].sort((a,b)=>(b.startedAt||b.date||'').localeCompare(a.startedAt||a.date||''))[0];
+
+ const smartAlerts=[];
+ followStudents.forEach(x=>{
+   if(x.missedTasks>=2)smartAlerts.push({type:'warn',title:x.student.name,text:`لم ينجز ${x.missedTasks} من آخر المهام المسجلة.`});
+   else if(x.abs>=2)smartAlerts.push({type:'danger',title:x.student.name,text:`سُجل عليه ${x.abs} حالات غياب.`});
+   else if(x.late>=3)smartAlerts.push({type:'warn',title:x.student.name,text:`تأخر ${x.late} مرات.`});
+   else smartAlerts.push({type:'warn',title:x.student.name,text:'مجموع نقاطه منخفض ويحتاج تشجيعاً إضافياً.'});
+ });
+ if(health>=80)smartAlerts.unshift({type:'good',title:'أداء الفصل جيد',text:'مؤشرات الحضور والسلوك والمهام في مستوى مطمئن.'});
+ if(!smartAlerts.length)smartAlerts.push({type:'good',title:'لا توجد تنبيهات',text:'بيانات الفصل الحالية لا تشير إلى مشكلات تحتاج تدخلاً.'});
+
+ const noLateCount=list.filter(s=>classSessions.filter(se=>se.attendance?.[s.id]==='late').length===0).length;
+ const highPointsCount=list.filter(s=>totalPoints(s.id)>=20).length;
+ const achievement=highPointsCount>0
+   ?`${highPointsCount} طلاب حصلوا على 20 نقطة أو أكثر`
+   :`${noLateCount} طلاب لم يسجل عليهم أي تأخر`;
 
  view.innerHTML=`
  <div class="dashboard-topbar">
@@ -2292,6 +2518,24 @@ function renderClassDashboard(){
    <h2>${c.name}</h2>
    <div>${c.stage||''}</div>
    <div style="margin-top:8px;opacity:.85">${total} طالب في الفصل</div>
+ </div>
+
+ <div class="class-health-card">
+   <div class="health-ring" style="--health:${health};--ring-color:${healthColor}">
+     <div class="health-ring-content">
+       <b>${health}%</b>
+       <span>أداء الفصل</span>
+     </div>
+   </div>
+   <div>
+     <div class="health-title">صحة الفصل: ${healthLabel}</div>
+     <div class="health-bars">
+       <div class="health-row"><span>الحضور</span><div class="health-bar"><div style="width:${attendanceRate}%"></div></div><b>${attendanceRate}%</b></div>
+       <div class="health-row"><span>المهام</span><div class="health-bar"><div style="width:${taskRate}%"></div></div><b>${taskRate}%</b></div>
+       <div class="health-row"><span>السلوك</span><div class="health-bar"><div style="width:${behaviorRate}%"></div></div><b>${behaviorRate}%</b></div>
+       <div class="health-row"><span>المشاركة</span><div class="health-bar"><div style="width:${participationRate}%"></div></div><b>${participationRate}%</b></div>
+     </div>
+   </div>
  </div>
 
  <div class="dashboard-summary">
@@ -2311,6 +2555,46 @@ function renderClassDashboard(){
      <div class="metric-icon">${rasdIcon('task',18)}</div>
      <span>متوسط المهام</span><b>${averageTasks}/20</b>
    </div>
+ </div>
+
+ ${weekStudent?`
+ <div class="week-student" data-dashboard-student="${weekStudent.id}">
+   <div class="week-student-head">
+     <h3 style="margin:0">طالب الأسبوع</h3>
+     <span>🏆</span>
+   </div>
+   <div class="week-student-body">
+     ${avatarHtml(weekStudent)}
+     <div>
+       <div class="week-student-name">${weekStudent.name}</div>
+       <div class="week-student-reason">حقق أعلى مجموع نقاط في الفصل خلال البيانات الحالية.</div>
+     </div>
+     <span class="week-badge">${totalPoints(weekStudent.id)} نقطة</span>
+   </div>
+ </div>`:''}
+
+ <div class="dashboard-section">
+   <h3>التنبيهات الذكية</h3>
+   <div class="smart-alerts">
+     ${smartAlerts.slice(0,5).map(a=>`
+       <div class="smart-alert ${a.type}">
+         <div class="smart-alert-icon">${a.type==='good'?rasdIcon('star',19):a.type==='danger'?rasdIcon('absent',19):rasdIcon('late',19)}</div>
+         <div><b>${a.title}</b><p>${a.text}</p></div>
+       </div>
+     `).join('')}
+   </div>
+ </div>
+
+ <div class="dashboard-section">
+   <h3>آخر نشاط</h3>
+   <div class="last-activity-card">
+     <div class="last-activity-icon">${rasdIcon('eval',22)}</div>
+     <div>
+       <div class="last-activity-title">${latestLog?`${data.students.find(s=>s.id===latestLog.studentId)?.name||'طالب'} — ${latestLog.name}`:'لا توجد نشاطات بعد'}</div>
+       <div class="last-activity-meta">${latestLog?new Date(latestLog.date).toLocaleString('ar-SA'):'ابدأ بتقييم الطلاب لتظهر النشاطات هنا'}</div>
+     </div>
+   </div>
+   <div class="class-achievement">${achievement}</div>
  </div>
 
  <div class="dashboard-section">
@@ -2337,7 +2621,9 @@ function renderClassDashboard(){
          ${avatarHtml(x.student)}
          <div>
            <div class="dashboard-student-name">${x.student.name}</div>
-           <div class="dashboard-student-sub">${x.abs} غياب · ${x.late} تأخر</div>
+           <div class="dashboard-student-sub">
+             ${x.missedTasks>=2?`لم ينجز ${x.missedTasks} مهام`:x.abs>=2?`${x.abs} غياب`:x.late>=3?`${x.late} تأخر`:'نقاط منخفضة'}
+           </div>
          </div>
          <span class="dashboard-rank watch">${x.points} نقطة</span>
        </div>
@@ -2348,36 +2634,17 @@ function renderClassDashboard(){
  <div class="dashboard-section">
    <h3>ملخص السلوك</h3>
    <div class="dashboard-progress-row">
-     <span>ممتاز</span>
-     <div class="dashboard-progress"><div style="width:${Math.round(behaviorCounts.excellent/maxBehavior*100)}%"></div></div>
-     <b>${behaviorCounts.excellent}</b>
+     <span>ممتاز</span><div class="dashboard-progress"><div style="width:${Math.round(behaviorCounts.excellent/maxBehavior*100)}%"></div></div><b>${behaviorCounts.excellent}</b>
    </div>
    <div class="dashboard-progress-row">
-     <span>جيد</span>
-     <div class="dashboard-progress"><div style="width:${Math.round(behaviorCounts.good/maxBehavior*100)}%"></div></div>
-     <b>${behaviorCounts.good}</b>
+     <span>جيد</span><div class="dashboard-progress"><div style="width:${Math.round(behaviorCounts.good/maxBehavior*100)}%"></div></div><b>${behaviorCounts.good}</b>
    </div>
    <div class="dashboard-progress-row">
-     <span>تنبيه</span>
-     <div class="dashboard-progress"><div style="width:${Math.round(behaviorCounts.warning/maxBehavior*100)}%"></div></div>
-     <b>${behaviorCounts.warning}</b>
+     <span>تنبيه</span><div class="dashboard-progress"><div style="width:${Math.round(behaviorCounts.warning/maxBehavior*100)}%"></div></div><b>${behaviorCounts.warning}</b>
    </div>
    <div class="dashboard-progress-row">
-     <span>مخالفة</span>
-     <div class="dashboard-progress"><div style="width:${Math.round(behaviorCounts.violation/maxBehavior*100)}%"></div></div>
-     <b>${behaviorCounts.violation}</b>
+     <span>مخالفة</span><div class="dashboard-progress"><div style="width:${Math.round(behaviorCounts.violation/maxBehavior*100)}%"></div></div><b>${behaviorCounts.violation}</b>
    </div>
- </div>
-
- <div class="dashboard-section">
-   <h3>آخر النشاطات</h3>
-   ${recentLogs.length?recentLogs.map(l=>{
-     const student=data.students.find(s=>s.id===l.studentId);
-     return `<div class="dashboard-activity">
-       <b>${student?.name||'طالب'} — ${l.name}</b>
-       <small>${new Date(l.date).toLocaleString('ar-SA')}</small>
-     </div>`;
-   }).join(''):'<div class="dashboard-empty">لا توجد نشاطات مسجلة بعد</div>'}
  </div>
 
  <button class="btn light" id="dashboardBackBottom" style="width:100%">العودة إلى الطلاب</button>`;
@@ -2394,6 +2661,7 @@ function renderClassDashboard(){
    };
  });
 }
+
 
 function studentLevel(studentId){
  const pts=totalPoints(studentId);
