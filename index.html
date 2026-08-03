@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v4.6</title>
+<title>رَصْد — v4.7</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -5300,6 +5300,42 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   }
 }
 
+
+/* ===== انتظار اختيار الفصل في صفحة الاختبارات v4.7 ===== */
+.exam-select-placeholder{
+  min-height:285px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:7px;
+  padding:24px;
+  border:1px dashed #b9cdd5;
+  border-radius:20px;
+  background:linear-gradient(145deg,#fbfcfd,#f3f8f9);
+  color:#64748b;
+}
+.exam-select-placeholder-icon{
+  width:72px;
+  height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:22px;
+  background:#e7f5f2;
+  font-size:34px;
+  margin-bottom:5px;
+}
+.exam-select-placeholder b{
+  color:#17324d;
+  font-size:18px;
+}
+.exam-select-placeholder p{
+  margin:0;
+  font-size:13px;
+}
+
 </style>
 </head>
 <body>
@@ -5354,7 +5390,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v4.6';
+const APP_VERSION='v4.7';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -7328,27 +7364,24 @@ function buildExamDraft(classId){
  return draft
 }
 function renderExams(){
- let classId=data.selectedClass||data.classes[0]?.id||null;
+ let classId=window.examSelectedClassId||null;
  const c=data.classes.find(x=>x.id===classId);
- setTitle('الاختبارات',c?c.name:'اختر فصلاً');
+ setTitle('الاختبارات',c?c.name:'اختر الفصل أولاً');
 
  if(!data.classes.length){
   view.innerHTML='<div class="notice">أضف فصلاً أولاً من شاشة الفصول</div>';
   return;
  }
 
- if(!classId){
-  classId=data.classes[0].id;
-  data.selectedClass=classId;
- }
+ const classStudents=classId
+  ? data.students
+      .filter(s=>s.classId===classId)
+      .sort((a,b)=>a.name.localeCompare(b.name,'ar'))
+  : [];
 
- const classStudents=data.students
-  .filter(s=>s.classId===classId)
-  .sort((a,b)=>a.name.localeCompare(b.name,'ar'));
-
- let draft=loadExamDraft(classId);
+ let draft=classId?loadExamDraft(classId):null;
  const hasDraft=!!draft;
- if(!draft)draft=buildExamDraft(classId);
+ if(classId&&!draft)draft=buildExamDraft(classId);
 
  const rows=classStudents.map(s=>{
   const d=draft.students?.[s.id]||{p1:'',p2:'',final:''};
@@ -7367,17 +7400,24 @@ function renderExams(){
      <div class="field">
        <label>الفصل</label>
        <select id="examClassSelect">
+         <option value="" ${classId?'':'selected'} disabled>اختر الفصل</option>
          ${data.classes.map(x=>`<option value="${x.id}" ${x.id===classId?'selected':''}>${x.name}</option>`).join('')}
        </select>
      </div>
-     <div class="students-count">${classStudents.length} طالب</div>
+     <div class="students-count">${classId?`${classStudents.length} طالب`:'اختر الفصل'}</div>
    </div>
 
-   <div id="examDraftStatus" class="exam-draft-status ${hasDraft?'dirty':'clean'}">
+   ${classId?`<div id="examDraftStatus" class="exam-draft-status ${hasDraft?'dirty':'clean'}">
      ${hasDraft?'🟡 توجد درجات محفوظة كمسودة وغير معتمدة':'✅ لا توجد تعديلات غير معتمدة'}
-   </div>
+   </div>`:''}
 
-   ${classStudents.length?`
+   ${!classId?`
+   <div class="exam-select-placeholder">
+     <div class="exam-select-placeholder-icon">📝</div>
+     <b>اختر الفصل لعرض الطلاب والدرجات</b>
+     <p>لن تظهر أي درجات قبل تحديد الفصل من القائمة أعلاه.</p>
+   </div>
+   `:classStudents.length?`
    <div class="exam-table-wrap">
      <table class="exam-table">
        <thead><tr><th>الطالب</th><th>الفتري الأول /20</th><th>الفتري الثاني /20</th><th>نهاية الفصل /40</th></tr></thead>
@@ -7387,18 +7427,21 @@ function renderExams(){
    <div class="exam-save-note">تُحفظ كل درجة تلقائيًا كمسودة على الجهاز، ولا تظهر في التقارير إلا بعد اعتماد الدرجات.</div>
    `:'<div class="notice">لا يوجد طلاب في هذا الفصل</div>'}
 
-   <div class="exam-actions-bar">
+   ${classId?`<div class="exam-actions-bar">
      <button class="btn light" id="discardExamDraft" ${hasDraft?'':'disabled'}>إلغاء المسودة</button>
      <button class="btn" id="approveExamGrades" ${classStudents.length?'':'disabled'}>✓ اعتماد الدرجات</button>
-   </div>
+   </div>`:''}
  </div>`;
 
  const classSelect=document.getElementById('examClassSelect');
  classSelect.onchange=()=>{
+  window.examSelectedClassId=classSelect.value;
   data.selectedClass=classSelect.value;
   save();
   renderExams();
  };
+
+ if(!classId)return;
 
  const inputs=[...document.querySelectorAll('.exam-score')];
  const status=document.getElementById('examDraftStatus');
@@ -8048,7 +8091,11 @@ function renderReport(id){
 }
 
 document.getElementById('fab').onclick=()=>page==='classes'?addClass():addStudent();
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{page=b.dataset.page;render()});
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+ if(b.dataset.page==='exams')window.examSelectedClassId=null;
+ page=b.dataset.page;
+ render()
+});
 setTimeout(()=>document.getElementById('splash').classList.add('hidden'),1400);
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 
