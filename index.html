@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v0.7</title>
+<title>رَصْد — v0.7.1</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -166,6 +166,122 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
 .compact-footer{display:flex;align-items:center;gap:7px;margin-top:10px}
 .compact-total{flex:1;background:#f8fafc;border:1px solid var(--border);border-radius:11px;padding:9px}
 
+
+/* ===== شاشة الطلاب v0.7.1 ===== */
+.students-page-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin-bottom:12px
+}
+.students-count{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 11px;border-radius:999px;
+  background:#e8f6f3;color:#08756c;font-weight:900;font-size:13px
+}
+.students-actions{
+  display:grid;grid-template-columns:1.15fr 1fr;gap:10px;margin-bottom:12px
+}
+.action-tile{
+  border:0;border-radius:18px;padding:12px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-weight:900;min-height:62px
+}
+.action-tile.primary{
+  color:#fff;background:linear-gradient(145deg,#0f8b7f,#087269);
+  box-shadow:0 9px 20px #0f766e2e
+}
+.action-tile.soft{
+  color:#0d6f68;background:linear-gradient(145deg,#effbf8,#dcf3ee);
+  border:1px solid #cce8e2
+}
+.rasd-icon{
+  width:38px;height:38px;border-radius:12px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:21px;flex:0 0 38px;
+  box-shadow:inset 0 1px 0 #fff9,0 5px 12px #13243b16
+}
+.rasd-icon.green{background:linear-gradient(145deg,#dff8e9,#bfeccf)}
+.rasd-icon.blue{background:linear-gradient(145deg,#e8f1ff,#cadcff)}
+.rasd-icon.amber{background:linear-gradient(145deg,#fff4d8,#ffe0a0)}
+.rasd-icon.red{background:linear-gradient(145deg,#ffe8e8,#ffcaca)}
+.rasd-icon.purple{background:linear-gradient(145deg,#f2ebff,#ddceff)}
+.students-search{
+  position:relative;margin-bottom:12px
+}
+.students-search input{
+  height:54px;padding:12px 48px 12px 14px;
+  border-radius:17px;background:#fff;
+  box-shadow:0 5px 16px #17324d0b
+}
+.students-search .search-symbol{
+  position:absolute;right:15px;top:50%;transform:translateY(-50%);
+  width:28px;height:28px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  background:#e9f5f3;color:#0f766e;font-size:16px
+}
+.student-premium-card{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;
+  gap:12px;align-items:center;background:#fff;
+  border:1px solid #dce6ec;border-radius:22px;
+  padding:14px;margin-bottom:11px;
+  box-shadow:0 8px 24px #17324d0c
+}
+.student-premium-card .avatar-image,
+.student-premium-card .avatar-letter{
+  width:68px;height:68px;flex-basis:68px
+}
+.student-main{min-width:0}
+.student-title-row{
+  display:flex;align-items:center;gap:7px;margin-bottom:8px;min-width:0
+}
+.student-title-row .student-name{
+  font-size:18px;min-width:0;flex:1
+}
+.student-level-badge{
+  padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900;
+  white-space:nowrap
+}
+.student-level-badge.excellent{background:#dcfce7;color:#166534}
+.student-level-badge.good{background:#e0f2fe;color:#075985}
+.student-level-badge.follow{background:#fef3c7;color:#92400e}
+.student-stats-new{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px
+}
+.student-stat-new{
+  min-width:0;padding:6px 3px;border:1px solid #e1e9ee;
+  border-radius:11px;background:#f9fbfc;text-align:center;
+  font-size:11px;color:#586678
+}
+.student-stat-new .mini-icon{
+  display:block;font-size:17px;line-height:1;margin-bottom:3px
+}
+.student-side-actions{
+  display:flex;flex-direction:column;gap:7px;align-items:stretch
+}
+.student-evaluate-btn{
+  border:0;border-radius:12px;padding:9px 10px;
+  background:linear-gradient(145deg,#e8f7f4,#d3eee9);
+  color:#08756c;font-weight:900;min-width:68px
+}
+.student-menu-btn{
+  border:1px solid #dce6ec;border-radius:12px;
+  background:#fff;color:#17324d;padding:7px 10px;font-size:18px
+}
+.empty-students{
+  text-align:center;padding:32px 18px;border-radius:20px;
+  border:1px dashed #cbd9e1;background:#fff;color:#64748b
+}
+.empty-students .empty-icon{
+  width:66px;height:66px;margin:0 auto 12px;border-radius:20px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:34px;background:linear-gradient(145deg,#e8f1ff,#d4e2ff)
+}
+@media(max-width:520px){
+  .student-premium-card{grid-template-columns:auto minmax(0,1fr);padding:12px}
+  .student-side-actions{grid-column:1/-1;flex-direction:row}
+  .student-side-actions button{flex:1}
+  .student-stats-new{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
 @media(max-width:520px){.grid{grid-template-columns:repeat(2,1fr)} .class-title{font-size:19px} .beh-grid{grid-template-columns:1fr 1fr}}
 @media print{header,nav,.fab,.no-print{display:none!important} body{background:#fff} .app{padding:0;max-width:none} main{padding:0} .report{border:0}}
 </style>
@@ -203,7 +319,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v0.7';
+const APP_VERSION='v0.7.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -548,24 +664,101 @@ function renderStudents(){
  const c=cls(); if(!c){page='classes';return render()}
  setTitle(c.name,c.stage);
  const list=students();
- view.innerHTML=`<div class="row" style="margin-bottom:10px"><button class="btn grow" id="startAny">بدء حصة</button><button class="btn secondary grow" id="bulkBtn">إضافة جماعية</button></div>
- <div class="searchbar"><input id="studentSearch" placeholder="ابحث عن طالب بالاسم"></div>
+
+ view.innerHTML=`
+ <div class="students-page-head">
+   <div>
+     <div class="class-title">${c.name}</div>
+     <div class="muted">${c.stage||''}</div>
+   </div>
+   <div class="students-count"><span>👥</span><span>${list.length} طالب</span></div>
+ </div>
+
+ <div class="students-actions">
+   <button class="action-tile primary" id="startAny">
+     <span class="rasd-icon green">▶</span>
+     <span>بدء حصة</span>
+   </button>
+   <button class="action-tile soft" id="bulkBtn">
+     <span class="rasd-icon blue">👥＋</span>
+     <span>إضافة جماعية</span>
+   </button>
+ </div>
+
+ <div class="students-search">
+   <span class="search-symbol">⌕</span>
+   <input id="studentSearch" placeholder="ابحث عن طالب بالاسم">
+ </div>
+
  <div id="studentList" class="student-grid"></div>`;
+
  const draw=(items)=>{
-   document.getElementById('studentList').innerHTML=items.length?items.map(s=>{
+   const holder=document.getElementById('studentList');
+
+   if(!items.length){
+     holder.innerHTML=`<div class="empty-students">
+       <div class="empty-icon">👨‍🎓</div>
+       <b>لا يوجد طلاب مطابقون</b>
+       <div style="margin-top:6px">استخدم زر الإضافة لإضافة طالب جديد</div>
+     </div>`;
+     return;
+   }
+
+   holder.innerHTML=items.map(s=>{
      const abs=data.sessions.filter(se=>se.attendance?.[s.id]==='absent').length;
      const late=data.sessions.filter(se=>se.attendance?.[s.id]==='late').length;
-     return `<div class="card student-card-rich" data-student="${s.id}">${avatarHtml(s)}<div class="student-info"><div class="student-name">${s.name}</div><div class="student-meta"><span>⭐ ${totalPoints(s.id)} نقطة</span><span>🧪 ${taskPoints(s.id)}/20 مهام</span><span>❌ ${abs} غياب</span><span>⏰ ${late} تأخر</span></div></div><button class="btn light student-actions" data-id="${s.id}">⋮</button></div>`
-   }).join(''):'<div class="notice">لا يوجد طلاب مطابقون</div>';
-   document.querySelectorAll('.student-actions').forEach(b=>b.onclick=e=>{e.stopPropagation();studentActions(b.dataset.id)});
-   document.querySelectorAll('[data-student]').forEach(card=>card.onclick=e=>{if(e.target.closest('button'))return;window.reportStudentId=card.dataset.student;page='report';render()});
+     const lvl=studentLevel(s.id);
+
+     return `<div class="student-premium-card" data-student="${s.id}">
+       ${avatarHtml(s)}
+       <div class="student-main">
+         <div class="student-title-row">
+           <div class="student-name">${s.name}</div>
+           <span class="student-level-badge ${lvl.cls}">${lvl.label}</span>
+         </div>
+         <div class="student-stats-new">
+           <div class="student-stat-new"><span class="mini-icon">⭐</span><b>${totalPoints(s.id)}</b> نقطة</div>
+           <div class="student-stat-new"><span class="mini-icon">📘</span><b>${taskPoints(s.id)}/20</b> مهمة</div>
+           <div class="student-stat-new"><span class="mini-icon">🔴</span><b>${abs}</b> غياب</div>
+           <div class="student-stat-new"><span class="mini-icon">🟠</span><b>${late}</b> تأخر</div>
+         </div>
+       </div>
+       <div class="student-side-actions">
+         <button class="student-evaluate-btn" data-eval-student="${s.id}">تقييم</button>
+         <button class="student-menu-btn student-actions" data-id="${s.id}" aria-label="خيارات">•••</button>
+       </div>
+     </div>`;
+   }).join('');
+
+   document.querySelectorAll('.student-actions').forEach(b=>{
+     b.onclick=e=>{e.stopPropagation();studentActions(b.dataset.id)};
+   });
+
+   document.querySelectorAll('[data-eval-student]').forEach(b=>{
+     b.onclick=e=>{
+       e.stopPropagation();
+       quickEvaluationCompact(b.dataset.evalStudent);
+     };
+   });
+
+   document.querySelectorAll('[data-student]').forEach(card=>{
+     card.onclick=e=>{
+       if(e.target.closest('button'))return;
+       window.reportStudentId=card.dataset.student;
+       page='report';
+       render();
+     };
+   });
  };
+
  draw(list);
  document.getElementById('startAny').onclick=()=>pickSessionPeriod(c.id);
  document.getElementById('bulkBtn').onclick=bulkAdd;
- document.getElementById('studentSearch').oninput=e=>draw(list.filter(s=>s.name.includes(e.target.value.trim())));
+ document.getElementById('studentSearch').oninput=e=>{
+   const q=e.target.value.trim();
+   draw(list.filter(s=>s.name.includes(q)));
+ };
 }
-
 
 function studentLevel(studentId){
  const pts=totalPoints(studentId);
