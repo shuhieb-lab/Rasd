@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.3.1</title>
+<title>رَصْد — v1.3.2</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -1653,6 +1653,15 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   z-index:2!important;
 }
 
+
+#classDashboardBtn{
+ pointer-events:auto!important;
+ cursor:pointer!important;
+ user-select:none!important;
+ -webkit-user-select:none!important;
+}
+#classDashboardBtn *{pointer-events:none!important}
+
 </style>
 </head>
 <body>
@@ -1688,7 +1697,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.3.1';
+const APP_VERSION='v1.3.2';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -2136,7 +2145,7 @@ function renderStudents(){
      <span class="rasd-action-icon">${rasdIcon('group',20)}</span>
      <span>إضافة جماعية</span>
    </button>
-   <button class="action-tile class-dashboard-btn" id="classDashboardBtn">
+   <button type="button" class="action-tile class-dashboard-btn" id="classDashboardBtn" onclick="openClassDashboard()">
      <span class="rasd-action-icon">${rasdIcon('dashboard',20)}</span>
      <span>لوحة تحكم الفصل</span>
    </button>
@@ -2215,21 +2224,17 @@ function renderStudents(){
  draw(list);
  document.getElementById('startAny').onclick=()=>pickSessionPeriod(c.id);
  document.getElementById('bulkBtn').onclick=bulkAdd;
- const dashboardButton=document.getElementById('classDashboardBtn');
- if(dashboardButton){
-   dashboardButton.addEventListener('click',e=>{
-     e.preventDefault();
-     e.stopPropagation();
-     page='dashboard';
-     render();
-   });
- }
  document.getElementById('studentSearch').oninput=e=>{
    const q=e.target.value.trim();
    draw(list.filter(s=>s.name.includes(q)));
  };
 }
 
+
+function openClassDashboard(){
+ page='dashboard';
+ render();
+}
 
 function renderClassDashboard(){
  const c=cls();
@@ -2860,6 +2865,15 @@ document.getElementById('fab').onclick=()=>page==='classes'?addClass():addStuden
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{page=b.dataset.page;render()});
 setTimeout(()=>document.getElementById('splash').classList.add('hidden'),1400);
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+
+document.addEventListener('click',function(event){
+ const button=event.target.closest('#classDashboardBtn');
+ if(!button)return;
+ event.preventDefault();
+ event.stopPropagation();
+ openClassDashboard();
+});
+
 render();
 </script>
 </body></html>
