@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.0.1</title>
+<title>رَصْد — v1.1</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -1237,184 +1237,72 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
 @media(max-width:520px){.grid{grid-template-columns:repeat(2,1fr)} .class-title{font-size:19px} .beh-grid{grid-template-columns:1fr 1fr}}
 @media print{header,nav,.fab,.no-print{display:none!important} body{background:#fff} .app{padding:0;max-width:none} main{padding:0} .report{border:0}}
 
-/* ===== التنسيق النهائي لشاشة الطلاب v1.0.1 ===== */
-.students-page-head{
-  display:flex!important;
-  align-items:center!important;
-  justify-content:space-between!important;
-  gap:10px!important;
-  margin-bottom:12px!important;
+/* ===== هوية الأيقونات والحركة v1.1 ===== */
+.rasd-svg-icon{display:block;flex:0 0 auto}
+.rasd-icon-box{
+  width:34px;height:34px;border-radius:11px;
+  display:inline-flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 1px 0 #fff9,0 5px 12px #13243b14;
 }
-.students-count{
-  display:inline-flex!important;
-  align-items:center!important;
-  gap:6px!important;
-  padding:6px 10px!important;
-  border-radius:999px!important;
-  background:#e8f6f3!important;
-  color:#08756c!important;
-  font-size:12px!important;
-  font-weight:900!important;
-}
-.students-actions{
-  display:grid!important;
-  grid-template-columns:1.15fr 1fr!important;
-  gap:8px!important;
-  margin-bottom:10px!important;
-}
-.action-tile{
-  min-height:54px!important;
-  border-radius:16px!important;
-  padding:9px 10px!important;
-  font-size:15px!important;
-}
-.action-tile .rasd-icon{
-  width:32px!important;
-  height:32px!important;
-  flex-basis:32px!important;
-  font-size:18px!important;
-}
-.students-search{
-  position:relative!important;
-  margin-bottom:12px!important;
-}
-.students-search input{
-  height:49px!important;
-  border-radius:15px!important;
-  padding-right:47px!important;
-}
-.students-search .search-symbol{
-  position:absolute!important;
-  right:14px!important;
-  top:50%!important;
-  transform:translateY(-50%)!important;
-  width:27px!important;
-  height:27px!important;
-  border-radius:9px!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  background:#e9f5f3!important;
-  color:#0f766e!important;
-}
+.rasd-icon-box.green{background:linear-gradient(145deg,#dcf7e7,#bfeccf);color:#15803d}
+.rasd-icon-box.blue{background:linear-gradient(145deg,#e7f0ff,#cadcff);color:#2563eb}
+.rasd-icon-box.amber{background:linear-gradient(145deg,#fff5d8,#ffe0a0);color:#d97706}
+.rasd-icon-box.red{background:linear-gradient(145deg,#ffe9e9,#ffcaca);color:#dc2626}
+.rasd-icon-box.teal{background:linear-gradient(145deg,#e2f6f2,#c8ece5);color:#0f766e}
 
-/* بطاقة الطالب المعتمدة */
 .rasd-student-card{
-  background:#fff!important;
-  border:1px solid #dbe5ea!important;
-  border-radius:18px!important;
-  padding:12px!important;
-  margin-bottom:10px!important;
-  box-shadow:0 6px 18px rgba(23,50,77,.06)!important;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important;
 }
-.rasd-student-top{
-  display:grid!important;
-  grid-template-columns:66px minmax(0,1fr) 30px!important;
-  gap:11px!important;
-  align-items:center!important;
-}
-.rasd-student-card .avatar-image,
-.rasd-student-card .avatar-letter{
-  width:66px!important;
-  height:66px!important;
-  flex-basis:66px!important;
-}
-.rasd-student-name{
-  font-size:17px!important;
-  font-weight:900!important;
-  line-height:1.3!important;
-  color:#14213d!important;
-  white-space:nowrap!important;
-  overflow:hidden!important;
-  text-overflow:ellipsis!important;
-}
-.rasd-student-level{
-  display:inline-flex!important;
-  margin-top:5px!important;
-  padding:4px 8px!important;
-  border-radius:999px!important;
-  font-size:9px!important;
-  font-weight:900!important;
-}
-.rasd-student-level.excellent{background:#dcfce7!important;color:#166534!important}
-.rasd-student-level.good{background:#e0f2fe!important;color:#075985!important}
-.rasd-student-level.follow{background:#fef3c7!important;color:#92400e!important}
-.rasd-student-menu{
-  width:30px!important;
-  height:30px!important;
-  border-radius:50%!important;
-  border:1px solid #dbe5ea!important;
-  background:#f8fafc!important;
-  color:#17324d!important;
-  padding:0!important;
-  font-size:13px!important;
-}
-.rasd-student-stats{
-  display:grid!important;
-  grid-template-columns:repeat(4,minmax(0,1fr))!important;
-  gap:5px!important;
-  margin-top:10px!important;
+.rasd-student-card:has(.rasd-eval-btn:active){
+  transform:scale(1.015)!important;
 }
 .rasd-student-stat{
-  height:34px!important;
-  min-width:0!important;
-  border:1px solid #e2e8ee!important;
-  border-radius:10px!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  gap:4px!important;
-  font-size:10px!important;
-  color:#526174!important;
-  white-space:nowrap!important;
-  overflow:hidden!important;
+  gap:5px!important;
 }
-.rasd-student-stat:nth-child(1){background:#fff8e6!important}
-.rasd-student-stat:nth-child(2){background:#edf6ff!important}
-.rasd-student-stat:nth-child(3){background:#fff0f0!important}
-.rasd-student-stat:nth-child(4){background:#fff7e8!important}
-.rasd-student-stat i{
-  font-style:normal!important;
-  font-size:13px!important;
-}
-.rasd-student-actions{
-  display:flex!important;
-  justify-content:flex-start!important;
-  margin-top:9px!important;
+.rasd-student-stat .rasd-svg-icon{
+  width:14px!important;height:14px!important
 }
 .rasd-eval-btn{
-  min-width:100px!important;
-  height:36px!important;
-  border:0!important;
-  border-radius:11px!important;
-  padding:0 13px!important;
-  background:#e3f4f1!important;
-  color:#0f766e!important;
-  font-size:13px!important;
-  font-weight:900!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
 }
-.rasd-eval-btn::before{
-  content:'★'!important;
-  margin-left:5px!important;
-  font-size:13px!important;
+.rasd-eval-btn::before{display:none!important}
+.rasd-student-menu{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:0!important;
 }
+.rasd-student-menu .rasd-svg-icon{width:16px;height:16px}
+.action-tile .rasd-icon{display:none!important}
+.action-tile{
+  gap:8px!important;
+}
+.action-tile .rasd-action-icon{
+  width:34px;height:34px;border-radius:11px;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.action-tile.primary .rasd-action-icon{background:#ffffff28;color:#fff}
+.action-tile.soft .rasd-action-icon{background:#dcecff;color:#2563eb}
+.students-search .search-symbol{
+  font-size:0!important;
+}
+.students-search .search-symbol .rasd-svg-icon{width:16px;height:16px}
 
-@media(max-width:390px){
-  .rasd-student-top{
-    grid-template-columns:58px minmax(0,1fr) 28px!important;
-    gap:9px!important;
-  }
-  .rasd-student-card .avatar-image,
-  .rasd-student-card .avatar-letter{
-    width:58px!important;
-    height:58px!important;
-    flex-basis:58px!important;
-  }
-  .rasd-student-name{font-size:16px!important}
-  .rasd-student-stat{
-    height:32px!important;
-    font-size:9px!important;
-  }
+.modal{animation:rasdFade .18s ease both}
+.sheet{animation:rasdSheet .22s ease both}
+@keyframes rasdFade{from{opacity:0}to{opacity:1}}
+@keyframes rasdSheet{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+
+.rasd-save-flash{
+  animation:rasdFlash .55s ease
+}
+@keyframes rasdFlash{
+  0%{box-shadow:0 0 0 0 #10b98155}
+  50%{box-shadow:0 0 0 8px #10b98122}
+  100%{box-shadow:0 0 0 0 transparent}
 }
 
 </style>
@@ -1452,7 +1340,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.0.1';
+const APP_VERSION='v1.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -1722,6 +1610,11 @@ function quickEvaluationCompact(studentId){
    save();
    closeModal();
    render();
+   setTimeout(()=>{
+     const card=document.querySelector(`[data-student="${studentId}"]`);
+     card?.classList.add('rasd-save-flash');
+     setTimeout(()=>card?.classList.remove('rasd-save-flash'),600);
+   },60);
    toast(`تم حفظ تقييم ${s.name}`,()=>{
      data.logs=data.logs.filter(x=>!ids.includes(x.id));
      save();
@@ -1882,22 +1775,22 @@ function renderStudents(){
      <div class="class-title">${c.name}</div>
      <div class="muted">${c.stage||''}</div>
    </div>
-   <div class="students-count"><span>👥</span><span>${list.length} طالب</span></div>
+   <div class="students-count">${rasdIcon('group',17)}<span>${list.length} طالب</span></div>
  </div>
 
  <div class="students-actions">
    <button class="action-tile primary" id="startAny">
-     <span class="rasd-icon green">▶</span>
+     <span class="rasd-action-icon">${rasdIcon('play',20)}</span>
      <span>بدء حصة</span>
    </button>
    <button class="action-tile soft" id="bulkBtn">
-     <span class="rasd-icon blue">👥＋</span>
+     <span class="rasd-action-icon">${rasdIcon('group',20)}</span>
      <span>إضافة جماعية</span>
    </button>
  </div>
 
  <div class="students-search">
-   <span class="search-symbol">⌕</span>
+   <span class="search-symbol">${rasdIcon('search',16)}</span>
    <input id="studentSearch" placeholder="ابحث عن طالب بالاسم">
  </div>
 
@@ -1908,7 +1801,7 @@ function renderStudents(){
 
    if(!items.length){
      holder.innerHTML=`<div class="empty-students">
-       <div class="empty-icon">👨‍🎓</div>
+       <div class="empty-icon">${rasdIcon('group',32)}</div>
        <b>لا يوجد طلاب مطابقون</b>
      </div>`;
      return;
@@ -1926,18 +1819,18 @@ function renderStudents(){
            <div class="rasd-student-name">${s.name}</div>
            <span class="rasd-student-level ${lvl.cls}">${lvl.label}</span>
          </div>
-         <button class="rasd-student-menu student-actions" data-id="${s.id}" aria-label="خيارات">•••</button>
+         <button class="rasd-student-menu student-actions" data-id="${s.id}" aria-label="خيارات">${rasdIcon('more',16)}</button>
        </div>
 
        <div class="rasd-student-stats">
-         <div class="rasd-student-stat"><i>★</i><b>${totalPoints(s.id)}</b></div>
-         <div class="rasd-student-stat"><i>▣</i><b>${taskPoints(s.id)}/20</b></div>
-         <div class="rasd-student-stat"><i>✖</i><b>${abs}</b></div>
-         <div class="rasd-student-stat"><i>◷</i><b>${late}</b></div>
+         <div class="rasd-student-stat">${rasdIcon('star',14)}<b>${totalPoints(s.id)}</b></div>
+         <div class="rasd-student-stat">${rasdIcon('task',14)}<b>${taskPoints(s.id)}/20</b></div>
+         <div class="rasd-student-stat">${rasdIcon('absent',14)}<b>${abs}</b></div>
+         <div class="rasd-student-stat">${rasdIcon('late',14)}<b>${late}</b></div>
        </div>
 
        <div class="rasd-student-actions">
-         <button class="rasd-eval-btn" data-eval-student="${s.id}">تقييم</button>
+         <button class="rasd-eval-btn" data-eval-student="${s.id}">${rasdIcon('eval',15)}<span>تقييم</span></button>
        </div>
      </div>`;
    }).join('');
@@ -1949,6 +1842,9 @@ function renderStudents(){
    document.querySelectorAll('[data-eval-student]').forEach(b=>{
      b.onclick=e=>{
        e.stopPropagation();
+       const card=b.closest('.rasd-student-card');
+       card?.classList.add('rasd-save-flash');
+       setTimeout(()=>card?.classList.remove('rasd-save-flash'),600);
        quickEvaluationCompact(b.dataset.evalStudent);
      };
    });
@@ -1977,6 +1873,22 @@ function studentLevel(studentId){
  if(pts>=20)return {label:'ممتاز',cls:'excellent'};
  if(pts>=8)return {label:'جيد',cls:'good'};
  return {label:'يحتاج متابعة',cls:'follow'};
+}
+
+
+function rasdIcon(name, size=20){
+ const icons={
+  play:'<path d="M8 5v14l11-7z"/>',
+  group:'<path d="M7 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm10 0a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM1 21v-2c0-3.3 2.7-6 6-6s6 2.7 6 6v2Zm12 0v-2c0-1.8-.6-3.5-1.7-4.8A6 6 0 0 1 17 12c3.3 0 6 2.7 6 6v3Z"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+  star:'<path d="m12 2 3.1 6.3 7 .9-5 4.9 1.2 6.9L12 17.7 5.7 21l1.2-6.9-5-4.9 7-.9Z"/>',
+  task:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  absent:'<circle cx="12" cy="12" r="9"/><path d="m8 8 8 8m0-8-8 8"/>',
+  late:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  eval:'<path d="m12 3 2.3 4.7 5.2.8-3.8 3.7.9 5.2-4.6-2.4-4.6 2.4.9-5.2-3.8-3.7 5.2-.8Z"/><path d="M4 21h16"/>',
+  more:'<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>'
+ };
+ return `<svg class="rasd-svg-icon" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]||icons.star}</svg>`;
 }
 
 function avatarHtml(student){
