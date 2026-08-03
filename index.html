@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.7.2</title>
+<title>رَصْد — v1.7.3</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -2405,7 +2405,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.7.2';
+const APP_VERSION='v1.7.3';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -2800,7 +2800,7 @@ function showLiveUndo(message,undoFn,type='default'){
    undoFn?.();
 
    bar.className='live-undo show success no-countdown';
-   textEl.textContent='✅ تم التراجع بنجاح';
+   textEl.textContent='✅ تم التراجع عن الإجراء بنجاح';
 
    window.liveUndoTimer=setTimeout(()=>{
      bar.classList.remove('show','success','no-countdown');
@@ -3010,17 +3010,17 @@ function renderSession(){
 
    currentSession.liveStats.actions++;
 
-   if(action==='participation1'){log={name:'مشاركة 1/5',value:1};eventText=`⭐ ${student.name} +1 مشاركة`;}
-   if(action==='participation2'){log={name:'مشاركة مميزة',value:2};eventText=`⭐ ${student.name} +2 مشاركة مميزة`;}
-   if(action==='task'){log={name:'أنجز المهمة',value:2,task:true};eventText=`📘 ${student.name} أنجز المهمة`;}
-   if(action==='excellent'){log={name:'سلوك ممتاز',value:2};eventText=`🌟 ${student.name} سلوك ممتاز`;}
-   if(action==='warning'){log={name:'تنبيه سلوكي',value:0};eventText=`⚠️ تم تسجيل تنبيه لـ ${student.name}`;}
-   if(action==='violation'){log={name:'مخالفة سلوكية',value:-1};eventText=`🚫 تم تسجيل مخالفة لـ ${student.name}`;}
+   if(action==='participation1'){log={name:'مشاركة 1/5',value:1};eventText=`⭐ تمت إضافة نقطة مشاركة لـ ${student.name}`;}
+   if(action==='participation2'){log={name:'مشاركة مميزة',value:2};eventText=`⭐ تمت إضافة مشاركتين مميزتين لـ ${student.name}`;}
+   if(action==='task'){log={name:'أنجز المهمة',value:2,task:true};eventText=`📘 تم تسجيل إنجاز مهمة لـ ${student.name}`;}
+   if(action==='excellent'){log={name:'سلوك ممتاز',value:2};eventText=`🌟 تم تسجيل سلوك ممتاز لـ ${student.name}`;}
+   if(action==='warning'){log={name:'تنبيه سلوكي',value:0};eventText=`⚠️ تم تسجيل تنبيه على ${student.name}`;}
+   if(action==='violation'){log={name:'مخالفة سلوكية',value:-1};eventText=`🚫 تم تسجيل مخالفة على ${student.name}`;}
 
    if(action==='late'||action==='absent'){
      currentSession.attendance=currentSession.attendance||{};
      currentSession.attendance[studentId]=action;
-     eventText=action==='late'?`⏰ تم تسجيل تأخر ${student.name}`:`❌ تم تسجيل غياب ${student.name}`;
+     eventText=action==='late'?`⏰ تم تسجيل تأخر على ${student.name}`:`❌ تم تسجيل غياب على ${student.name}`;
    }else if(log){
      const newLog={
        id:crypto.randomUUID(),
