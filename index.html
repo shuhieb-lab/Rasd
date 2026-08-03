@@ -6073,7 +6073,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v5.5';
+const APP_VERSION='v5.5.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -6179,12 +6179,17 @@ function render(){
  document.body.classList.toggle('focus-mode',page==='session');
  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
  const fab=document.getElementById('fab');
- fab.classList.toggle('hidden',!['classes','students'].includes(page));
- if(!fab.classList.contains('hidden')){
-  fab.innerHTML=page==='classes'
-   ? premiumIcon('class_add','fab-premium-icon')
-   : premiumIcon('student','fab-premium-icon');
-  fab.setAttribute('aria-label',page==='classes'?'إضافة فصل':'إضافة طالب');
+ if(page==='classes'){
+   fab.classList.remove('hidden');
+   fab.innerHTML=premiumIcon('class_add','fab-premium-icon');
+   fab.setAttribute('aria-label','إضافة فصل');
+ }else if(page==='students'){
+   fab.classList.remove('hidden');
+   fab.innerHTML=premiumIcon('student','fab-premium-icon');
+   fab.setAttribute('aria-label','إضافة طالب');
+ }else{
+   fab.classList.add('hidden');
+   fab.innerHTML='';
  }
  if(page==='home')return renderHome();
  if(page==='classes')return renderClasses();
