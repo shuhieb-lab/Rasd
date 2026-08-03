@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v5.3.1</title>
+<title>رَصْد — v5.3.2</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -5912,6 +5912,52 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   }
 }
 
+
+/* ===== تثبيت نص خيارات المهمة داخل المستطيل اللوني v5.3.2 ===== */
+.rasd-choice{
+  position:relative!important;
+  padding:10px 8px 11px!important;
+  box-sizing:border-box!important;
+}
+
+.rasd-choice > span:last-child{
+  position:static!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:calc(100% - 16px)!important;
+  min-height:42px!important;
+  margin:0 auto!important;
+  padding:6px 8px!important;
+  box-sizing:border-box!important;
+  border-radius:13px!important;
+  white-space:nowrap!important;
+  line-height:1.15!important;
+  text-align:center!important;
+  transform:none!important;
+}
+
+.rasd-choice.green > span:last-child{
+  background:#dff6e8!important;
+}
+
+.rasd-choice.amber > span:last-child{
+  background:#fff0c6!important;
+}
+
+.rasd-choice.red > span:last-child{
+  background:#ffe0e0!important;
+}
+
+@media(max-width:390px){
+  .rasd-choice > span:last-child{
+    width:calc(100% - 10px)!important;
+    min-height:38px!important;
+    padding:5px 5px!important;
+    border-radius:11px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -5966,7 +6012,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v5.3.1';
+const APP_VERSION='v5.3.2';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
