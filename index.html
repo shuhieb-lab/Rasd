@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v2.8.1</title>
+<title>رَصْد — v2.9</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -4540,31 +4540,47 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
 }
 
 
-/* ===== تحسين التوقيعات v2.8.1 ===== */
+/* ===== ضبط رؤوس بطاقات المؤشرات بعرض البطاقة بالكامل v2.9 ===== */
 @media print{
-  body .parent-print-report .rp-footer{
+  body .parent-print-report .rp-metric{
+    display:grid!important;
+    grid-template-rows:12mm minmax(0,1fr)!important;
+    padding:0!important;
+    overflow:hidden!important;
+    align-items:stretch!important;
+    justify-items:stretch!important;
+  }
+
+  body .parent-print-report .rp-metric-head{
+    width:100%!important;
+    max-width:none!important;
+    min-width:100%!important;
+    height:12mm!important;
+    min-height:12mm!important;
+    margin:0!important;
+    padding:1.5mm 2.5mm!important;
+    align-self:stretch!important;
+    justify-self:stretch!important;
+    box-sizing:border-box!important;
+    border-radius:3.65mm 3.65mm 0 0!important;
     display:flex!important;
     align-items:center!important;
-    justify-content:space-between!important;
-    gap:8mm!important;
-    padding:0 4mm!important;
-    font-size:7pt!important;
-  }
-
-  body .parent-print-report .rp-signature{
-    flex:1!important;
-    border:0!important;
-    padding:0!important;
-    text-align:right!important;
+    justify-content:center!important;
+    gap:1.4mm!important;
     white-space:nowrap!important;
-    color:#4b5563!important;
-    font-weight:700!important;
   }
 
-  body .parent-print-report .rp-signature::after{
-    content:' ........................................'!important;
-    color:#94a3b8!important;
-    letter-spacing:.4px!important;
+  body .parent-print-report .rp-metric-body{
+    width:100%!important;
+    min-width:0!important;
+    margin:0!important;
+    align-self:stretch!important;
+    justify-self:stretch!important;
+    border-radius:0 0 3.65mm 3.65mm!important;
+  }
+
+  body .parent-print-report .rp-metric-head .rp-metric-icon{
+    flex:0 0 7mm!important;
   }
 }
 
@@ -4622,7 +4638,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v2.8.1';
+const APP_VERSION='v2.9';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
