@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.9.3</title>
+<title>رَصْد — v1.9.4</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -2586,7 +2586,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.9.3';
+const APP_VERSION='v1.9.4';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -3048,10 +3048,10 @@ function renderSession(){
 
  const draw=()=>{
    ensureStats();
-   const orderedList=[...list].sort((a,b)=>{
-     const la=getStudentLevel(a.id),lb=getStudentLevel(b.id);
-     return lb.level-la.level||totalPoints(b.id)-totalPoints(a.id)||a.name.localeCompare(b.name,'ar');
-   });
+   // ترتيب ثابت أبجديًا أثناء الحصة لمنع تشتت المعلم
+   const orderedList=[...list].sort((a,b)=>
+     a.name.localeCompare(b.name,'ar',{sensitivity:'base'})
+   );
    const present=orderedList.filter(s=>statusOf(s.id)==='present').length;
    const late=list.filter(s=>statusOf(s.id)==='late').length;
    const absent=list.filter(s=>statusOf(s.id)==='absent').length;
@@ -3368,10 +3368,7 @@ function renderSession(){
 
    setTimeout(()=>{
      draw();
-     document.querySelectorAll('.live-student-card').forEach(c=>{
-       c.classList.add('reorder-move');
-       setTimeout(()=>c.classList.remove('reorder-move'),300);
-     });
+
    },280);
  };
  window.showLiveSessionSummary=()=>{
