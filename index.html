@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.9</title>
+<title>رَصْد — v1.9.1</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -2518,7 +2518,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.9';
+const APP_VERSION='v1.9.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -3153,8 +3153,11 @@ function renderSession(){
    }
 
    save();
-   setTimeout(()=>checkAndUnlockBadges(studentId),120);
-   setTimeout(()=>checkLevelUp(studentId),220);
+   const isPositiveAction=['participation1','participation2','task','excellent'].includes(action);
+   if(isPositiveAction){
+     setTimeout(()=>checkAndUnlockBadges(studentId),120);
+     setTimeout(()=>checkLevelUp(studentId),220);
+   }
 
    const afterPoints=totalPoints(studentId);
    const pointsEl=document.querySelector(`[data-points-value="${studentId}"]`);
@@ -3425,7 +3428,7 @@ function renderClassDashboard(){
  const behaviorPositive=classLogs.filter(l=>l.name==='سلوك ممتاز'||l.name==='سلوك جيد').length;
  const behaviorNegative=classLogs.filter(l=>l.name==='تنبيه سلوكي'||l.name==='مخالفة سلوكية').length;
  const behaviorTotal=behaviorPositive+behaviorNegative;
- const behaviorRate=behaviorTotal?Math.round(behaviorPositive/behaviorTotal*100):100;
+ const behaviorRate=total===0?0:(behaviorTotal?Math.round(behaviorPositive/behaviorTotal*100):100);
 
  const participationLogs=classLogs.filter(l=>l.name?.startsWith('مشاركة'));
  const participationMax=participationLogs.length*5;
@@ -3433,14 +3436,14 @@ function renderClassDashboard(){
  const participationRate=participationMax?Math.round(participationScore/participationMax*100):0;
 
  const taskRate=total?Math.round((averageTasks/20)*100):0;
- const health=Math.round(
+ const health=total===0?0:Math.round(
    attendanceRate*.35+
    taskRate*.25+
    behaviorRate*.25+
    participationRate*.15
  );
  const healthColor=health>=80?'#16a34a':health>=60?'#d97706':'#dc2626';
- const healthLabel=health>=80?'ممتازة':health>=60?'جيدة':'تحتاج متابعة';
+ const healthLabel=total===0?'لا توجد بيانات':health>=80?'ممتازة':health>=60?'جيدة':'تحتاج متابعة';
 
  const ranked=[...list].sort((a,b)=>totalPoints(b.id)-totalPoints(a.id));
  const topStudents=ranked.slice(0,3);
@@ -3450,13 +3453,31 @@ function renderClassDashboard(){
    .map(s=>{
      const abs=classSessions.filter(se=>se.attendance?.[s.id]==='absent').length;
      const late=classSessions.filter(se=>se.attendance?.[s.id]==='late').length;
-     const recent=data.logs.filter(l=>l.studentId===s.id).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+     const allLogs=data.logs.filter(l=>l.studentId===s.id);
+     const recent=allLogs.sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);
      const missedTasks=recent.filter(l=>l.task && l.value<=0).length;
-     return {student:s,points:totalPoints(s.id),abs,late,missedTasks,score:(abs*3)+(late*2)+(missedTasks*2)-totalPoints(s.id)};
+     const violations=recent.filter(l=>l.name==='مخالفة سلوكية').length;
+     const warnings=recent.filter(l=>l.name==='تنبيه سلوكي').length;
+     const points=totalPoints(s.id);
+     const lowPointsPenalty=Math.max(0,10-points);
+     const riskScore=
+       abs*12+
+       late*7+
+       violations*10+
+       warnings*5+
+       missedTasks*8+
+       lowPointsPenalty;
+     return {student:s,points,abs,late,missedTasks,violations,warnings,riskScore};
    })
-   .filter(x=>x.points<8 || x.abs>=2 || x.late>=3 || x.missedTasks>=2)
-   .sort((a,b)=>b.score-a.score)
-   .slice(0,5);
+   .filter(x=>x.riskScore>0 && (x.points<10 || x.abs>0 || x.late>0 || x.missedTasks>0 || x.violations>0 || x.warnings>0))
+   .sort((a,b)=>
+     b.riskScore-a.riskScore ||
+     b.abs-a.abs ||
+     b.violations-a.violations ||
+     b.late-a.late ||
+     a.points-b.points
+   )
+   .slice(0,8);
 
  const behaviorCounts={
    excellent:classLogs.filter(l=>l.name==='سلوك ممتاز').length,
@@ -3477,14 +3498,21 @@ function renderClassDashboard(){
    else if(x.late>=3)smartAlerts.push({type:'warn',title:x.student.name,text:`تأخر ${x.late} مرات.`});
    else smartAlerts.push({type:'warn',title:x.student.name,text:'مجموع نقاطه منخفض ويحتاج تشجيعاً إضافياً.'});
  });
- if(health>=80)smartAlerts.unshift({type:'good',title:'أداء الفصل جيد',text:'مؤشرات الحضور والسلوك والمهام في مستوى مطمئن.'});
- if(!smartAlerts.length)smartAlerts.push({type:'good',title:'لا توجد تنبيهات',text:'بيانات الفصل الحالية لا تشير إلى مشكلات تحتاج تدخلاً.'});
+ if(total===0){
+   smartAlerts.length=0;
+   smartAlerts.push({type:'warn',title:'لا يوجد طلاب',text:'أضف طلابًا إلى الفصل حتى تبدأ مؤشرات الصحة والمتابعة.'});
+ }else{
+   if(health>=80)smartAlerts.unshift({type:'good',title:'أداء الفصل جيد',text:'مؤشرات الحضور والسلوك والمهام في مستوى مطمئن.'});
+   if(!smartAlerts.length)smartAlerts.push({type:'good',title:'لا توجد تنبيهات',text:'بيانات الفصل الحالية لا تشير إلى مشكلات تحتاج تدخلاً.'});
+ }
 
  const noLateCount=list.filter(s=>classSessions.filter(se=>se.attendance?.[s.id]==='late').length===0).length;
  const highPointsCount=list.filter(s=>totalPoints(s.id)>=20).length;
- const achievement=highPointsCount>0
-   ?`${highPointsCount} طلاب حصلوا على 20 نقطة أو أكثر`
-   :`${noLateCount} طلاب لم يسجل عليهم أي تأخر`;
+ const achievement=total===0
+   ?'لا توجد بيانات طلاب حتى الآن'
+   :highPointsCount>0
+     ?`${highPointsCount} طلاب حصلوا على 20 نقطة أو أكثر`
+     :`${noLateCount} طلاب لم يسجل عليهم أي تأخر`;
 
  view.innerHTML=`
  <div class="dashboard-topbar">
@@ -3602,10 +3630,10 @@ function renderClassDashboard(){
          <div>
            <div class="dashboard-student-name">${x.student.name}</div>
            <div class="dashboard-student-sub">
-             ${x.missedTasks>=2?`لم ينجز ${x.missedTasks} مهام`:x.abs>=2?`${x.abs} غياب`:x.late>=3?`${x.late} تأخر`:'نقاط منخفضة'}
+             ${x.abs>0?`${x.abs} غياب`:x.violations>0?`${x.violations} مخالفة`:x.missedTasks>0?`${x.missedTasks} مهمة غير منجزة`:x.late>0?`${x.late} تأخر`:x.warnings>0?`${x.warnings} تنبيه`:'نقاط منخفضة'}
            </div>
          </div>
-         <span class="dashboard-rank watch">${x.points} نقطة</span>
+         <span class="dashboard-rank watch">متابعة ${x.riskScore}</span>
        </div>
      `).join('')}
    </div>`:'<div class="dashboard-empty">لا يوجد طلاب يحتاجون متابعة حالياً</div>'}
@@ -3784,6 +3812,92 @@ function editClass(id){
  saveClass.onclick=()=>{c.name=cname.value.trim();c.stage=cstage.value.trim();c.color=chosen;save();closeModal();render()};
  delClass.onclick=()=>{if(confirm('حذف الفصل وطلابه؟')){data.classes=data.classes.filter(x=>x.id!==id);data.students=data.students.filter(s=>s.classId!==id);if(data.selectedClass===id)data.selectedClass=null;save();closeModal();render()}};
 }
+
+function bulkAdd(){
+ const c=cls();
+ if(!c)return alert('اختر فصلاً أولاً');
+
+ openModal(`<h2>إضافة طلاب جماعيًا</h2>
+   <p class="muted">اكتب كل اسم في سطر مستقل. ويمكن أيضًا الفصل بالفاصلة.</p>
+   <div class="field">
+     <label>أسماء الطلاب</label>
+     <textarea id="bulkStudentNames" rows="12" placeholder="محمد أحمد
+علي حسن
+خالد عبدالله"></textarea>
+   </div>
+   <div class="notice" id="bulkAddResult" style="display:none"></div>
+   <div class="row">
+     <button class="btn" id="saveBulkStudents">إضافة الطلاب</button>
+     <button class="btn light" id="closeBulkStudents">إلغاء</button>
+   </div>`);
+
+ const textarea=document.getElementById('bulkStudentNames');
+ const saveBtn=document.getElementById('saveBulkStudents');
+ const resultBox=document.getElementById('bulkAddResult');
+
+ document.getElementById('closeBulkStudents').onclick=closeModal;
+ setTimeout(()=>textarea.focus(),50);
+
+ saveBtn.onclick=()=>{
+   const names=textarea.value
+     .split(/[\n،,;]+/)
+     .map(name=>name.trim().replace(/\s+/g,' '))
+     .filter(Boolean);
+
+   if(!names.length){
+     alert('اكتب اسم طالب واحد على الأقل');
+     return;
+   }
+
+   const normalize=name=>name.toLocaleLowerCase('ar').replace(/\s+/g,' ').trim();
+   const existing=new Set(
+     data.students
+       .filter(s=>s.classId===c.id)
+       .map(s=>normalize(s.name))
+   );
+
+   const unique=[];
+   const skipped=[];
+   names.forEach(name=>{
+     const key=normalize(name);
+     if(existing.has(key) || unique.some(x=>normalize(x)===key)){
+       skipped.push(name);
+     }else{
+       unique.push(name);
+     }
+   });
+
+   if(!unique.length){
+     resultBox.style.display='block';
+     resultBox.textContent='لم تتم إضافة أسماء جديدة؛ جميع الأسماء موجودة مسبقًا أو مكررة.';
+     return;
+   }
+
+   const addedIds=[];
+   unique.forEach(name=>{
+     const student={
+       id:crypto.randomUUID(),
+       classId:c.id,
+       name,
+       phone:'',
+       note:'',
+       photo:''
+     };
+     data.students.push(student);
+     addedIds.push(student.id);
+   });
+
+   if(!save()){
+     data.students=data.students.filter(s=>!addedIds.includes(s.id));
+     return;
+   }
+
+   closeModal();
+   render();
+   toast(`تمت إضافة ${unique.length} طالب${skipped.length?` وتجاهل ${skipped.length} اسم مكرر`:''}`);
+ };
+}
+
 function addStudent(){
  if(!cls())return alert('اختر فصلاً أولاً');
  openModal(`<h2>إضافة طالب</h2>
