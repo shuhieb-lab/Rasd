@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v2.2.1</title>
+<title>رَصْد — v2.3</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -3614,6 +3614,152 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   }
 }
 
+
+/* ===== نسخة مستقلة لتقرير ولي الأمر عند الطباعة v2.3 ===== */
+.parent-print-report{display:none}
+
+@media print{
+  .parent-report-page{display:none!important}
+  .parent-print-report{
+    display:block!important;
+    width:196mm!important;
+    height:283mm!important;
+    overflow:hidden!important;
+    direction:rtl!important;
+    color:#12344f!important;
+    font-family:Tahoma,Arial,sans-serif!important;
+    background:#fff!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+
+  .ppr-hero{
+    height:43mm;
+    border-radius:7mm;
+    padding:5mm 6mm;
+    display:grid;
+    grid-template-columns:28mm 1fr 30mm;
+    align-items:center;
+    gap:4mm;
+    color:#fff;
+    background:
+      radial-gradient(circle at 8% 8%,rgba(255,255,255,.16) 0 18mm,transparent 18.3mm),
+      linear-gradient(135deg,#0ca58f 0%,#087f72 50%,#12344f 100%);
+    box-shadow:0 4mm 8mm rgba(8,127,114,.18);
+  }
+
+  .ppr-avatar{
+    width:27mm;height:27mm;border-radius:50%;
+    object-fit:cover;border:1.5mm solid #fff;
+    box-shadow:0 2mm 5mm rgba(0,0,0,.2);
+  }
+
+  .ppr-avatar-letter{
+    width:27mm;height:27mm;border-radius:50%;
+    border:1.5mm solid #fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:20pt;font-weight:900;
+    background:#ffffff22;
+  }
+
+  .ppr-name{font-size:20pt;font-weight:950;line-height:1.2}
+  .ppr-class{font-size:9pt;margin-top:1.5mm;opacity:.9}
+  .ppr-subtitle{font-size:7pt;margin-top:1mm;opacity:.78}
+  .ppr-level{
+    display:inline-flex;margin-top:2mm;padding:1.2mm 2.2mm;
+    border-radius:999px;background:#ffffff22;border:.3mm solid #ffffff28;
+    font-size:7.5pt;font-weight:900
+  }
+
+  .ppr-score{
+    width:27mm;height:27mm;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:conic-gradient(#fff calc(var(--ppr-score)*1%),#ffffff30 0);
+    position:relative
+  }
+  .ppr-score:before{
+    content:'';position:absolute;width:20mm;height:20mm;border-radius:50%;
+    background:#087f72
+  }
+  .ppr-score-inner{position:relative;z-index:1;text-align:center}
+  .ppr-score-inner b{display:block;font-size:16pt}
+  .ppr-score-inner span{font-size:6pt}
+
+  .ppr-status{
+    margin-top:3mm;border-radius:4mm;padding:2.6mm 4mm;
+    font-size:11pt;font-weight:900;text-align:center;
+  }
+  .ppr-status.good{background:#e7f8ee;color:#137a43;border:.4mm solid #b7e6c7}
+  .ppr-status.mid{background:#fff4d8;color:#a16207;border:.4mm solid #efd38a}
+  .ppr-status.bad{background:#ffe8e8;color:#b42318;border:.4mm solid #f1b7b7}
+
+  .ppr-metrics{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:2.5mm;margin-top:3mm
+  }
+  .ppr-metric{
+    border-radius:4mm;padding:2.8mm;text-align:center;min-height:22mm;
+    display:flex;flex-direction:column;justify-content:center
+  }
+  .ppr-metric:nth-child(1){background:linear-gradient(145deg,#fff7cc,#ffe69a)}
+  .ppr-metric:nth-child(2){background:linear-gradient(145deg,#e5f2ff,#c9e3ff)}
+  .ppr-metric:nth-child(3){background:linear-gradient(145deg,#edf6ff,#d7eaff)}
+  .ppr-metric:nth-child(4){background:linear-gradient(145deg,#effcf5,#d9f5e5)}
+  .ppr-metric-label{font-size:7pt;color:#5d6c7a}
+  .ppr-metric-value{font-size:16pt;font-weight:950;margin-top:1mm}
+  .ppr-metric-note{font-size:6pt;color:#6b7280;margin-top:.8mm}
+
+  .ppr-main{
+    display:grid;grid-template-columns:1.05fr .95fr;gap:3mm;margin-top:3mm
+  }
+  .ppr-col{display:grid;gap:3mm;align-content:start}
+
+  .ppr-card{
+    border-radius:4.5mm;padding:3.4mm;border:.4mm solid #dbe5ea;background:#fff;
+    box-shadow:0 1.5mm 4mm rgba(18,52,79,.06)
+  }
+  .ppr-card h3{font-size:11pt;margin:0 0 2.4mm;color:#12344f}
+  .ppr-card.strengths{background:linear-gradient(145deg,#effdf5,#dcf7e6);border-color:#b8e7c8}
+  .ppr-card.improve{background:linear-gradient(145deg,#fffaf0,#ffedc5);border-color:#efd38a}
+
+  .ppr-list{display:grid;gap:1.5mm}
+  .ppr-item{display:grid;grid-template-columns:6mm 1fr;gap:1.5mm;align-items:start;font-size:8pt}
+  .ppr-item-icon{
+    width:6mm;height:6mm;border-radius:2mm;display:flex;align-items:center;justify-content:center;
+    font-weight:950;background:#fff
+  }
+
+  .ppr-chart{
+    height:42mm;display:grid;grid-template-columns:repeat(8,1fr);
+    gap:1.3mm;align-items:end;border-bottom:.4mm solid #dbe5ea;padding-top:2mm
+  }
+  .ppr-chart-item{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+  .ppr-chart-value{font-size:6pt;font-weight:900;margin-bottom:.8mm}
+  .ppr-chart-bar{width:6mm;border-radius:2mm 2mm .6mm .6mm}
+  .ppr-chart-date{font-size:5pt;color:#7b8795;margin-top:.8mm}
+
+  .ppr-events{display:grid;gap:1.6mm}
+  .ppr-event{
+    border-radius:3mm;padding:2.2mm 2.5mm;background:linear-gradient(145deg,#fff,#f7fafb);
+    border:.3mm solid #dbe5ea
+  }
+  .ppr-event-title{font-size:8pt;font-weight:900}
+  .ppr-event-date{font-size:5.5pt;color:#7b8795;margin-top:.6mm}
+
+  .ppr-analysis{
+    border-radius:4mm;padding:3.4mm;
+    background:linear-gradient(135deg,#12344f,#087f72);
+    color:#fff;font-size:9pt;line-height:1.7;text-align:center
+  }
+
+  .ppr-signatures{
+    display:grid;grid-template-columns:1fr 1fr;gap:12mm;margin-top:4mm;
+    font-size:7pt;color:#6b7280
+  }
+  .ppr-signature{border-top:.3mm dashed #a9b8c2;padding-top:1.5mm;text-align:center}
+
+  @page{size:A4 portrait;margin:7mm}
+}
+
 </style>
 </head>
 <body>
@@ -3668,7 +3814,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v2.2.1';
+const APP_VERSION='v2.3';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -5664,6 +5810,123 @@ function renderReport(id){
      <button class="btn light" id="backStudents" style="grid-column:1/-1">العودة للطلاب</button>
    </div>
  </div>`;
+
+ const printAvatar=s.photo
+   ?`<img class="ppr-avatar" src="${s.photo}" alt="${s.name}">`
+   :`<div class="ppr-avatar-letter">${s.name.charAt(0)}</div>`;
+
+ const printStatusClass=score>=80?'good':score>=60?'mid':'bad';
+ const printStatusText=score>=80
+   ?'الطالب في مستوى ممتاز'
+   :score>=60
+     ?'الطالب يحتاج متابعة بسيطة'
+     :'الطالب يحتاج متابعة مستمرة';
+
+ const smartAnalysis=score>=80
+   ?`يظهر الطالب انضباطًا واضحًا داخل الصف، ويلتزم بالحضور والمهام، مع أداء سلوكي إيجابي. نوصي بمواصلة دعمه للمحافظة على هذا المستوى المتميز.`
+   :score>=60
+     ?`يظهر الطالب مستوى جيدًا بصورة عامة، مع حاجة بسيطة إلى تعزيز المشاركة الصفية والالتزام المستمر بالمهام للوصول إلى مستوى أعلى.`
+     :`يحتاج الطالب إلى متابعة أقرب في الحضور والمهام والسلوك الصفي، ونوصي بالتعاون المستمر بين المنزل والمدرسة لدعم تقدمه.`;
+
+ const chartPrint=chartLogs.length?chartLogs.map((l,i)=>{
+   const h=Math.max(5,Math.round(Math.abs(l.value)/maxChart*32));
+   const colors=['#087f72','#2f80ed','#805ad5','#d69e2e'];
+   const color=l.value<0?'#e05252':colors[i%colors.length];
+   return `<div class="ppr-chart-item">
+     <div class="ppr-chart-value">${l.value>0?'+':''}${l.value}</div>
+     <div class="ppr-chart-bar" style="height:${h}mm;background:${color}"></div>
+     <div class="ppr-chart-date">${new Date(l.date).toLocaleDateString('ar-SA',{day:'numeric',month:'numeric'})}</div>
+   </div>`;
+ }).join(''):'<div style="grid-column:1/-1;text-align:center;color:#7b8795;font-size:8pt">لا توجد بيانات كافية بعد</div>';
+
+ view.insertAdjacentHTML('beforeend',`
+ <div class="parent-print-report">
+   <div class="ppr-hero">
+     ${printAvatar}
+     <div>
+       <div class="ppr-name">${s.name}</div>
+       <div class="ppr-class">${c?.name||''}${c?.stage?` — ${c.stage}`:''}</div>
+       <div class="ppr-subtitle">تقرير الأداء الأكاديمي والسلوكي</div>
+       <div class="ppr-level">${levelInfo.icon} المستوى ${levelInfo.level} · ${levelInfo.title}</div>
+     </div>
+     <div class="ppr-score" style="--ppr-score:${score}">
+       <div class="ppr-score-inner"><b>${score}%</b><span>الأداء العام</span></div>
+     </div>
+   </div>
+
+   <div class="ppr-status ${printStatusClass}">${printStatusText}</div>
+
+   <div class="ppr-metrics">
+     <div class="ppr-metric">
+       <div class="ppr-metric-label">النقاط</div>
+       <div class="ppr-metric-value">${totalPoints(id)}</div>
+       <div class="ppr-metric-note">نقطة</div>
+     </div>
+     <div class="ppr-metric">
+       <div class="ppr-metric-label">المهام</div>
+       <div class="ppr-metric-value">${taskPoints(id)}/20</div>
+       <div class="ppr-metric-note">المهام المنجزة</div>
+     </div>
+     <div class="ppr-metric">
+       <div class="ppr-metric-label">الاختبار الفتري</div>
+       <div class="ppr-metric-value">${periodicExam}%</div>
+       <div class="ppr-metric-note">${examLabel(periodicExam)}</div>
+     </div>
+     <div class="ppr-metric">
+       <div class="ppr-metric-label">نهاية الفصل</div>
+       <div class="ppr-metric-value">${finalExam}%</div>
+       <div class="ppr-metric-note">${examLabel(finalExam)}</div>
+     </div>
+   </div>
+
+   <div class="ppr-main">
+     <div class="ppr-col">
+       <div class="ppr-card">
+         <h3>📊 تطور الأداء</h3>
+         <div class="ppr-chart">${chartPrint}</div>
+       </div>
+
+       <div class="ppr-card strengths">
+         <h3>💚 نقاط القوة</h3>
+         <div class="ppr-list">
+           ${(strengths.length?strengths:['لا توجد بيانات كافية بعد']).slice(0,5).map(x=>`
+             <div class="ppr-item"><span class="ppr-item-icon">✓</span><span>${x}</span></div>
+           `).join('')}
+         </div>
+       </div>
+
+       <div class="ppr-card improve">
+         <h3>📌 جوانب تحتاج إلى تطوير</h3>
+         <div class="ppr-list">
+           ${(improvements.length?improvements:['لا توجد ملاحظات جوهرية حاليًا']).slice(0,4).map(x=>`
+             <div class="ppr-item"><span class="ppr-item-icon">!</span><span>${x}</span></div>
+           `).join('')}
+         </div>
+       </div>
+     </div>
+
+     <div class="ppr-col">
+       <div class="ppr-card">
+         <h3>🕘 آخر السلوكيات والنشاطات</h3>
+         <div class="ppr-events">
+           ${(logs.length?logs.slice(0,6):[]).map(l=>`
+             <div class="ppr-event">
+               <div class="ppr-event-title">${l.name}</div>
+               <div class="ppr-event-date">${new Date(l.date).toLocaleString('ar-SA')}</div>
+             </div>
+           `).join('') || '<div style="color:#7b8795;font-size:8pt">لا توجد نشاطات مسجلة بعد</div>'}
+         </div>
+       </div>
+
+       <div class="ppr-analysis">${smartAnalysis}</div>
+     </div>
+   </div>
+
+   <div class="ppr-signatures">
+     <div class="ppr-signature">توقيع المعلم</div>
+     <div class="ppr-signature">توقيع ولي الأمر</div>
+   </div>
+ </div>`);
 
  document.getElementById('profileBack').onclick=()=>{page='students';render()};
  document.getElementById('printReport').onclick=()=>window.print();
