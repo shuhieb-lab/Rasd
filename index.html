@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.8</title>
+<title>رَصْد — v1.9</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -2394,6 +2394,95 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
 .badge-confetti{font-size:24px;letter-spacing:8px;margin:8px 0;animation:confettiDrop .7s ease}
 @keyframes confettiDrop{from{transform:translateY(-20px);opacity:0}to{transform:none;opacity:1}}
 
+
+/* ===== نظام المستويات v1.9 ===== */
+.level-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.level-1{background:#e8f7ef;color:#15803d}
+.level-2{background:#e8f1ff;color:#2563eb}
+.level-3{background:#efe8ff;color:#7c3aed}
+.level-4{background:#fff0dc;color:#c2410c}
+.level-5{background:#fff7c7;color:#a16207}
+.level-6{background:linear-gradient(135deg,#fff1a8,#ffd24d);color:#7c4a03;box-shadow:0 4px 12px #d9a60022}
+.level-progress-wrap{
+  margin-top:7px;
+}
+.level-progress-label{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  font-size:10px;
+  color:#667085;
+  margin-bottom:4px;
+}
+.level-progress-track{
+  height:7px;
+  border-radius:999px;
+  overflow:hidden;
+  background:#e7edf1;
+}
+.level-progress-fill{
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#0f766e,#4cc9bd);
+  transition:width .28s ease;
+}
+.level-message{
+  margin-top:6px;
+  font-size:10px;
+  color:#0f766e;
+  font-weight:800;
+}
+.live-level-row{
+  margin-top:5px;
+}
+.profile-level-card{
+  background:#fff;
+  border:1px solid #dbe5ea;
+  border-radius:17px;
+  padding:13px;
+  margin-bottom:12px;
+}
+.profile-level-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+.badges-level-box{
+  margin-top:8px;
+  padding:10px;
+  border-radius:14px;
+  background:#ffffff18;
+}
+.level-up-modal{
+  text-align:center;
+  padding:8px 0;
+}
+.level-up-icon{
+  width:96px;
+  height:96px;
+  margin:0 auto 12px;
+  border-radius:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  background:linear-gradient(145deg,#fff8d8,#ffe58f);
+  box-shadow:0 12px 25px #a1620725;
+  animation:badgePop .5s ease;
+}
+
 </style>
 </head>
 <body>
@@ -2429,7 +2518,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.8';
+const APP_VERSION='v1.9';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -2873,7 +2962,10 @@ function renderSession(){
 
  const draw=()=>{
    ensureStats();
-   const orderedList=[...list].sort((a,b)=>totalPoints(b.id)-totalPoints(a.id)||a.name.localeCompare(b.name,'ar'));
+   const orderedList=[...list].sort((a,b)=>{
+     const la=getStudentLevel(a.id),lb=getStudentLevel(b.id);
+     return lb.level-la.level||totalPoints(b.id)-totalPoints(a.id)||a.name.localeCompare(b.name,'ar');
+   });
    const present=orderedList.filter(s=>statusOf(s.id)==='present').length;
    const late=list.filter(s=>statusOf(s.id)==='late').length;
    const absent=list.filter(s=>statusOf(s.id)==='absent').length;
@@ -2923,6 +3015,7 @@ function renderSession(){
              <div class="live-student-meta">
                <span class="live-student-points"><b data-points-value="${s.id}">${totalPoints(s.id)}</b> نقطة</span>
              </div>
+             ${levelHtml(s.id,{compact:true})}
              <div class="live-progress-row">
                <span class="live-progress-label">المهام</span>
                <div class="live-progress-track"><div class="live-progress-fill" style="width:${Math.min(100,taskPoints(s.id)/20*100)}%"></div></div>
@@ -3061,6 +3154,7 @@ function renderSession(){
 
    save();
    setTimeout(()=>checkAndUnlockBadges(studentId),120);
+   setTimeout(()=>checkLevelUp(studentId),220);
 
    const afterPoints=totalPoints(studentId);
    const pointsEl=document.querySelector(`[data-points-value="${studentId}"]`);
@@ -3843,6 +3937,73 @@ function renderSettings(){
 }
 
 
+
+const LEVEL_DEFINITIONS=[
+ {level:1,min:0,max:9,title:'مبتدئ',icon:'🌱'},
+ {level:2,min:10,max:24,title:'مجتهد',icon:'⭐'},
+ {level:3,min:25,max:49,title:'متقدم',icon:'🥉'},
+ {level:4,min:50,max:79,title:'متميز',icon:'🥈'},
+ {level:5,min:80,max:119,title:'نجم',icon:'🥇'},
+ {level:6,min:120,max:Infinity,title:'أسطورة الفصل',icon:'👑'}
+];
+
+function getStudentLevel(studentId){
+ const points=totalPoints(studentId);
+ const current=LEVEL_DEFINITIONS.find(l=>points>=l.min&&points<=l.max)||LEVEL_DEFINITIONS[0];
+ const next=LEVEL_DEFINITIONS.find(l=>l.level===current.level+1);
+ const rangeMax=Number.isFinite(current.max)?current.max:current.min+40;
+ const progress=next
+   ?Math.max(0,Math.min(100,Math.round((points-current.min)/(next.min-current.min)*100)))
+   :100;
+ const remaining=next?Math.max(0,next.min-points):0;
+ return {...current,points,next,progress,remaining};
+}
+
+function levelHtml(studentId,{compact=false}={}){
+ const info=getStudentLevel(studentId);
+ return `<div class="${compact?'live-level-row':''}">
+   <span class="level-chip level-${info.level}">${info.icon} المستوى ${info.level} · ${info.title}</span>
+   <div class="level-progress-wrap">
+     <div class="level-progress-label">
+       <span>${info.points} نقطة</span>
+       <span>${info.next?`${info.next.min} للمستوى التالي`:'أعلى مستوى'}</span>
+     </div>
+     <div class="level-progress-track"><div class="level-progress-fill" style="width:${info.progress}%"></div></div>
+     <div class="level-message">${info.next?`تبقى ${info.remaining} نقاط للوصول إلى المستوى ${info.next.level}`:'وصل إلى أعلى مستوى 🎉'}</div>
+   </div>
+ </div>`;
+}
+
+function checkLevelUp(studentId,{show=true}={}){
+ const student=data.students.find(s=>s.id===studentId);
+ if(!student)return null;
+ const info=getStudentLevel(studentId);
+ const oldLevel=student.levelUnlocked||1;
+ if(info.level>oldLevel){
+   student.levelUnlocked=info.level;
+   save();
+   if(show)showLevelUp(student,info);
+   return info;
+ }
+ if(!student.levelUnlocked){
+   student.levelUnlocked=info.level;
+   save();
+ }
+ return null;
+}
+
+function showLevelUp(student,info){
+ openModal(`<div class="level-up-modal">
+   <div class="level-up-icon">${info.icon}</div>
+   <h2 style="margin:0 0 5px">ارتقى إلى مستوى جديد!</h2>
+   <h3 style="margin:0;color:#a16207">المستوى ${info.level} · ${info.title}</h3>
+   <p>${student.name}</p>
+   <div class="notice" style="margin-top:10px">${info.points} نقطة حتى الآن</div>
+   <button class="btn" id="levelUpClose" style="width:100%;margin-top:12px">رائع</button>
+ </div>`);
+ document.getElementById('levelUpClose').onclick=closeModal;
+}
+
 const BADGE_DEFINITIONS=[
  {id:'firstPoint',icon:'✨',title:'البداية المضيئة',description:'الحصول على أول نقطة',check:s=>totalPoints(s.id)>=1},
  {id:'points10',icon:'🥉',title:'عشر نقاط',description:'الوصول إلى 10 نقاط',check:s=>totalPoints(s.id)>=10},
@@ -3909,7 +4070,7 @@ function renderStudentBadges(studentId){
    <button class="profile-back-btn" id="badgesBack" aria-label="رجوع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
    <div></div>
  </div>
- <div class="badges-hero">${avatarHtml(student)}<div><h2 style="margin:0 0 5px">${student.name}</h2><div>${c?.name||''}${c?.stage?` — ${c.stage}`:''}</div><div style="margin-top:6px">${unlockedCount} شارات محققة</div></div></div>
+ <div class="badges-hero">${avatarHtml(student)}<div><h2 style="margin:0 0 5px">${student.name}</h2><div>${c?.name||''}${c?.stage?` — ${c.stage}`:''}</div><div style="margin-top:6px">${unlockedCount} شارات محققة</div><div class="badges-level-box">${levelHtml(studentId)}</div></div></div>
  <div class="badges-progress-card"><div class="badges-progress-head"><b>تقدم الإنجازات</b><span>${progress}%</span></div><div class="badges-progress-track"><div class="badges-progress-fill" style="width:${progress}%"></div></div></div>
  <div class="badges-grid">${BADGE_DEFINITIONS.map(badge=>{const record=records[badge.id];return `<div class="badge-card ${record?'unlocked':'locked'}"><span class="badge-lock">${record?'✓':'🔒'}</span><div class="badge-icon">${badge.icon}</div><div class="badge-title">${badge.title}</div><div class="badge-desc">${badge.description}</div>${record?`<div class="badge-date">${new Date(record.unlockedAt).toLocaleDateString('ar-SA')}</div>`:''}</div>`}).join('')}</div>`;
  document.getElementById('badgesBack').onclick=()=>{window.reportStudentId=studentId;page='report';render()};
@@ -3975,6 +4136,14 @@ function renderReport(id){
  <div class="student-insight ${insight.cls}">
    <b>${insight.title}</b>
    <div>${insight.text}</div>
+ </div>
+
+ <div class="profile-level-card">
+   <div class="profile-level-head">
+     <b>مستوى الطالب</b>
+     <span>${getStudentLevel(id).icon}</span>
+   </div>
+   ${levelHtml(id)}
  </div>
 
  <div class="profile-metrics">
