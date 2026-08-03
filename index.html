@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v4.3</title>
+<title>رَصْد — v4.4</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -5051,6 +5051,72 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   color:#64748b;
 }
 
+
+/* ===== فكرة اليوم التربوية v4.4 ===== */
+.daily-tip-card{
+  position:relative;
+  overflow:hidden;
+  margin-top:12px;
+  border:1px solid #cfe5e1;
+  border-radius:22px;
+  padding:17px;
+  background:linear-gradient(145deg,#f0fdfa,#ecfeff);
+  box-shadow:0 8px 24px #0f766e12;
+}
+.daily-tip-card::after{
+  content:'💡';
+  position:absolute;
+  left:12px;
+  top:7px;
+  font-size:58px;
+  opacity:.08;
+  transform:rotate(-10deg);
+}
+.daily-tip-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+.daily-tip-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:19px;
+  font-weight:950;
+  color:#0f766e;
+}
+.daily-tip-number{
+  padding:5px 9px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid #cfe5e1;
+  color:#64748b;
+  font-size:11px;
+  font-weight:800;
+}
+.daily-tip-text{
+  position:relative;
+  z-index:1;
+  margin:0;
+  color:#17324d;
+  font-size:16px;
+  font-weight:800;
+  line-height:1.9;
+}
+.daily-tip-actions{
+  position:relative;
+  z-index:1;
+  display:flex;
+  justify-content:flex-end;
+  margin-top:13px;
+}
+.daily-tip-actions .btn{
+  padding:9px 14px;
+  border-radius:13px;
+}
+
 </style>
 </head>
 <body>
@@ -5105,7 +5171,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v4.3';
+const APP_VERSION='v4.4';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -5207,10 +5273,62 @@ function render(){
  if(page==='badges')return renderStudentBadges(window.badgesStudentId);
 }
 
+
+const PEDAGOGICAL_TIPS=[
+ 'ابدأ الحصة بسؤال بسيط يعرف معظم الطلاب إجابته، ثم انتقل تدريجيًا إلى الأسئلة الأصعب؛ فهذا يبني الثقة ويزيد المشاركة.',
+ 'امنح الطالب الخجول سؤالًا مناسبًا لقدراته، ثم عزز إجابته أمام زملائه بكلمة صادقة ومحددة.',
+ 'انتظر خمس ثوانٍ بعد طرح السؤال قبل اختيار المجيب؛ وقت التفكير القصير يرفع جودة الإجابات.',
+ 'بدل أن تقول: إجابتك خطأ، قل: فكرة جيدة، دعنا نراجع جزءًا منها ونحاول مرة أخرى.',
+ 'اختم الحصة بطلب تلخيص أهم فكرة تعلمها الطلاب في جملة واحدة.',
+ 'نوّع اختيار الطلاب، ولا تجعل المشاركة مقتصرة على أصحاب الأيدي المرفوعة دائمًا.',
+ 'اجعل الطالب يشرح لزميله الفكرة قبل أن يجيب أمام الفصل؛ الحوار القصير يثبت التعلم.',
+ 'عزز السلوك المحدد بدل المدح العام؛ قل: أعجبني تنظيمك للحل، بدلًا من: ممتاز فقط.',
+ 'استخدم مثالًا من حياة الطلاب اليومية عند شرح المفاهيم المجردة.',
+ 'قسّم السؤال الكبير إلى خطوات صغيرة حتى يستطيع الطالب الوصول إلى الإجابة بنفسه.',
+ 'خصص دقيقة في منتصف الحصة لسؤال الطلاب: ما الجزء الذي ما زال غير واضح؟',
+ 'عند إجابة الطالب، اطلب منه توضيح كيف توصل إليها، وليس ذكر النتيجة فقط.',
+ 'ابدأ مراجعة الدرس السابق بسؤال واحد سريع قبل تقديم المحتوى الجديد.',
+ 'اجعل الطالب الذي أتقن المهارة يساعد زميلًا يحتاج دعمًا مع توجيه واضح.',
+ 'استخدم أسماء الطلاب أثناء التعزيز؛ ذكر الاسم يجعل التشجيع أكثر تأثيرًا.',
+ 'لا تكثر من التصحيح أثناء حديث الطالب؛ دعه يكمل فكرته ثم ناقشها بهدوء.',
+ 'غيّر نبرة صوتك وموقعك في الصف عند الانتقال إلى فكرة مهمة لجذب الانتباه.',
+ 'ضع هدفًا واضحًا للحصة واذكره للطلاب في البداية ثم ارجع إليه في النهاية.',
+ 'اجعل الخطأ فرصة للتعلم بالسؤال: ماذا تعلمنا من هذه المحاولة؟',
+ 'اطلب من الطلاب توقع الإجابة قبل عرضها؛ التوقع ينشط التفكير.',
+ 'استخدم سؤالًا مفتوحًا واحدًا على الأقل في كل حصة لتشجيع التفكير المتعدد.',
+ 'راقب الطلاب الأقل مشاركة، وضع لنفسك هدفًا لإشراك اثنين منهم اليوم.',
+ 'أعط تعليمات النشاط في خطوات قصيرة، ثم اطلب من طالب إعادة شرح المطلوب.',
+ 'احتفل بالتقدم الصغير، فالتطور التدريجي أهم من انتظار الأداء الكامل.',
+ 'استخدم إشارات بصرية ثابتة للهدوء والانتقال بين الأنشطة بدل تكرار التعليمات.',
+ 'اترك مساحة للطلاب لطرح أسئلتهم، فالسؤال الجيد دليل على تعلم نشط.',
+ 'قبل إنهاء الدرس، اطلب مثالًا جديدًا من الطلاب يطبق الفكرة التي تعلموها.',
+ 'اجعل التعزيز قريبًا من السلوك الإيجابي مباشرة حتى يفهم الطالب سبب حصوله عليه.',
+ 'عند انخفاض التفاعل، غيّر نمط النشاط بدل رفع الصوت أو تكرار الشرح بالطريقة نفسها.',
+ 'استخدم الاختيار العشوائي بعد منح الجميع وقتًا للتفكير حتى يكون عادلًا ومشجعًا.',
+ 'اعرض نموذجًا لإجابة جيدة قبل مطالبة الطلاب بمهمة جديدة أو معقدة.',
+ 'ابدأ بالتغذية الراجعة الإيجابية، ثم حدد نقطة واحدة فقط يحتاج الطالب إلى تحسينها.',
+ 'اربط بداية الحصة بنهايتها بسؤال: هل تحقق الهدف الذي بدأنا به؟',
+ 'اجعل الطالب يختار بين طريقتين لتنفيذ المهمة؛ الاختيار يزيد شعوره بالمسؤولية.',
+ 'استخدم دقيقة صمت للكتابة قبل النقاش؛ الكتابة تساعد الطلاب المترددين على المشاركة.',
+ 'اطلب من طالبين تقديم طريقتين مختلفتين للحل ثم ناقش مزايا كل طريقة.',
+ 'لا تعط الإجابة سريعًا؛ استخدم سؤالًا مساعدًا يقود الطالب إليها.',
+ 'خصص نهاية الأسبوع للاحتفاء بأكثر طالب تحسنًا، وليس الأعلى درجة فقط.',
+ 'اجعل بعض الأسئلة موجهة للفهم والتفسير، لا للحفظ والاسترجاع فقط.',
+ 'راقب لغة جسد الطلاب؛ التشتت المتكرر قد يعني أن النشاط يحتاج تغييرًا أو تبسيطًا.'
+];
+function dailyTipIndex(offset=0){
+ const now=new Date();
+ const dayKey=Math.floor(new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime()/86400000);
+ return ((dayKey+offset)%PEDAGOGICAL_TIPS.length+PEDAGOGICAL_TIPS.length)%PEDAGOGICAL_TIPS.length;
+}
+
 function renderHome(){
  setTitle('رَصْد','اليوم الدراسي');
  const slot=currentScheduledSlot(),c=slot?data.classes.find(x=>x.id===slot.classId):null;
  const today=todayName(),todayCount=today?Object.values(data.schedule[today]||{}).filter(Boolean).length:0;
+ window.homeTipOffset=window.homeTipOffset||0;
+ const tipIndex=dailyTipIndex(window.homeTipOffset);
+ const tipText=PEDAGOGICAL_TIPS[tipIndex];
  view.innerHTML=`<div class="card home-hero">
    <div class="version-badge" style="background:#ffffff22;color:#fff;margin-bottom:10px">رَصْد ${APP_VERSION}</div><h2>مرحباً ${data.teacher.name||'بك'} 👋</h2>
    <div>${new Date().toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
@@ -5225,15 +5343,22 @@ function renderHome(){
   <div class="metric">حصص اليوم<b>${todayCount}</b></div>
   <div class="metric">الحصص المحفوظة<b>${data.sessions.length}</b></div>
  </div>
- <div class="card" style="margin-top:12px"><h3>اختصارات</h3><div class="grid">
-   <button class="btn secondary" data-go="classes">الفصول</button>
-   <button class="btn secondary" data-go="activities">الأنشطة</button>
-   <button class="btn secondary" data-go="exams">الاختبارات</button>
-   <button class="btn secondary" data-go="settings">الإعدادات</button>
- </div></div>`;
+ <div class="daily-tip-card">
+   <div class="daily-tip-head">
+     <div class="daily-tip-title">💡 فكرة اليوم</div>
+     <div class="daily-tip-number">فكرة ${tipIndex+1} من ${PEDAGOGICAL_TIPS.length}</div>
+   </div>
+   <p class="daily-tip-text">${tipText}</p>
+   <div class="daily-tip-actions">
+     <button class="btn secondary" id="nextDailyTip">فكرة أخرى ←</button>
+   </div>
+ </div>`;
  document.getElementById('quickStart')?.addEventListener('click',()=>startSession(c.id,slot.period));
  document.getElementById('goSchedule')?.addEventListener('click',()=>{page='settings';render();setTimeout(()=>document.getElementById('scheduleCard')?.scrollIntoView(),100)});
- document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{page=b.dataset.go;render()});
+ document.getElementById('nextDailyTip')?.addEventListener('click',()=>{
+  window.homeTipOffset=(window.homeTipOffset||0)+1;
+  renderHome();
+ });
 }
 function startSession(classId,period){
  data.selectedClass=classId;
