@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.1</title>
+<title>رَصْد — v1.2</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -1305,6 +1305,188 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   100%{box-shadow:0 0 0 0 transparent}
 }
 
+
+/* ===== سجل الطالب v1.2 ===== */
+.student-profile-hero{
+  background:linear-gradient(135deg,#17324d,#0f766e);
+  color:#fff;
+  border-radius:22px;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:12px;
+  box-shadow:0 10px 26px #17324d22;
+}
+.student-profile-hero .avatar-image,
+.student-profile-hero .avatar-letter{
+  width:82px!important;
+  height:82px!important;
+  flex-basis:82px!important;
+}
+.student-profile-hero h2{
+  margin:0 0 5px;
+  font-size:23px;
+}
+.student-profile-level{
+  display:inline-flex;
+  margin-top:7px;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#ffffff22;
+  font-size:11px;
+  font-weight:900;
+}
+.student-insight{
+  border-radius:18px;
+  padding:13px 14px;
+  margin-bottom:12px;
+  border:1px solid #dbe5ea;
+  background:#fff;
+}
+.student-insight.good{background:#ecfdf5;border-color:#bbf7d0}
+.student-insight.watch{background:#fffbeb;border-color:#fde68a}
+.student-insight.alert{background:#fef2f2;border-color:#fecaca}
+.student-insight b{display:block;margin-bottom:5px}
+.profile-metrics{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:14px;
+}
+.profile-metric{
+  background:#fff;
+  border:1px solid #dbe5ea;
+  border-radius:15px;
+  padding:11px 6px;
+  text-align:center;
+}
+.profile-metric span{
+  display:block;
+  color:#6b7280;
+  font-size:11px;
+}
+.profile-metric b{
+  display:block;
+  margin-top:5px;
+  font-size:21px;
+  color:#17324d;
+}
+.profile-section{
+  background:#fff;
+  border:1px solid #dbe5ea;
+  border-radius:18px;
+  padding:14px;
+  margin-bottom:12px;
+}
+.profile-section h3{
+  margin:0 0 11px;
+}
+.progress-track{
+  height:11px;
+  border-radius:999px;
+  background:#e5edf2;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#0f766e,#38b2ac);
+}
+.behavior-grid-profile{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:7px;
+}
+.behavior-box{
+  border:1px solid #dbe5ea;
+  border-radius:13px;
+  padding:9px 5px;
+  text-align:center;
+  background:#f8fafc;
+}
+.behavior-box b{display:block;font-size:19px;margin-top:4px}
+.profile-timeline{
+  position:relative;
+}
+.profile-timeline::before{
+  content:'';
+  position:absolute;
+  right:15px;
+  top:8px;
+  bottom:8px;
+  width:2px;
+  background:#dbe5ea;
+}
+.profile-event{
+  position:relative;
+  padding-right:43px;
+  margin-bottom:10px;
+}
+.profile-event::before{
+  content:'';
+  position:absolute;
+  right:6px;
+  top:8px;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:#e7f4f2;
+  border:4px solid #fff;
+  box-shadow:0 0 0 1px #cde4df;
+}
+.profile-event-card{
+  border:1px solid #dbe5ea;
+  border-radius:13px;
+  padding:10px 11px;
+  background:#fff;
+}
+.profile-event-title{font-weight:900}
+.profile-event-date{font-size:11px;color:#7b8795;margin-top:3px}
+.profile-event-note{font-size:13px;color:#526174;margin-top:6px}
+.profile-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:12px;
+}
+.profile-chart{
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  height:120px;
+  padding:8px 4px 0;
+  border-bottom:1px solid #dbe5ea;
+}
+.profile-bar-wrap{
+  flex:1;
+  min-width:0;
+  text-align:center;
+}
+.profile-bar{
+  width:100%;
+  min-height:4px;
+  border-radius:8px 8px 2px 2px;
+  background:linear-gradient(#38b2ac,#0f766e);
+}
+.profile-bar-label{
+  font-size:9px;
+  color:#7b8795;
+  margin-top:4px;
+  overflow:hidden;
+  white-space:nowrap;
+}
+@media(max-width:520px){
+  .profile-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .behavior-grid-profile{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .student-profile-hero .avatar-image,
+  .student-profile-hero .avatar-letter{
+    width:72px!important;
+    height:72px!important;
+    flex-basis:72px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1340,7 +1522,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.1';
+const APP_VERSION='v1.2';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -2159,65 +2341,146 @@ function renderSettings(){
  exportData.onclick=()=>{const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(data,null,2));a.download='rasd-backup.json';a.click()};
  resetData.onclick=()=>{if(confirm('سيتم حذف جميع البيانات نهائياً')){localStorage.removeItem('rasdData');location.reload()}};
 }
+
+function buildStudentInsight(studentId){
+ const points=totalPoints(studentId);
+ const abs=data.sessions.filter(se=>se.attendance?.[studentId]==='absent').length;
+ const late=data.sessions.filter(se=>se.attendance?.[studentId]==='late').length;
+ const recent=data.logs.filter(l=>l.studentId===studentId).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+ const recentScore=recent.reduce((sum,l)=>sum+(l.value||0),0);
+
+ if(abs>=3 || recentScore<0){
+   return {cls:'alert',title:'يحتاج تدخل',text:'يوجد غياب متكرر أو انخفاض في نتائج المتابعة الأخيرة.'};
+ }
+ if(late>=3 || points<8){
+   return {cls:'watch',title:'يحتاج متابعة',text:'ينصح بمتابعة المشاركة والالتزام والمهام خلال الحصص القادمة.'};
+ }
+ return {cls:'good',title:'الطالب في وضع جيد',text:'مستوى المتابعة مستقر والنتائج الحالية إيجابية.'};
+}
+
 function renderReport(id){
  const s=data.students.find(x=>x.id===id);
+ if(!s){page='students';return render()}
  const c=data.classes.find(x=>x.id===s.classId);
  const e=data.exams[id]||{};
- const logs=data.logs
-   .filter(l=>l.studentId===id)
-   .sort((a,b)=>b.date.localeCompare(a.date));
+ const logs=data.logs.filter(l=>l.studentId===id).sort((a,b)=>b.date.localeCompare(a.date));
+ const insight=buildStudentInsight(id);
+
+ const abs=data.sessions.filter(se=>se.attendance?.[id]==='absent').length;
+ const late=data.sessions.filter(se=>se.attendance?.[id]==='late').length;
+ const present=data.sessions.filter(se=>(se.attendance?.[id]||'present')==='present').length;
+ const taskDone=logs.filter(l=>l.task && l.value>0).length;
+ const taskAll=logs.filter(l=>l.task).length;
+ const taskRate=taskAll?Math.round(taskDone/taskAll*100):0;
+
+ const excellent=logs.filter(l=>l.name==='سلوك ممتاز').length;
+ const good=logs.filter(l=>l.name==='سلوك جيد').length;
+ const warnings=logs.filter(l=>l.name==='تنبيه سلوكي').length;
+ const violations=logs.filter(l=>l.name==='مخالفة سلوكية').length;
+
+ const chartLogs=logs.filter(l=>l.value!==undefined).slice(0,8).reverse();
+ const maxChart=Math.max(5,...chartLogs.map(l=>Math.abs(l.value||0)));
 
  setTitle('سجل الطالب',s.name);
 
- const final=(e.p1||0)+(e.p2||0)+(e.final||0)+taskPoints(id);
- const abs=data.sessions.filter(se=>se.attendance?.[id]==='absent').length;
- const late=data.sessions.filter(se=>se.attendance?.[id]==='late').length;
-
  view.innerHTML=`
- <div class="report">
-   <div class="report-hero">
-     ${avatarHtml(s)}
-     <div>
-       <h2>${s.name}</h2>
-       <div>${c?.name||''} ${c?.stage?`— ${c.stage}`:''}</div>
-     </div>
+ <div class="student-profile-hero">
+   ${avatarHtml(s)}
+   <div>
+     <h2>${s.name}</h2>
+     <div>${c?.name||''}${c?.stage?` — ${c.stage}`:''}</div>
+     <span class="student-profile-level">${studentLevel(id).label}</span>
    </div>
+ </div>
 
-   <div class="report-metrics">
-     <div class="report-metric"><span>النقاط</span><b>${totalPoints(id)}</b></div>
-     <div class="report-metric"><span>المهام</span><b>${taskPoints(id)}/20</b></div>
-     <div class="report-metric"><span>الغياب</span><b>${abs}</b></div>
-     <div class="report-metric"><span>التأخر</span><b>${late}</b></div>
-     <div class="report-metric"><span>الفتري الأول</span><b>${e.p1||0}/20</b></div>
-     <div class="report-metric"><span>الفتري الثاني</span><b>${e.p2||0}/20</b></div>
-     <div class="report-metric"><span>نهاية الفصل</span><b>${e.final||0}/40</b></div>
-     <div class="report-metric"><span>المجموع</span><b>${final}/100</b></div>
+ <div class="student-insight ${insight.cls}">
+   <b>${insight.title}</b>
+   <div>${insight.text}</div>
+ </div>
+
+ <div class="profile-metrics">
+   <div class="profile-metric"><span>النقاط</span><b>${totalPoints(id)}</b></div>
+   <div class="profile-metric"><span>المهام</span><b>${taskPoints(id)}/20</b></div>
+   <div class="profile-metric"><span>الغياب</span><b>${abs}</b></div>
+   <div class="profile-metric"><span>التأخر</span><b>${late}</b></div>
+ </div>
+
+ <div class="profile-section">
+   <h3>تطور النقاط</h3>
+   ${chartLogs.length?`
+   <div class="profile-chart">
+     ${chartLogs.map(l=>{
+       const h=Math.max(5,Math.round(Math.abs(l.value||0)/maxChart*100));
+       return `<div class="profile-bar-wrap">
+         <div class="profile-bar" style="height:${h}px;opacity:${l.value<0?.45:1}"></div>
+         <div class="profile-bar-label">${new Date(l.date).toLocaleDateString('ar-SA',{day:'numeric',month:'numeric'})}</div>
+       </div>`;
+     }).join('')}
+   </div>`:'<div class="notice">لا توجد بيانات كافية للرسم البياني بعد</div>'}
+ </div>
+
+ <div class="profile-section">
+   <h3>إنجاز المهام</h3>
+   <div class="row" style="margin-bottom:8px">
+     <div>${taskDone} مهمة منجزة من أصل ${taskAll}</div>
+     <b style="text-align:left">${taskRate}%</b>
    </div>
+   <div class="progress-track"><div class="progress-fill" style="width:${taskRate}%"></div></div>
+ </div>
 
+ <div class="profile-section">
+   <h3>السلوك</h3>
+   <div class="behavior-grid-profile">
+     <div class="behavior-box"><span>ممتاز</span><b>${excellent}</b></div>
+     <div class="behavior-box"><span>جيد</span><b>${good}</b></div>
+     <div class="behavior-box"><span>تنبيه</span><b>${warnings}</b></div>
+     <div class="behavior-box"><span>مخالفة</span><b>${violations}</b></div>
+   </div>
+ </div>
+
+ <div class="profile-section">
+   <h3>الحضور</h3>
+   <div class="profile-metrics" style="margin:0">
+     <div class="profile-metric"><span>حاضر</span><b>${present}</b></div>
+     <div class="profile-metric"><span>غائب</span><b>${abs}</b></div>
+     <div class="profile-metric"><span>متأخر</span><b>${late}</b></div>
+     <div class="profile-metric"><span>الحصص</span><b>${present+abs+late}</b></div>
+   </div>
+ </div>
+
+ <div class="profile-section">
    <h3>سجل المتابعة</h3>
-
    ${logs.length?`
-   <div class="timeline">
+   <div class="profile-timeline">
      ${logs.map(l=>`
-       <div class="timeline-item">
-         <span class="timeline-dot"></span>
-         <div class="timeline-card">
-           <div class="timeline-title">
+       <div class="profile-event">
+         <div class="profile-event-card">
+           <div class="profile-event-title">
              ${l.name}
              ${l.value?` <span style="color:${l.value>0?'#0f766e':'#b91c1c'}">(${l.value>0?'+':''}${l.value})</span>`:''}
            </div>
-           <div class="timeline-date">${new Date(l.date).toLocaleString('ar-SA')}</div>
-           ${l.note?`<div class="timeline-note">${l.note}</div>`:''}
+           <div class="profile-event-date">${new Date(l.date).toLocaleString('ar-SA')}</div>
+           ${l.note?`<div class="profile-event-note">${l.note}</div>`:''}
          </div>
        </div>
      `).join('')}
    </div>`:'<div class="notice">لا توجد سجلات متابعة لهذا الطالب حتى الآن</div>'}
+ </div>
 
-   <div class="report-actions no-print">
-     <button class="btn" id="printReport">حفظ/طباعة PDF</button>
-     <button class="btn secondary" id="waReport">فتح واتساب</button>
-     <button class="btn light" id="backStudents">رجوع</button>
+ <div class="profile-section">
+   <h3>درجات الاختبارات</h3>
+   <div class="profile-metrics" style="margin:0">
+     <div class="profile-metric"><span>الفتري الأول</span><b>${e.p1||0}/20</b></div>
+     <div class="profile-metric"><span>الفتري الثاني</span><b>${e.p2||0}/20</b></div>
+     <div class="profile-metric"><span>نهاية الفصل</span><b>${e.final||0}/40</b></div>
+     <div class="profile-metric"><span>المجموع</span><b>${(e.p1||0)+(e.p2||0)+(e.final||0)+taskPoints(id)}/100</b></div>
    </div>
+ </div>
+
+ <div class="profile-actions no-print">
+   <button class="btn" id="printReport">طباعة التقرير</button>
+   <button class="btn secondary" id="waReport">مشاركة مع ولي الأمر</button>
+   <button class="btn light" id="backStudents" style="grid-column:1/-1">العودة للطلاب</button>
  </div>`;
 
  document.getElementById('printReport').onclick=()=>window.print();
