@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.9.2</title>
+<title>رَصْد — v1.9.3</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -2502,6 +2502,36 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
  .classroom-behavior{font-size:10px;min-height:70px}
 }
 
+
+/* ===== السلوكيات داخل الحصة v1.9.3 ===== */
+.live-behaviors-btn{
+  width:100%;
+  min-height:48px;
+  margin-top:8px;
+  border:0;
+  border-radius:13px;
+  background:linear-gradient(145deg,#e8f7f4,#d3eee9);
+  color:#08756c;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+.live-behaviors-btn .live-behaviors-icon{
+  width:31px;
+  height:31px;
+  border-radius:10px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 10px #17324d12;
+}
+.live-behavior-note{
+  margin-top:10px;
+}
+
 </style>
 </head>
 <body>
@@ -2556,7 +2586,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.9.2';
+const APP_VERSION='v1.9.3';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -3109,6 +3139,10 @@ function renderSession(){
              <span class="live-action-icon">${rasdIcon('absent',16)}</span>مخالفة
            </button>
          </div>
+         <button class="live-behaviors-btn" data-live-behaviors="${s.id}">
+           <span class="live-behaviors-icon">🎯</span>
+           السلوكيات الصفية
+         </button>
        </div>`;
      }).join('');
 
@@ -3118,6 +3152,10 @@ function renderSession(){
          const action=btn.dataset.liveAction;
          applyLiveAction(studentId,action);
        };
+     });
+
+     document.querySelectorAll('[data-live-behaviors]').forEach(btn=>{
+       btn.onclick=()=>openLiveBehaviors(btn.dataset.liveBehaviors);
      });
 
      document.querySelectorAll('[data-status-id]').forEach(btn=>{
@@ -3170,6 +3208,75 @@ function renderSession(){
    updateTimer();
    clearInterval(window.liveTimerInterval);
    window.liveTimerInterval=setInterval(updateTimer,1000);
+ };
+
+
+ const openLiveBehaviors=(studentId)=>{
+   const student=list.find(s=>s.id===studentId);
+   if(!student)return;
+
+   openModal(`<div>
+     <h2 style="margin:0 0 4px">السلوكيات الصفية</h2>
+     <p class="muted" style="margin-top:0">${student.name}</p>
+     ${behaviorInputHtml()}
+     <div class="field live-behavior-note">
+       <label>ملاحظة اختيارية</label>
+       <textarea id="liveBehaviorNote" rows="3" placeholder="اكتب ملاحظة عند الحاجة"></textarea>
+     </div>
+     <button class="btn light" id="closeLiveBehaviors" style="width:100%">إغلاق</button>
+   </div>`);
+
+   document.getElementById('closeLiveBehaviors').onclick=closeModal;
+
+   document.querySelectorAll('[data-classroom-behavior]').forEach(btn=>{
+     btn.onclick=()=>{
+       const name=decodeURIComponent(btn.dataset.classroomBehavior);
+       const value=+btn.dataset.classroomValue;
+       const task=btn.dataset.classroomTask==='1';
+       const note=document.getElementById('liveBehaviorNote')?.value.trim()||'';
+
+       const log={
+         id:crypto.randomUUID(),
+         studentId,
+         sessionId:currentSession.id,
+         name,
+         value,
+         task,
+         note,
+         date:new Date().toISOString()
+       };
+
+       data.logs.push(log);
+       currentSession.liveStats=currentSession.liveStats||{pointsAdded:0,actions:0};
+       currentSession.liveStats.actions++;
+       currentSession.liveStats.pointsAdded+=value;
+       save();
+
+       const positive=value>0;
+       if(positive){
+         setTimeout(()=>checkAndUnlockBadges(studentId),120);
+         setTimeout(()=>checkLevelUp(studentId),220);
+       }
+
+       closeModal();
+
+       const message=positive
+         ?`🌟 تم تسجيل ${name} لـ ${student.name}`
+         :`🚫 تم تسجيل ${name} على ${student.name}`;
+
+       const undoType=positive?'excellent':'violation';
+
+       showLiveUndo(message,()=>{
+         data.logs=data.logs.filter(l=>l.id!==log.id);
+         currentSession.liveStats.actions=Math.max(0,(currentSession.liveStats.actions||1)-1);
+         currentSession.liveStats.pointsAdded-=(value||0);
+         save();
+         draw();
+       },undoType);
+
+       draw();
+     };
+   });
  };
 
  const applyLiveAction=(studentId,action)=>{
