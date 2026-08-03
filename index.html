@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.3</title>
+<title>رَصْد — v1.3.1</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -1645,6 +1645,14 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   .dashboard-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
+
+.class-dashboard-btn{
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:transparent!important;
+  position:relative!important;
+  z-index:2!important;
+}
+
 </style>
 </head>
 <body>
@@ -1680,7 +1688,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.3';
+const APP_VERSION='v1.3.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -1767,15 +1775,15 @@ function render(){
  document.body.classList.toggle('focus-mode',page==='session');
  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
  document.getElementById('fab').classList.toggle('hidden',!['classes','students'].includes(page));
- if(page==='home')renderHome();
- if(page==='classes')renderClasses();
- if(page==='students')renderStudents();
- if(page==='session')renderSession();
- if(page==='wheel')renderWheel();
- if(page==='exams')renderExams();
- if(page==='settings')renderSettings();
- if(page==='report')renderReport(window.reportStudentId);
- if(page==='dashboard')renderClassDashboard();
+ if(page==='home')return renderHome();
+ if(page==='classes')return renderClasses();
+ if(page==='students')return renderStudents();
+ if(page==='session')return renderSession();
+ if(page==='wheel')return renderWheel();
+ if(page==='exams')return renderExams();
+ if(page==='settings')return renderSettings();
+ if(page==='report')return renderReport(window.reportStudentId);
+ if(page==='dashboard')return renderClassDashboard();
 }
 
 function renderHome(){
@@ -2207,7 +2215,15 @@ function renderStudents(){
  draw(list);
  document.getElementById('startAny').onclick=()=>pickSessionPeriod(c.id);
  document.getElementById('bulkBtn').onclick=bulkAdd;
- document.getElementById('classDashboardBtn').onclick=()=>{page='dashboard';render()};
+ const dashboardButton=document.getElementById('classDashboardBtn');
+ if(dashboardButton){
+   dashboardButton.addEventListener('click',e=>{
+     e.preventDefault();
+     e.stopPropagation();
+     page='dashboard';
+     render();
+   });
+ }
  document.getElementById('studentSearch').oninput=e=>{
    const q=e.target.value.trim();
    draw(list.filter(s=>s.name.includes(q)));
