@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v4.4</title>
+<title>رَصْد — v4.4.1</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -5117,6 +5117,113 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   border-radius:13px;
 }
 
+
+/* ===== الصفحة الرئيسية المدمجة v4.4.1 ===== */
+.home-compact{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.home-compact .home-hero{
+  margin:0!important;
+  padding:14px 15px!important;
+  border-radius:18px!important;
+}
+.home-compact .home-hero .version-badge{
+  margin-bottom:5px!important;
+  padding:4px 8px!important;
+  font-size:10px!important;
+}
+.home-compact .home-hero h2{
+  margin:0 0 4px!important;
+  font-size:21px!important;
+}
+.home-compact .home-hero h3{
+  margin:7px 0 4px!important;
+  font-size:15px!important;
+}
+.home-compact .home-hero hr{
+  margin:7px 0!important;
+}
+.home-compact .home-hero .class-title{
+  font-size:20px!important;
+  margin:2px 0!important;
+}
+.home-compact .home-hero .btn{
+  margin-top:7px!important;
+  padding:9px 13px!important;
+}
+.home-compact>.grid{
+  margin-top:0!important;
+  gap:7px!important;
+}
+.home-compact .metric{
+  min-height:58px!important;
+  padding:8px!important;
+  border-radius:14px!important;
+  font-size:11px!important;
+}
+.home-compact .metric b{
+  margin-top:2px!important;
+  font-size:21px!important;
+}
+.home-compact .daily-tip-card{
+  margin-top:0!important;
+  padding:13px 14px!important;
+  border-radius:18px!important;
+}
+.home-compact .daily-tip-head{
+  margin-bottom:7px!important;
+}
+.home-compact .daily-tip-title{
+  font-size:17px!important;
+}
+.home-compact .daily-tip-text{
+  font-size:13px!important;
+  line-height:1.65!important;
+}
+.home-compact .daily-tip-actions{
+  margin-top:8px!important;
+}
+.home-compact .daily-tip-actions .btn{
+  padding:7px 11px!important;
+  font-size:12px!important;
+}
+@media(max-height:760px){
+  .home-compact{
+    gap:6px!important;
+  }
+  .home-compact .home-hero{
+    padding:10px 13px!important;
+  }
+  .home-compact .home-hero h2{
+    font-size:18px!important;
+  }
+  .home-compact .home-hero h3{
+    margin:4px 0 2px!important;
+  }
+  .home-compact .home-hero hr{
+    margin:4px 0!important;
+  }
+  .home-compact .home-hero .btn{
+    padding:7px 11px!important;
+  }
+  .home-compact .metric{
+    min-height:50px!important;
+    padding:6px!important;
+  }
+  .home-compact .metric b{
+    font-size:18px!important;
+  }
+  .home-compact .daily-tip-card{
+    padding:10px 12px!important;
+  }
+  .home-compact .daily-tip-text{
+    font-size:12px!important;
+    line-height:1.5!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -5171,7 +5278,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v4.4';
+const APP_VERSION='v4.4.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -5329,7 +5436,7 @@ function renderHome(){
  window.homeTipOffset=window.homeTipOffset||0;
  const tipIndex=dailyTipIndex(window.homeTipOffset);
  const tipText=PEDAGOGICAL_TIPS[tipIndex];
- view.innerHTML=`<div class="card home-hero">
+ view.innerHTML=`<div class="home-compact"><div class="card home-hero">
    <div class="version-badge" style="background:#ffffff22;color:#fff;margin-bottom:10px">رَصْد ${APP_VERSION}</div><h2>مرحباً ${data.teacher.name||'بك'} 👋</h2>
    <div>${new Date().toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
    <hr style="border-color:#ffffff44">
@@ -5346,13 +5453,12 @@ function renderHome(){
  <div class="daily-tip-card">
    <div class="daily-tip-head">
      <div class="daily-tip-title">💡 فكرة اليوم</div>
-     <div class="daily-tip-number">فكرة ${tipIndex+1} من ${PEDAGOGICAL_TIPS.length}</div>
    </div>
    <p class="daily-tip-text">${tipText}</p>
    <div class="daily-tip-actions">
      <button class="btn secondary" id="nextDailyTip">فكرة أخرى ←</button>
    </div>
- </div>`;
+ </div></div>`;
  document.getElementById('quickStart')?.addEventListener('click',()=>startSession(c.id,slot.period));
  document.getElementById('goSchedule')?.addEventListener('click',()=>{page='settings';render();setTimeout(()=>document.getElementById('scheduleCard')?.scrollIntoView(),100)});
  document.getElementById('nextDailyTip')?.addEventListener('click',()=>{
