@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v2.3</title>
+<title>رَصْد — v2.4</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -3760,6 +3760,257 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   @page{size:A4 portrait;margin:7mm}
 }
 
+
+/* ===== إعادة برمجة تقرير ولي الأمر للطباعة v2.4 ===== */
+.parent-print-report{display:none}
+
+@media print{
+  .parent-report-page{display:none!important}
+  .parent-print-report{
+    display:block!important;
+    width:196mm!important;
+    height:283mm!important;
+    overflow:hidden!important;
+    direction:rtl!important;
+    color:#12344f!important;
+    font-family:Tahoma,Arial,sans-serif!important;
+    background:#fff!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+
+  .ppr2-page{
+    height:100%;
+    display:grid;
+    grid-template-rows:48mm 23mm 58mm 54mm 53mm 1fr;
+    gap:3mm;
+  }
+
+  .ppr2-hero{
+    border-radius:7mm;
+    padding:5mm 6mm;
+    display:grid;
+    grid-template-columns:31mm 1fr 34mm;
+    align-items:center;
+    gap:4mm;
+    color:#fff;
+    overflow:hidden;
+    position:relative;
+    background:
+      radial-gradient(circle at 7% 6%,rgba(255,255,255,.19) 0 20mm,transparent 20.3mm),
+      radial-gradient(circle at 98% 100%,rgba(255,255,255,.10) 0 28mm,transparent 28.3mm),
+      linear-gradient(135deg,#0ca58f 0%,#087f72 48%,#12344f 100%);
+    box-shadow:0 4mm 10mm rgba(8,127,114,.22);
+  }
+  .ppr2-hero:after{
+    content:'رَصْد';
+    position:absolute;
+    left:6mm;
+    bottom:3mm;
+    font-size:18pt;
+    font-weight:950;
+    color:rgba(255,255,255,.13);
+  }
+  .ppr2-avatar{
+    width:30mm;height:30mm;border-radius:50%;
+    object-fit:cover;border:1.7mm solid #fff;
+    box-shadow:0 2mm 6mm rgba(0,0,0,.23);
+    z-index:1;
+  }
+  .ppr2-avatar-letter{
+    width:30mm;height:30mm;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    border:1.7mm solid #fff;
+    background:rgba(255,255,255,.18);
+    font-size:22pt;font-weight:950;
+    z-index:1;
+  }
+  .ppr2-name{font-size:22pt;font-weight:950;line-height:1.15}
+  .ppr2-class{font-size:10pt;margin-top:1.5mm;opacity:.92}
+  .ppr2-subtitle{font-size:7.2pt;margin-top:1mm;opacity:.78}
+  .ppr2-level{
+    display:inline-flex;
+    margin-top:2mm;
+    padding:1.3mm 2.4mm;
+    border-radius:999px;
+    background:rgba(255,255,255,.16);
+    border:.3mm solid rgba(255,255,255,.19);
+    font-size:7.8pt;
+    font-weight:900
+  }
+  .ppr2-score{
+    width:31mm;height:31mm;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:conic-gradient(#fff calc(var(--ppr-score)*1%),rgba(255,255,255,.24) 0);
+    position:relative;
+    box-shadow:0 2mm 6mm rgba(0,0,0,.15);
+  }
+  .ppr2-score:before{
+    content:'';
+    position:absolute;
+    width:23mm;height:23mm;border-radius:50%;
+    background:linear-gradient(145deg,#0a8c7b,#0c5f68);
+  }
+  .ppr2-score-inner{position:relative;z-index:1;text-align:center}
+  .ppr2-score-inner b{display:block;font-size:18pt;line-height:1}
+  .ppr2-score-inner span{font-size:6.2pt}
+
+  .ppr2-status{
+    border-radius:5mm;
+    display:grid;
+    grid-template-columns:12mm 1fr;
+    gap:3mm;
+    align-items:center;
+    padding:3mm 4mm;
+    font-size:12pt;
+    font-weight:950;
+  }
+  .ppr2-status-icon{
+    width:10mm;height:10mm;border-radius:3mm;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14pt;background:#fff;
+  }
+  .ppr2-status.good{background:linear-gradient(145deg,#e7f8ee,#d2f1de);color:#137a43;border:.4mm solid #b4e3c4}
+  .ppr2-status.mid{background:linear-gradient(145deg,#fff5d9,#ffe9b0);color:#9a6504;border:.4mm solid #ebcf80}
+  .ppr2-status.bad{background:linear-gradient(145deg,#ffe9e9,#ffd1d1);color:#b42318;border:.4mm solid #efb1b1}
+
+  .ppr2-metrics{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:3mm;
+  }
+  .ppr2-metric{
+    border-radius:5mm;
+    padding:3mm;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    box-shadow:0 1.7mm 4mm rgba(18,52,79,.06);
+  }
+  .ppr2-metric:nth-child(1){background:linear-gradient(145deg,#fff7cc,#ffe69a)}
+  .ppr2-metric:nth-child(2){background:linear-gradient(145deg,#e5f2ff,#c9e3ff)}
+  .ppr2-metric:nth-child(3){background:linear-gradient(145deg,#edf6ff,#d7eaff)}
+  .ppr2-metric:nth-child(4){background:linear-gradient(145deg,#effcf5,#d9f5e5)}
+  .ppr2-metric-icon{font-size:16pt;line-height:1}
+  .ppr2-metric-label{font-size:7.5pt;color:#5d6c7a;margin-top:1mm}
+  .ppr2-metric-value{font-size:17pt;font-weight:950;margin-top:1mm}
+  .ppr2-metric-note{font-size:6pt;color:#6b7280;margin-top:.7mm}
+
+  .ppr2-chart-card,
+  .ppr2-analysis-card,
+  .ppr2-card{
+    border-radius:5mm;
+    padding:3.5mm;
+    border:.4mm solid #dbe5ea;
+    background:#fff;
+    box-shadow:0 1.7mm 4mm rgba(18,52,79,.055);
+  }
+  .ppr2-heading{
+    font-size:11pt;
+    font-weight:950;
+    margin-bottom:2.2mm;
+    color:#12344f;
+  }
+  .ppr2-chart{
+    height:43mm;
+    display:grid;
+    grid-template-columns:repeat(8,1fr);
+    gap:2mm;
+    align-items:end;
+    border-bottom:.5mm solid #dbe5ea;
+    padding:2mm 3mm 0;
+  }
+  .ppr2-chart-item{
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-end;
+  }
+  .ppr2-chart-value{font-size:6.5pt;font-weight:900;margin-bottom:.8mm}
+  .ppr2-chart-bar{
+    width:8mm;
+    border-radius:2.5mm 2.5mm .7mm .7mm;
+    box-shadow:0 1mm 2mm rgba(18,52,79,.12);
+  }
+  .ppr2-chart-date{font-size:5.3pt;color:#7b8795;margin-top:.8mm}
+
+  .ppr2-two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:3mm;
+  }
+  .ppr2-card.strengths{
+    background:linear-gradient(145deg,#effdf5,#dcf7e6);
+    border-color:#b8e7c8;
+  }
+  .ppr2-card.improve{
+    background:linear-gradient(145deg,#fffaf0,#ffedc5);
+    border-color:#efd38a;
+  }
+  .ppr2-list{display:grid;gap:1.8mm}
+  .ppr2-item{
+    display:grid;
+    grid-template-columns:7mm 1fr;
+    gap:1.5mm;
+    align-items:start;
+    font-size:8pt;
+  }
+  .ppr2-item-icon{
+    width:7mm;height:7mm;border-radius:2.2mm;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:950;background:#fff;
+  }
+
+  .ppr2-bottom{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:3mm;
+  }
+  .ppr2-events{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1.7mm;
+  }
+  .ppr2-event{
+    border-radius:3mm;
+    padding:2.2mm;
+    background:linear-gradient(145deg,#fff,#f7fafb);
+    border:.3mm solid #dbe5ea;
+  }
+  .ppr2-event-title{font-size:7.6pt;font-weight:900}
+  .ppr2-event-date{font-size:5.3pt;color:#7b8795;margin-top:.6mm}
+
+  .ppr2-analysis-card{
+    background:linear-gradient(135deg,#12344f,#087f72);
+    color:#fff;
+    border:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .ppr2-analysis-title{font-size:10pt;font-weight:950;margin-bottom:2mm}
+  .ppr2-analysis-text{font-size:8.2pt;line-height:1.75}
+
+  .ppr2-footer{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15mm;
+    align-items:end;
+    font-size:7pt;
+    color:#6b7280;
+    padding:0 4mm;
+  }
+  .ppr2-signature{
+    border-top:.3mm dashed #a9b8c2;
+    padding-top:1.5mm;
+    text-align:center;
+  }
+
+  @page{size:A4 portrait;margin:7mm}
+}
+
 </style>
 </head>
 <body>
@@ -3814,7 +4065,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v2.3';
+const APP_VERSION='v2.4';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -5841,92 +6092,116 @@ function renderReport(id){
 
  view.insertAdjacentHTML('beforeend',`
  <div class="parent-print-report">
-   <div class="ppr-hero">
-     ${printAvatar}
-     <div>
-       <div class="ppr-name">${s.name}</div>
-       <div class="ppr-class">${c?.name||''}${c?.stage?` — ${c.stage}`:''}</div>
-       <div class="ppr-subtitle">تقرير الأداء الأكاديمي والسلوكي</div>
-       <div class="ppr-level">${levelInfo.icon} المستوى ${levelInfo.level} · ${levelInfo.title}</div>
-     </div>
-     <div class="ppr-score" style="--ppr-score:${score}">
-       <div class="ppr-score-inner"><b>${score}%</b><span>الأداء العام</span></div>
-     </div>
-   </div>
-
-   <div class="ppr-status ${printStatusClass}">${printStatusText}</div>
-
-   <div class="ppr-metrics">
-     <div class="ppr-metric">
-       <div class="ppr-metric-label">النقاط</div>
-       <div class="ppr-metric-value">${totalPoints(id)}</div>
-       <div class="ppr-metric-note">نقطة</div>
-     </div>
-     <div class="ppr-metric">
-       <div class="ppr-metric-label">المهام</div>
-       <div class="ppr-metric-value">${taskPoints(id)}/20</div>
-       <div class="ppr-metric-note">المهام المنجزة</div>
-     </div>
-     <div class="ppr-metric">
-       <div class="ppr-metric-label">الاختبار الفتري</div>
-       <div class="ppr-metric-value">${periodicExam}%</div>
-       <div class="ppr-metric-note">${examLabel(periodicExam)}</div>
-     </div>
-     <div class="ppr-metric">
-       <div class="ppr-metric-label">نهاية الفصل</div>
-       <div class="ppr-metric-value">${finalExam}%</div>
-       <div class="ppr-metric-note">${examLabel(finalExam)}</div>
-     </div>
-   </div>
-
-   <div class="ppr-main">
-     <div class="ppr-col">
-       <div class="ppr-card">
-         <h3>📊 تطور الأداء</h3>
-         <div class="ppr-chart">${chartPrint}</div>
+   <div class="ppr2-page">
+     <div class="ppr2-hero">
+       ${printAvatar.replace('ppr-avatar','ppr2-avatar').replace('ppr-avatar-letter','ppr2-avatar-letter')}
+       <div>
+         <div class="ppr2-name">${s.name}</div>
+         <div class="ppr2-class">${c?.name||''}${c?.stage?` — ${c.stage}`:''}</div>
+         <div class="ppr2-subtitle">تقرير الأداء الأكاديمي والسلوكي</div>
+         <div class="ppr2-level">${levelInfo.icon} المستوى ${levelInfo.level} · ${levelInfo.title}</div>
        </div>
+       <div class="ppr2-score" style="--ppr-score:${score}">
+         <div class="ppr2-score-inner">
+           <b>${score}%</b>
+           <span>التقييم العام</span>
+         </div>
+       </div>
+     </div>
 
-       <div class="ppr-card strengths">
-         <h3>💚 نقاط القوة</h3>
-         <div class="ppr-list">
+     <div class="ppr2-status ${printStatusClass}">
+       <div class="ppr2-status-icon">${score>=80?'✓':score>=60?'!':'⚠'}</div>
+       <div>${printStatusText}</div>
+     </div>
+
+     <div class="ppr2-metrics">
+       <div class="ppr2-metric">
+         <div class="ppr2-metric-icon">⭐</div>
+         <div class="ppr2-metric-label">النقاط</div>
+         <div class="ppr2-metric-value">${totalPoints(id)}</div>
+         <div class="ppr2-metric-note">نقطة</div>
+       </div>
+       <div class="ppr2-metric">
+         <div class="ppr2-metric-icon">📘</div>
+         <div class="ppr2-metric-label">المهام</div>
+         <div class="ppr2-metric-value">${taskPoints(id)}/20</div>
+         <div class="ppr2-metric-note">المهام المنجزة</div>
+       </div>
+       <div class="ppr2-metric">
+         <div class="ppr2-metric-icon">📝</div>
+         <div class="ppr2-metric-label">الاختبار الفتري</div>
+         <div class="ppr2-metric-value">${periodicExam}%</div>
+         <div class="ppr2-metric-note">${examLabel(periodicExam)}</div>
+       </div>
+       <div class="ppr2-metric">
+         <div class="ppr2-metric-icon">🎓</div>
+         <div class="ppr2-metric-label">نهاية الفصل</div>
+         <div class="ppr2-metric-value">${finalExam}%</div>
+         <div class="ppr2-metric-note">${examLabel(finalExam)}</div>
+       </div>
+     </div>
+
+     <div class="ppr2-chart-card">
+       <div class="ppr2-heading">📈 تطور الأداء</div>
+       <div class="ppr2-chart">
+         ${chartLogs.length?chartLogs.map((l,i)=>{
+           const h=Math.max(7,Math.round(Math.abs(l.value)/maxChart*35));
+           const colors=['#087f72','#2f80ed','#805ad5','#d69e2e'];
+           const color=l.value<0?'#e05252':colors[i%colors.length];
+           return `<div class="ppr2-chart-item">
+             <div class="ppr2-chart-value">${l.value>0?'+':''}${l.value}</div>
+             <div class="ppr2-chart-bar" style="height:${h}mm;background:${color}"></div>
+             <div class="ppr2-chart-date">${new Date(l.date).toLocaleDateString('ar-SA',{day:'numeric',month:'numeric'})}</div>
+           </div>`;
+         }).join(''):'<div style="grid-column:1/-1;text-align:center;color:#7b8795;font-size:8pt">لا توجد بيانات كافية بعد</div>'}
+       </div>
+     </div>
+
+     <div class="ppr2-two-col">
+       <div class="ppr2-card strengths">
+         <div class="ppr2-heading">💚 نقاط القوة</div>
+         <div class="ppr2-list">
            ${(strengths.length?strengths:['لا توجد بيانات كافية بعد']).slice(0,5).map(x=>`
-             <div class="ppr-item"><span class="ppr-item-icon">✓</span><span>${x}</span></div>
+             <div class="ppr2-item"><span class="ppr2-item-icon">✓</span><span>${x}</span></div>
            `).join('')}
          </div>
        </div>
 
-       <div class="ppr-card improve">
-         <h3>📌 جوانب تحتاج إلى تطوير</h3>
-         <div class="ppr-list">
-           ${(improvements.length?improvements:['لا توجد ملاحظات جوهرية حاليًا']).slice(0,4).map(x=>`
-             <div class="ppr-item"><span class="ppr-item-icon">!</span><span>${x}</span></div>
+       <div class="ppr2-card improve">
+         <div class="ppr2-heading">📌 جوانب تحتاج إلى تطوير</div>
+         <div class="ppr2-list">
+           ${(improvements.length?improvements:['لا توجد ملاحظات جوهرية حاليًا']).slice(0,5).map(x=>`
+             <div class="ppr2-item"><span class="ppr2-item-icon">!</span><span>${x}</span></div>
            `).join('')}
          </div>
        </div>
      </div>
 
-     <div class="ppr-col">
-       <div class="ppr-card">
-         <h3>🕘 آخر السلوكيات والنشاطات</h3>
-         <div class="ppr-events">
+     <div class="ppr2-bottom">
+       <div class="ppr2-card">
+         <div class="ppr2-heading">🕘 آخر السلوكيات والنشاطات</div>
+         <div class="ppr2-events">
            ${(logs.length?logs.slice(0,6):[]).map(l=>`
-             <div class="ppr-event">
-               <div class="ppr-event-title">${l.name}</div>
-               <div class="ppr-event-date">${new Date(l.date).toLocaleString('ar-SA')}</div>
+             <div class="ppr2-event">
+               <div class="ppr2-event-title">${l.name}</div>
+               <div class="ppr2-event-date">${new Date(l.date).toLocaleString('ar-SA')}</div>
              </div>
            `).join('') || '<div style="color:#7b8795;font-size:8pt">لا توجد نشاطات مسجلة بعد</div>'}
          </div>
        </div>
 
-       <div class="ppr-analysis">${smartAnalysis}</div>
+       <div class="ppr2-analysis-card">
+         <div class="ppr2-analysis-title">تحليل أداء الطالب</div>
+         <div class="ppr2-analysis-text">${smartAnalysis}</div>
+       </div>
+     </div>
+
+     <div class="ppr2-footer">
+       <div class="ppr2-signature">توقيع المعلم</div>
+       <div class="ppr2-signature">توقيع ولي الأمر</div>
      </div>
    </div>
-
-   <div class="ppr-signatures">
-     <div class="ppr-signature">توقيع المعلم</div>
-     <div class="ppr-signature">توقيع ولي الأمر</div>
-   </div>
- </div>`);
+ </div>`)
 
  document.getElementById('profileBack').onclick=()=>{page='students';render()};
  document.getElementById('printReport').onclick=()=>window.print();
