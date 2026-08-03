@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v2.6</title>
+<title>رَصْد — v2.7</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -4321,6 +4321,153 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   @page{size:A4 portrait;margin:7mm}
 }
 
+
+/* ===== تقرير ولي الأمر الاحترافي v2.7 ===== */
+@media print{
+  .parent-report-page{display:none!important}
+
+  .parent-print-report{
+    display:block!important;
+    width:196mm!important;
+    height:283mm!important;
+    overflow:hidden!important;
+    direction:rtl!important;
+    color:#17324d!important;
+    font-family:Tahoma,Arial,sans-serif!important;
+    background:#fff!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+
+  .rp-page{
+    height:100%!important;
+    display:grid!important;
+    grid-template-rows:48mm 18mm 39mm 57mm 48mm 50mm 12mm!important;
+    gap:2.2mm!important;
+  }
+
+  .rp-hero{
+    background:
+      radial-gradient(circle at 8% 10%,rgba(255,255,255,.14) 0 20mm,transparent 20.3mm),
+      linear-gradient(135deg,#149c9a 0%,#087f86 48%,#18506f 100%)!important;
+  }
+
+  /* بطاقات المؤشرات */
+  .rp-metric{
+    grid-template-rows:12mm 1fr!important;
+  }
+  .rp-metric-head{
+    min-height:12mm!important;
+    justify-content:flex-start!important;
+    padding:1.5mm 2.5mm!important;
+  }
+  .rp-metric-head .rp-metric-icon{
+    width:7mm!important;height:7mm!important;border-radius:2mm!important;
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    background:rgba(255,255,255,.16)!important;
+    font-size:13pt!important;
+  }
+  .rp-metric-body{padding:2mm!important}
+  .rp-metric-value{font-size:18pt!important}
+  .rp-metric-note{font-size:6.2pt!important}
+
+  /* هيدر الأقسام */
+  .rp-section,
+  .rp-analysis{
+    border-radius:4.8mm!important;
+    box-shadow:0 1.2mm 3.5mm rgba(23,50,77,.065)!important;
+  }
+  .rp-section-head,
+  .rp-analysis-title{
+    height:11.5mm!important;
+    font-size:10.5pt!important;
+    letter-spacing:.1px!important;
+  }
+
+  /* رسم بياني احترافي بخطوط أفقية خفيفة */
+  .rp-chart{
+    height:41mm!important;
+    padding:2mm 5mm 0!important;
+    background:
+      repeating-linear-gradient(
+        to top,
+        transparent 0,
+        transparent 9mm,
+        #e9eef2 9.2mm,
+        #e9eef2 9.45mm
+      )!important;
+    border-bottom:.4mm solid #dbe5ea!important;
+  }
+  .rp-chart-bar{
+    width:8mm!important;
+    border-radius:2.5mm 2.5mm .7mm .7mm!important;
+  }
+
+  /* نقاط القوة والتطوير كعناصر مستقلة */
+  .rp-list{gap:1.5mm!important}
+  .rp-item{
+    grid-template-columns:7mm 1fr!important;
+    gap:1.4mm!important;
+    font-size:7.8pt!important;
+    padding:1.1mm 1.3mm!important;
+    border-radius:2.5mm!important;
+    background:#f8fafc!important;
+    border:.25mm solid #e4eaee!important;
+  }
+  .rp-item-icon{
+    width:6.5mm!important;height:6.5mm!important;
+  }
+
+  /* Timeline للنشاطات */
+  .rp-events{
+    display:block!important;
+    position:relative!important;
+    padding-right:7mm!important;
+  }
+  .rp-events:before{
+    content:''!important;
+    position:absolute!important;
+    right:2.8mm!important;
+    top:1mm!important;
+    bottom:1mm!important;
+    width:.6mm!important;
+    background:#cfe5e4!important;
+  }
+  .rp-event{
+    position:relative!important;
+    margin-bottom:1.2mm!important;
+    padding:1.5mm 2mm!important;
+    background:#fff!important;
+    border:.25mm solid #e0e7eb!important;
+  }
+  .rp-event:before{
+    content:''!important;
+    position:absolute!important;
+    right:-5.2mm!important;
+    top:2.4mm!important;
+    width:2.7mm!important;height:2.7mm!important;
+    border-radius:50%!important;
+    background:#149c9a!important;
+    box-shadow:0 0 0 1mm #e7f6f5!important;
+  }
+  .rp-event-title{font-size:7pt!important}
+  .rp-event-date{font-size:4.8pt!important}
+
+  /* تحليل الأداء */
+  .rp-analysis-text{
+    font-size:7.8pt!important;
+    line-height:1.75!important;
+    display:flex!important;
+    align-items:center!important;
+  }
+
+  /* التوقيعات */
+  .rp-footer{
+    padding:0 7mm!important;
+    font-size:6.8pt!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -4375,7 +4522,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v2.6';
+const APP_VERSION='v2.7';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -6442,7 +6589,7 @@ function renderReport(id){
      </div>
 
      <div class="rp-section">
-       <div class="rp-section-head">📈 تطور الأداء</div>
+       <div class="rp-section-head">📊 تطور الأداء</div>
        <div class="rp-section-body">
          <div class="rp-chart-card">
            <div class="rp-chart">
@@ -6486,7 +6633,7 @@ function renderReport(id){
        </div>
 
        <div class="rp-analysis">
-         <div class="rp-analysis-title">تحليل أداء الطالب</div>
+         <div class="rp-analysis-title">🔎 تحليل أداء الطالب</div>
          <div class="rp-analysis-text">${smartAnalysis}</div>
        </div>
      </div>
