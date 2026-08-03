@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v2.2</title>
+<title>رَصْد — v2.2.1</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -3368,6 +3368,252 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   .parent-report-signature{font-size:6.3pt!important;margin-top:1mm!important}
 }
 
+
+/* ===== إصلاح عرض تقرير ولي الأمر على الجوال v2.2.1 ===== */
+@media screen and (max-width: 760px){
+  body{
+    overflow-x:hidden!important;
+  }
+
+  .parent-report-page{
+    width:100%!important;
+    max-width:100%!important;
+    padding:0 10px 24px!important;
+    box-sizing:border-box!important;
+    overflow:visible!important;
+  }
+
+  .parent-report-top{
+    position:relative!important;
+    z-index:2!important;
+    margin-bottom:10px!important;
+  }
+
+  .parent-report-hero{
+    min-height:0!important;
+    padding:18px 14px!important;
+    grid-template-columns:78px minmax(0,1fr)!important;
+    gap:12px!important;
+    border-radius:22px!important;
+  }
+
+  .parent-report-hero .avatar-image,
+  .parent-report-hero .avatar-letter{
+    width:78px!important;
+    height:78px!important;
+    flex-basis:78px!important;
+    border-width:4px!important;
+  }
+
+  .parent-report-name{
+    font-size:23px!important;
+    line-height:1.25!important;
+    word-break:normal!important;
+  }
+
+  .parent-report-class{
+    font-size:13px!important;
+    margin-top:4px!important;
+  }
+
+  .parent-report-status{
+    font-size:10px!important;
+    padding:5px 8px!important;
+    margin-top:6px!important;
+  }
+
+  .parent-level-box{
+    margin-top:8px!important;
+    padding:8px!important;
+  }
+
+  .parent-level-box .level-progress-label,
+  .parent-level-box .level-message{
+    font-size:9px!important;
+  }
+
+  .parent-report-metrics{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+    margin:10px 0!important;
+  }
+
+  .parent-report-metric{
+    min-height:94px!important;
+    padding:10px 6px!important;
+  }
+
+  .parent-report-metric .metric-icon{
+    width:38px!important;
+    height:38px!important;
+  }
+
+  .parent-report-metric span{
+    font-size:11px!important;
+  }
+
+  .parent-report-metric b{
+    font-size:23px!important;
+  }
+
+  .parent-report-layout{
+    display:block!important;
+  }
+
+  .parent-column{
+    display:block!important;
+  }
+
+  .parent-column > *{
+    margin-bottom:10px!important;
+  }
+
+  .parent-score-card{
+    grid-template-columns:102px minmax(0,1fr)!important;
+    gap:10px!important;
+    padding:12px!important;
+  }
+
+  .parent-score-ring{
+    width:96px!important;
+    height:96px!important;
+  }
+
+  .parent-score-ring::before{
+    width:68px!important;
+    height:68px!important;
+  }
+
+  .parent-score-content b{
+    font-size:25px!important;
+  }
+
+  .parent-score-summary h3{
+    font-size:18px!important;
+  }
+
+  .parent-score-summary p{
+    font-size:12px!important;
+    line-height:1.55!important;
+  }
+
+  .parent-mini-row{
+    grid-template-columns:52px minmax(0,1fr) 34px!important;
+    font-size:10px!important;
+  }
+
+  .parent-exams-grid{
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+  }
+
+  .parent-exam-box{
+    min-height:130px!important;
+    padding:10px 5px!important;
+  }
+
+  .parent-exam-title{
+    font-size:12px!important;
+    min-height:34px!important;
+  }
+
+  .parent-exam-ring{
+    width:72px!important;
+    height:72px!important;
+  }
+
+  .parent-exam-ring::before{
+    width:52px!important;
+    height:52px!important;
+  }
+
+  .parent-exam-ring b{
+    font-size:20px!important;
+  }
+
+  .parent-report-section{
+    padding:12px!important;
+  }
+
+  .parent-report-section h3{
+    font-size:17px!important;
+  }
+
+  .parent-badges-preview{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+  }
+
+  .parent-badge{
+    min-height:88px!important;
+    padding:8px 4px!important;
+  }
+
+  .parent-badge-icon{
+    font-size:27px!important;
+  }
+
+  .parent-badge-title{
+    font-size:10px!important;
+    line-height:1.35!important;
+    overflow-wrap:anywhere!important;
+  }
+
+  .parent-chart{
+    height:150px!important;
+    grid-template-columns:repeat(8,minmax(20px,1fr))!important;
+    gap:5px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    padding-bottom:4px!important;
+  }
+
+  .parent-chart-item{
+    min-width:24px!important;
+  }
+
+  .parent-chart-bar{
+    max-width:24px!important;
+  }
+
+  .parent-timeline{
+    max-height:none!important;
+    overflow:visible!important;
+  }
+
+  .parent-event{
+    padding-right:34px!important;
+  }
+
+  .parent-message{
+    font-size:13px!important;
+    line-height:1.7!important;
+    padding:13px!important;
+  }
+
+  .parent-report-signature{
+    grid-template-columns:1fr 1fr!important;
+    gap:12px!important;
+    font-size:10px!important;
+  }
+
+  .parent-report-actions{
+    grid-template-columns:1fr!important;
+  }
+
+  .parent-report-actions .btn{
+    grid-column:auto!important;
+  }
+}
+
+/* لا تطبق قواعد الطباعة على الشاشة */
+@media screen{
+  .parent-report-page{
+    height:auto!important;
+    overflow:visible!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3422,7 +3668,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v2.2';
+const APP_VERSION='v2.2.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
