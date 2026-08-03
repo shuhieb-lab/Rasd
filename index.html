@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.9.4</title>
+<title>رَصْد — v2.0</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -2532,6 +2532,183 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   margin-top:10px;
 }
 
+
+/* ===== تقرير ولي الأمر الاحترافي v2.0 ===== */
+.parent-report-page{padding-bottom:20px}
+.parent-report-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+.parent-report-back{
+  width:42px;height:42px;border-radius:13px;
+  border:1px solid #dbe5ea;background:#fff;color:#17324d;
+  display:flex;align-items:center;justify-content:center;
+}
+.parent-report-print{
+  border:0;border-radius:12px;padding:10px 13px;
+  background:#e8f6f3;color:#0f766e;font-weight:900;
+}
+.parent-report-hero{
+  background:linear-gradient(135deg,#17324d 0%,#0f766e 65%,#16a085 100%);
+  color:#fff;border-radius:24px;padding:18px;
+  display:grid;grid-template-columns:86px minmax(0,1fr);
+  gap:15px;align-items:center;
+  box-shadow:0 14px 34px #17324d25;
+  margin-bottom:13px;position:relative;overflow:hidden;
+}
+.parent-report-hero::after{
+  content:'';position:absolute;left:-55px;top:-55px;
+  width:150px;height:150px;border-radius:50%;
+  background:#ffffff12;
+}
+.parent-report-hero .avatar-image,
+.parent-report-hero .avatar-letter{
+  width:86px!important;height:86px!important;flex-basis:86px!important;
+  border:3px solid #ffffffcc!important;
+}
+.parent-report-name{font-size:24px;font-weight:950;line-height:1.25}
+.parent-report-class{opacity:.84;margin-top:4px;font-size:13px}
+.parent-report-status{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:8px;padding:6px 10px;border-radius:999px;
+  background:#ffffff22;font-size:11px;font-weight:900;
+}
+.parent-level-box{
+  margin-top:10px;background:#ffffff12;border:1px solid #ffffff22;
+  border-radius:14px;padding:10px;
+}
+.parent-level-box .level-progress-label,
+.parent-level-box .level-message{color:#fff!important}
+.parent-level-box .level-progress-track{background:#ffffff2b!important}
+.parent-score-card{
+  background:#fff;border:1px solid #dbe5ea;border-radius:20px;
+  padding:14px;margin-bottom:13px;
+  display:grid;grid-template-columns:126px minmax(0,1fr);
+  gap:14px;align-items:center;
+}
+.parent-score-ring{
+  width:116px;height:116px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  background:conic-gradient(var(--score-color) calc(var(--score)*1%),#e8edf1 0);
+}
+.parent-score-ring::before{
+  content:'';position:absolute;width:84px;height:84px;
+  border-radius:50%;background:#fff;
+}
+.parent-score-content{position:relative;text-align:center;z-index:1}
+.parent-score-content b{display:block;font-size:27px;color:#17324d}
+.parent-score-content span{font-size:10px;color:#6b7280}
+.parent-score-summary h3{margin:0 0 6px;font-size:19px}
+.parent-score-summary p{margin:0;color:#667085;font-size:13px;line-height:1.7}
+.parent-mini-bars{display:grid;gap:8px;margin-top:10px}
+.parent-mini-row{
+  display:grid;grid-template-columns:65px 1fr 38px;
+  align-items:center;gap:7px;font-size:11px;
+}
+.parent-mini-track{height:8px;background:#e8edf1;border-radius:999px;overflow:hidden}
+.parent-mini-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#0f766e,#4cc9bd)}
+.parent-report-metrics{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;margin-bottom:13px;
+}
+.parent-report-metric{
+  background:#fff;border:1px solid #dbe5ea;border-radius:16px;
+  padding:12px 6px;text-align:center;
+}
+.parent-report-metric .metric-icon{
+  width:38px;height:38px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 6px;
+}
+.parent-report-metric:nth-child(1) .metric-icon{background:#fff4d8;color:#d97706}
+.parent-report-metric:nth-child(2) .metric-icon{background:#e8f1ff;color:#2563eb}
+.parent-report-metric:nth-child(3) .metric-icon{background:#ffe9e9;color:#dc2626}
+.parent-report-metric:nth-child(4) .metric-icon{background:#fff2d6;color:#d97706}
+.parent-report-metric span{display:block;color:#6b7280;font-size:10px}
+.parent-report-metric b{display:block;margin-top:4px;font-size:20px;color:#17324d}
+.parent-report-section{
+  background:#fff;border:1px solid #dbe5ea;border-radius:19px;
+  padding:14px;margin-bottom:12px;
+}
+.parent-report-section h3{margin:0 0 11px;font-size:18px}
+.parent-strengths{background:#f0fdf4;border-color:#bbf7d0}
+.parent-improve{background:#fffaf0;border-color:#fde68a}
+.parent-points-list{display:grid;gap:8px}
+.parent-point{
+  display:grid;grid-template-columns:30px minmax(0,1fr);
+  gap:8px;align-items:start;font-size:13px;
+}
+.parent-point-icon{
+  width:30px;height:30px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+}
+.parent-strengths .parent-point-icon{background:#dcfce7;color:#15803d}
+.parent-improve .parent-point-icon{background:#fef3c7;color:#b45309}
+.parent-badges-preview{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.parent-badge{
+  text-align:center;border:1px solid #ead994;background:#fffaf0;
+  border-radius:14px;padding:9px 4px;
+}
+.parent-badge-icon{font-size:27px}
+.parent-badge-title{font-size:10px;font-weight:900;margin-top:4px}
+.parent-chart{
+  display:grid;grid-template-columns:repeat(8,minmax(0,1fr));
+  align-items:end;gap:7px;height:145px;padding-top:10px;
+  border-bottom:1px solid #dbe5ea;
+}
+.parent-chart-item{
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;
+}
+.parent-chart-value{font-size:9px;font-weight:900;margin-bottom:4px}
+.parent-chart-bar{
+  width:100%;max-width:28px;min-height:6px;border-radius:8px 8px 2px 2px;
+  background:linear-gradient(180deg,#4cc9bd,#0f766e);
+}
+.parent-chart-bar.negative{background:linear-gradient(180deg,#fca5a5,#dc2626)}
+.parent-chart-date{font-size:8px;color:#7b8795;margin-top:4px;white-space:nowrap}
+.parent-timeline{position:relative}
+.parent-timeline::before{
+  content:'';position:absolute;right:15px;top:8px;bottom:8px;
+  width:2px;background:#dbe5ea;
+}
+.parent-event{position:relative;padding-right:42px;margin-bottom:10px}
+.parent-event::before{
+  content:'';position:absolute;right:6px;top:8px;width:18px;height:18px;
+  border-radius:50%;background:#e7f4f2;border:4px solid #fff;
+  box-shadow:0 0 0 1px #cde4df;
+}
+.parent-event-card{
+  border:1px solid #dbe5ea;border-radius:13px;padding:10px 11px;background:#fff;
+}
+.parent-event-title{font-weight:900}
+.parent-event-date{font-size:10px;color:#7b8795;margin-top:3px}
+.parent-event-note{font-size:12px;color:#526174;margin-top:5px}
+.parent-message{
+  background:linear-gradient(135deg,#f4fbfa,#e9f7f4);
+  border:1px solid #cfe8e2;border-radius:18px;
+  padding:15px;text-align:center;color:#0f615b;
+  font-weight:800;line-height:1.8;margin-bottom:12px;
+}
+.parent-report-actions{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+}
+@media(max-width:520px){
+  .parent-score-card{grid-template-columns:105px minmax(0,1fr);padding:12px}
+  .parent-score-ring{width:98px;height:98px}
+  .parent-score-ring::before{width:70px;height:70px}
+  .parent-report-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .parent-badges-preview{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media print{
+  .parent-report-top,.parent-report-actions{display:none!important}
+  .parent-report-page{padding:0}
+  .parent-report-section,.parent-score-card,.parent-report-hero{break-inside:avoid}
+}
+
 </style>
 </head>
 <body>
@@ -2586,7 +2763,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.9.4';
+const APP_VERSION='v2.0';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -4373,162 +4550,198 @@ function renderReport(id){
  const e=data.exams[id]||{};
  const logs=data.logs.filter(l=>l.studentId===id).sort((a,b)=>b.date.localeCompare(a.date));
  const insight=buildStudentInsight(id);
+ const levelInfo=getStudentLevel(id);
 
  const abs=data.sessions.filter(se=>se.attendance?.[id]==='absent').length;
  const late=data.sessions.filter(se=>se.attendance?.[id]==='late').length;
  const present=data.sessions.filter(se=>(se.attendance?.[id]||'present')==='present').length;
- const taskDone=logs.filter(l=>l.task && l.value>0).length;
+ const taskDone=logs.filter(l=>l.task&&l.value>0).length;
  const taskAll=logs.filter(l=>l.task).length;
  const taskRate=taskAll?Math.round(taskDone/taskAll*100):0;
+ const attendanceTotal=present+abs+late;
+ const attendanceRate=attendanceTotal?Math.round(present/attendanceTotal*100):0;
 
- const excellent=logs.filter(l=>l.name==='سلوك ممتاز').length;
- const good=logs.filter(l=>l.name==='سلوك جيد').length;
- const warnings=logs.filter(l=>l.name==='تنبيه سلوكي').length;
- const violations=logs.filter(l=>l.name==='مخالفة سلوكية').length;
+ const positiveLogs=logs.filter(l=>l.value>0);
+ const negativeLogs=logs.filter(l=>l.value<0);
+ const positiveRate=(positiveLogs.length+negativeLogs.length)
+   ?Math.round(positiveLogs.length/(positiveLogs.length+negativeLogs.length)*100)
+   :0;
 
- const chartLogs=logs.filter(l=>l.value!==undefined).slice(0,8).reverse();
- const maxChart=Math.max(5,...chartLogs.map(l=>Math.abs(l.value||0)));
+ const behaviorRate=Math.max(0,Math.min(100,positiveRate));
+ const score=Math.max(0,Math.min(100,Math.round(
+   attendanceRate*.35+
+   taskRate*.25+
+   behaviorRate*.25+
+   Math.min(100,totalPoints(id)*4)*.15
+ )));
 
- setTitle('سجل الطالب',s.name);
+ const scoreColor=score>=80?'#16a34a':score>=60?'#d97706':'#dc2626';
+ const scoreLabel=score>=80?'أداء متميز':score>=60?'أداء جيد ويحتاج دعمًا بسيطًا':'يحتاج متابعة';
+ const scoreText=score>=80
+   ?'يظهر الطالب تقدمًا واضحًا في الحضور والمهام والسلوك داخل الصف.'
+   :score>=60
+     ?'مستوى الطالب جيد، مع وجود جوانب محددة يمكن تطويرها خلال الفترة القادمة.'
+     :'تظهر البيانات حاجة الطالب إلى متابعة أقرب ودعم مستمر في أكثر من جانب.';
+
+ const records=studentBadgeRecords(id);
+ const unlockedBadges=BADGE_DEFINITIONS.filter(b=>records[b.id]).slice(0,4);
+
+ const positiveCounts={};
+ positiveLogs.forEach(l=>positiveCounts[l.name]=(positiveCounts[l.name]||0)+1);
+ const strengths=Object.entries(positiveCounts)
+   .sort((a,b)=>b[1]-a[1]).slice(0,4)
+   .map(([name,count])=>`${name}${count>1?` (${count} مرات)`:''}`);
+ if(taskRate>=80)strengths.unshift('ملتزم بإنجاز المهام');
+ if(attendanceRate>=90)strengths.unshift('انتظام جيد في الحضور');
+
+ const improvements=[];
+ if(abs>0)improvements.push(`تقليل الغياب (${abs})`);
+ if(late>0)improvements.push(`الاهتمام بالحضور في الوقت (${late} تأخر)`);
+ if(taskRate<70)improvements.push('رفع مستوى إنجاز المهام');
+ if(totalPoints(id)<10)improvements.push('زيادة المشاركة الصفية');
+ negativeLogs.slice(0,3).forEach(l=>{
+   if(!improvements.includes(l.name))improvements.push(`تحسين: ${l.name}`);
+ });
+
+ const chartLogs=logs.filter(l=>typeof l.value==='number'&&l.value!==0).slice(0,8).reverse();
+ const maxChart=Math.max(1,...chartLogs.map(l=>Math.abs(l.value)));
+
+ const parentMessage=score>=80
+   ?'نفخر بتقدم ابنكم، ونشكر تعاونكم المستمر، ونأمل مواصلة دعمه للحفاظ على هذا المستوى المميز.'
+   :score>=60
+     ?'نشكر تعاونكم، ونوصي بمواصلة تشجيع الطالب على المشاركة والالتزام بالمهام لتحقيق تقدم أكبر.'
+     :'نرجو دعم الطالب خلال الفترة القادمة ومتابعة الحضور والمهام والسلوك، فالتعاون بين المنزل والمدرسة يصنع فرقًا كبيرًا.';
+
+ setTitle('تقرير ولي الأمر',s.name);
 
  view.innerHTML=`
- <div class="profile-topbar">
-   <button class="profile-back-btn" id="profileBack" aria-label="رجوع">
-     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-   </button>
-   <div></div>
- </div>
- <div class="student-profile-hero">
-   ${avatarHtml(s)}
-   <div>
-     <h2>${s.name}</h2>
-     <div>${c?.name||''}${c?.stage?` — ${c.stage}`:''}</div>
-     <span class="student-profile-level">${studentLevel(id).label}</span>
+ <div class="parent-report-page">
+   <div class="parent-report-top">
+     <button class="parent-report-back" id="profileBack" aria-label="رجوع">
+       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+     </button>
+     <button class="parent-report-print" id="printReport">طباعة التقرير</button>
    </div>
- </div>
 
- <div class="student-insight ${insight.cls}">
-   <b>${insight.title}</b>
-   <div>${insight.text}</div>
- </div>
-
- <div class="profile-level-card">
-   <div class="profile-level-head">
-     <b>مستوى الطالب</b>
-     <span>${getStudentLevel(id).icon}</span>
+   <div class="parent-report-hero">
+     ${avatarHtml(s)}
+     <div>
+       <div class="parent-report-name">${s.name}</div>
+       <div class="parent-report-class">${c?.name||''}${c?.stage?` — ${c.stage}`:''}</div>
+       <span class="parent-report-status">${levelInfo.icon} المستوى ${levelInfo.level} · ${levelInfo.title}</span>
+       <div class="parent-level-box">${levelHtml(id)}</div>
+     </div>
    </div>
-   ${levelHtml(id)}
- </div>
 
- <div class="profile-metrics">
-   <div class="profile-metric"><div class="metric-icon">${rasdIcon('star',18)}</div><span>النقاط</span><b>${totalPoints(id)}</b></div>
-   <div class="profile-metric"><div class="metric-icon">${rasdIcon('task',18)}</div><span>المهام</span><b>${taskPoints(id)}/20</b></div>
-   <div class="profile-metric"><div class="metric-icon">${rasdIcon('absent',18)}</div><span>الغياب</span><b>${abs}</b></div>
-   <div class="profile-metric"><div class="metric-icon">${rasdIcon('late',18)}</div><span>التأخر</span><b>${late}</b></div>
- </div>
-
- <div class="profile-section">
-   <h3>تطور النقاط</h3>
-   ${chartLogs.length?`
-   <div class="profile-chart">
-     ${chartLogs.map(l=>{
-       const height=Math.max(8,Math.round(Math.abs(l.value)/maxChart*100));
-       return `<div class="profile-bar-wrap">
-         <div class="profile-bar-value">${l.value>0?'+':''}${l.value}</div>
-         <div class="profile-bar ${l.value<0?'negative':''}" style="height:${height}px"></div>
-         <div class="profile-bar-label">${new Date(l.date).toLocaleDateString('ar-SA',{day:'numeric',month:'numeric'})}</div>
-       </div>`;
-     }).join('')}
-   </div>`:'<div class="notice">لا توجد بيانات كافية للرسم البياني بعد</div>'}
- </div>
-
- <div class="profile-section">
-   <h3>إنجاز المهام</h3>
-   <div class="row" style="margin-bottom:8px">
-     <div>${taskDone} مهمة منجزة من أصل ${taskAll}</div>
-     <b style="text-align:left">${taskRate}%</b>
-   </div>
-   <div class="progress-track"><div class="progress-fill" style="width:${taskRate}%"></div></div>
- </div>
-
- <div class="profile-section">
-   <h3>السلوك</h3>
-   <div class="behavior-grid-profile">
-     <div class="behavior-box"><span>ممتاز</span><b>${excellent}</b></div>
-     <div class="behavior-box"><span>جيد</span><b>${good}</b></div>
-     <div class="behavior-box"><span>تنبيه</span><b>${warnings}</b></div>
-     <div class="behavior-box"><span>مخالفة</span><b>${violations}</b></div>
-   </div>
- </div>
-
- <div class="profile-section">
-   <h3>الحضور</h3>
-   <div class="profile-metrics" style="margin:0">
-     <div class="profile-metric"><span>حاضر</span><b>${present}</b></div>
-     <div class="profile-metric"><span>غائب</span><b>${abs}</b></div>
-     <div class="profile-metric"><span>متأخر</span><b>${late}</b></div>
-     <div class="profile-metric"><span>الحصص</span><b>${present+abs+late}</b></div>
-   </div>
- </div>
-
- <div class="profile-section">
-   <h3>سجل المتابعة</h3>
-   ${logs.length?`
-   <div class="profile-timeline">
-     ${logs.map(l=>`
-       <div class="profile-event">
-         <div class="profile-event-card">
-           <div class="profile-event-title">
-             ${l.name}
-             ${l.value?` <span style="color:${l.value>0?'#0f766e':'#b91c1c'}">(${l.value>0?'+':''}${l.value})</span>`:''}
-           </div>
-           <div class="profile-event-date">${new Date(l.date).toLocaleString('ar-SA')}</div>
-           ${l.note?`<div class="profile-event-note">${l.note}</div>`:''}
-         </div>
+   <div class="parent-score-card">
+     <div class="parent-score-ring" style="--score:${score};--score-color:${scoreColor}">
+       <div class="parent-score-content">
+         <b>${score}%</b>
+         <span>أداء الطالب</span>
        </div>
-     `).join('')}
-   </div>`:'<div class="notice">لا توجد سجلات متابعة لهذا الطالب حتى الآن</div>'}
- </div>
-
- <div class="profile-section">
-   <h3>درجات الاختبارات</h3>
-   <div class="profile-metrics" style="margin:0">
-     <div class="profile-metric"><span>الفتري الأول</span><b>${e.p1||0}/20</b></div>
-     <div class="profile-metric"><span>الفتري الثاني</span><b>${e.p2||0}/20</b></div>
-     <div class="profile-metric"><span>نهاية الفصل</span><b>${e.final||0}/40</b></div>
-     <div class="profile-metric"><span>المجموع</span><b>${(e.p1||0)+(e.p2||0)+(e.final||0)+taskPoints(id)}/100</b></div>
+     </div>
+     <div class="parent-score-summary">
+       <h3>${scoreLabel}</h3>
+       <p>${scoreText}</p>
+       <div class="parent-mini-bars">
+         <div class="parent-mini-row"><span>الحضور</span><div class="parent-mini-track"><div class="parent-mini-fill" style="width:${attendanceRate}%"></div></div><b>${attendanceRate}%</b></div>
+         <div class="parent-mini-row"><span>المهام</span><div class="parent-mini-track"><div class="parent-mini-fill" style="width:${taskRate}%"></div></div><b>${taskRate}%</b></div>
+         <div class="parent-mini-row"><span>السلوك</span><div class="parent-mini-track"><div class="parent-mini-fill" style="width:${behaviorRate}%"></div></div><b>${behaviorRate}%</b></div>
+       </div>
+     </div>
    </div>
- </div>
 
- <div class="profile-actions no-print">
-   <button class="btn" id="openBadges">الإنجازات والشارات</button>
-   <button class="btn secondary" id="printReport">طباعة التقرير</button>
-   <button class="btn secondary" id="waReport">مشاركة مع ولي الأمر</button>
-   <button class="btn light" id="backStudents">العودة للطلاب</button>
+   <div class="parent-report-metrics">
+     <div class="parent-report-metric"><div class="metric-icon">${rasdIcon('star',19)}</div><span>النقاط</span><b>${totalPoints(id)}</b></div>
+     <div class="parent-report-metric"><div class="metric-icon">${rasdIcon('task',19)}</div><span>المهام</span><b>${taskPoints(id)}/20</b></div>
+     <div class="parent-report-metric"><div class="metric-icon">${rasdIcon('absent',19)}</div><span>الغياب</span><b>${abs}</b></div>
+     <div class="parent-report-metric"><div class="metric-icon">${rasdIcon('late',19)}</div><span>التأخر</span><b>${late}</b></div>
+   </div>
+
+   <div class="parent-report-section parent-strengths">
+     <h3>نقاط القوة</h3>
+     <div class="parent-points-list">
+       ${(strengths.length?strengths:['لا توجد بيانات كافية بعد']).slice(0,5).map(x=>`
+         <div class="parent-point"><span class="parent-point-icon">✓</span><div>${x}</div></div>
+       `).join('')}
+     </div>
+   </div>
+
+   <div class="parent-report-section parent-improve">
+     <h3>جوانب تحتاج إلى تطوير</h3>
+     <div class="parent-points-list">
+       ${(improvements.length?improvements:['لا توجد ملاحظات جوهرية حاليًا']).slice(0,5).map(x=>`
+         <div class="parent-point"><span class="parent-point-icon">!</span><div>${x}</div></div>
+       `).join('')}
+     </div>
+   </div>
+
+   <div class="parent-report-section">
+     <h3>الإنجازات والشارات</h3>
+     ${unlockedBadges.length?`
+       <div class="parent-badges-preview">
+         ${unlockedBadges.map(b=>`
+           <div class="parent-badge">
+             <div class="parent-badge-icon">${b.icon}</div>
+             <div class="parent-badge-title">${b.title}</div>
+           </div>
+         `).join('')}
+       </div>
+     `:'<div class="notice">لم يحصل الطالب على شارات بعد</div>'}
+   </div>
+
+   <div class="parent-report-section">
+     <h3>تطور الأداء</h3>
+     ${chartLogs.length?`
+       <div class="parent-chart">
+         ${chartLogs.map(l=>{
+           const h=Math.max(8,Math.round(Math.abs(l.value)/maxChart*100));
+           return `<div class="parent-chart-item">
+             <div class="parent-chart-value">${l.value>0?'+':''}${l.value}</div>
+             <div class="parent-chart-bar ${l.value<0?'negative':''}" style="height:${h}px"></div>
+             <div class="parent-chart-date">${new Date(l.date).toLocaleDateString('ar-SA',{day:'numeric',month:'numeric'})}</div>
+           </div>`;
+         }).join('')}
+       </div>
+     `:'<div class="notice">لا توجد بيانات كافية للرسم البياني بعد</div>'}
+   </div>
+
+   <div class="parent-report-section">
+     <h3>آخر النشاطات</h3>
+     ${logs.length?`
+       <div class="parent-timeline">
+         ${logs.slice(0,8).map(l=>`
+           <div class="parent-event">
+             <div class="parent-event-card">
+               <div class="parent-event-title">${l.name}</div>
+               <div class="parent-event-date">${new Date(l.date).toLocaleString('ar-SA')}</div>
+               ${l.note?`<div class="parent-event-note">${l.note}</div>`:''}
+             </div>
+           </div>
+         `).join('')}
+       </div>
+     `:'<div class="notice">لا توجد نشاطات مسجلة بعد</div>'}
+   </div>
+
+   <div class="parent-message">${parentMessage}</div>
+
+   <div class="parent-report-actions no-print">
+     <button class="btn" id="openBadges">عرض الإنجازات</button>
+     <button class="btn secondary" id="waReport">إرسال لولي الأمر</button>
+     <button class="btn light" id="backStudents" style="grid-column:1/-1">العودة للطلاب</button>
+   </div>
  </div>`;
 
- document.getElementById('profileBack').onclick=()=>{
-   page='students';
-   render();
- };
-
- document.getElementById('openBadges').onclick=()=>{window.badgesStudentId=id;page='badges';render()};
+ document.getElementById('profileBack').onclick=()=>{page='students';render()};
  document.getElementById('printReport').onclick=()=>window.print();
-
- document.getElementById('backStudents').onclick=()=>{
-   page='students';
-   render();
- };
+ document.getElementById('openBadges').onclick=()=>{window.badgesStudentId=id;page='badges';render()};
+ document.getElementById('backStudents').onclick=()=>{page='students';render()};
 
  document.getElementById('waReport').onclick=()=>{
    let phone=(s.phone||'').replace(/\D/g,'');
-   if(!phone){
-     alert('لم يتم إضافة رقم ولي الأمر لهذا الطالب');
-     return;
-   }
+   if(!phone){alert('لم يتم إضافة رقم ولي الأمر لهذا الطالب');return}
    if(phone.startsWith('05'))phone='966'+phone.slice(1);
-   const msg=(data.teacher.whatsappMessage||'السلام عليكم، هذا تقرير الطالب {student}')
-     .replace('{student}',s.name);
+   const msg=`السلام عليكم، نشارككم تقرير الطالب ${s.name}. مستوى الأداء الحالي ${score}%، وعدد النقاط ${totalPoints(id)}، والغياب ${abs}، والتأخر ${late}.`;
    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,'_blank');
  };
 }
