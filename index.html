@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v0.8.2</title>
+<title>رَصْد — v0.8.3</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -660,6 +660,155 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   }
 }
 
+
+/* ===== بطاقة الطالب النهائية v0.8.3 ===== */
+.student-premium-card{
+  display:grid!important;
+  grid-template-columns:70px minmax(0,1fr) 32px!important;
+  grid-template-areas:
+    "avatar main menu"
+    "stats stats stats"
+    "eval eval eval";
+  gap:9px 12px!important;
+  padding:14px!important;
+  border-radius:20px!important;
+  background:#fff!important;
+  border:1px solid #dce6ec!important;
+  box-shadow:0 7px 20px #17324d0c!important;
+  position:relative!important;
+  overflow:visible!important;
+}
+.student-premium-card::before{display:none!important}
+.student-premium-card .avatar-image,
+.student-premium-card .avatar-letter{
+  grid-area:avatar!important;
+  width:70px!important;
+  height:70px!important;
+  flex-basis:70px!important;
+  align-self:center!important;
+}
+.student-main{
+  grid-area:main!important;
+  min-width:0!important;
+  align-self:center!important;
+}
+.student-title-row{
+  display:flex!important;
+  align-items:center!important;
+  flex-wrap:wrap!important;
+  gap:6px!important;
+  margin:0!important;
+}
+.student-title-row .student-name{
+  flex:1 1 auto!important;
+  min-width:120px!important;
+  font-size:18px!important;
+  font-weight:900!important;
+  line-height:1.3!important;
+  margin:0!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.student-level-badge{
+  display:inline-flex!important;
+  align-items:center!important;
+  padding:4px 8px!important;
+  font-size:9px!important;
+  border-radius:999px!important;
+  white-space:nowrap!important;
+}
+.student-side-actions{
+  grid-area:menu!important;
+  align-self:start!important;
+  display:block!important;
+}
+.student-menu-btn{
+  width:30px!important;
+  height:30px!important;
+  min-width:30px!important;
+  border-radius:50%!important;
+  padding:0!important;
+  background:#f8fafc!important;
+  border:1px solid #dce6ec!important;
+  font-size:0!important;
+}
+.student-menu-btn::before{
+  content:'•••';
+  font-size:11px;
+  color:#17324d;
+  letter-spacing:1px;
+}
+.student-stats-new{
+  grid-area:stats!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:6px!important;
+  width:100%!important;
+  margin:0!important;
+}
+.student-stat-new{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:4px!important;
+  width:100%!important;
+  min-width:0!important;
+  height:36px!important;
+  padding:5px 3px!important;
+  border-radius:11px!important;
+  border:1px solid #e1e9ee!important;
+  font-size:10px!important;
+  color:#536174!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+}
+.student-stat-new .mini-icon{
+  display:inline!important;
+  margin:0!important;
+  font-size:13px!important;
+}
+.student-evaluate-btn{
+  grid-area:eval!important;
+  justify-self:start!important;
+  width:auto!important;
+  min-width:118px!important;
+  height:36px!important;
+  border-radius:11px!important;
+  padding:0 14px!important;
+  background:#e7f5f2!important;
+  color:#08756c!important;
+  font-size:13px!important;
+  font-weight:900!important;
+  border:0!important;
+}
+.student-evaluate-btn::before{
+  content:'★';
+  font-size:14px;
+  margin-left:5px;
+}
+@media(max-width:390px){
+  .student-premium-card{
+    grid-template-columns:62px minmax(0,1fr) 30px!important;
+    padding:12px!important;
+    gap:8px 9px!important;
+  }
+  .student-premium-card .avatar-image,
+  .student-premium-card .avatar-letter{
+    width:62px!important;
+    height:62px!important;
+    flex-basis:62px!important;
+  }
+  .student-title-row .student-name{
+    font-size:16px!important;
+    min-width:100px!important;
+  }
+  .student-stat-new{
+    height:33px!important;
+    font-size:9px!important;
+  }
+}
+
 @media(max-width:520px){
   .student-premium-card{
     grid-template-columns:56px minmax(0,1fr) 34px!important;
@@ -732,7 +881,7 @@ data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.ses
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v0.8.2';
+const APP_VERSION='v0.8.3';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -1139,7 +1288,7 @@ function renderStudents(){
        <div class="student-side-actions">
          <button class="student-menu-btn student-actions" data-id="${s.id}" aria-label="خيارات">•••</button>
        </div>
-       <button class="student-evaluate-btn" data-eval-student="${s.id}">تقييم الطالب</button>
+       <button class="student-evaluate-btn" data-eval-student="${s.id}">تقييم</button>
      </div>`;
    }).join('');
 
