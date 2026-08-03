@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v1.9.1</title>
+<title>رَصْد — v1.9.2</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -2483,6 +2483,25 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   animation:badgePop .5s ease;
 }
 
+
+/* ===== قائمة السلوكيات الصفية v1.9.2 ===== */
+.classroom-behavior-section{margin:12px 0}
+.classroom-behavior-title{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:900;margin-bottom:8px}
+.classroom-behavior-title.positive{color:#137a43}
+.classroom-behavior-title.negative{color:#b42318}
+.classroom-behavior-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.classroom-behavior{min-width:0;min-height:72px;border:1px solid #dbe5ea;border-radius:13px;background:#fff;padding:8px 4px;color:#17324d;font-size:11px;font-weight:850;line-height:1.25;text-align:center}
+.classroom-behavior-icon{width:34px;height:34px;border-radius:11px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:19px}
+.classroom-behavior.positive .classroom-behavior-icon{background:#e2f7e9;color:#15803d}
+.classroom-behavior.negative .classroom-behavior-icon{background:#ffe5e5;color:#dc2626}
+.classroom-behavior.selected{border-width:2px;transform:scale(.98)}
+.classroom-behavior.positive.selected{border-color:#16a34a;background:#f0fdf4}
+.classroom-behavior.negative.selected{border-color:#dc2626;background:#fff5f5}
+@media(max-width:420px){
+ .classroom-behavior-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .classroom-behavior{font-size:10px;min-height:70px}
+}
+
 </style>
 </head>
 <body>
@@ -2503,11 +2522,25 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
 <div id="toast" class="toast hidden"><span id="toastText"></span><button id="undoBtn" class="btn light">تراجع</button></div>
 <script>
 const DEFAULT_BEHAVIORS = [
-{name:'صح',value:1},{name:'أتقن',value:2},{name:'حفظ',value:1},{name:'مميز',value:2},
-{name:'مؤدب',value:1},{name:'حل الواجب',value:.5},{name:'تطبيق عملي',value:5,task:true},{name:'إنجاز مشروع',value:2,task:true},
-{name:'خطأ',value:-1},{name:'لم يتقن',value:-2},{name:'لم يحفظ',value:-1},{name:'لم يحل الواجب',value:-.5},
-{name:'النوم في الحصة',value:-.5},{name:'التحدث أثناء الدرس',value:-1},{name:'مشاغب',value:-2},
-{name:'لا مبالاة',value:-1},{name:'نسيان الكتاب',value:-.5},{name:'استخدام الهاتف',value:-.5}
+{name:'صح',icon:'✓',value:1,type:'positive'},
+{name:'أتقن',icon:'🧠',value:1,type:'positive'},
+{name:'حفظ',icon:'🏆',value:1,type:'positive'},
+{name:'مميز',icon:'★',value:1,type:'positive'},
+{name:'مؤدب',icon:'♥',value:1,type:'positive'},
+{name:'حل الواجب',icon:'📖',value:1,type:'positive'},
+{name:'إنجاز مشروع',icon:'⚙️',value:1,type:'positive',task:true},
+{name:'تطبيق عملي',icon:'💡',value:1,type:'positive',task:true},
+
+{name:'خطأ',icon:'×',value:-1,type:'negative'},
+{name:'لم يتقن',icon:'🧠',value:-1,type:'negative'},
+{name:'لم يحفظ',icon:'🏆',value:-1,type:'negative'},
+{name:'لم يحل الواجب',icon:'📕',value:-1,type:'negative'},
+{name:'التحدث أثناء الدرس',icon:'🗣️',value:-1,type:'negative'},
+{name:'النوم في الحصة',icon:'💤',value:-1,type:'negative'},
+{name:'مشاغب',icon:'😠',value:-1,type:'negative'},
+{name:'لا مبالاة',icon:'😐',value:-1,type:'negative'},
+{name:'استخدام الهاتف',icon:'📱',value:-1,type:'negative'},
+{name:'نسيان الكتاب',icon:'📚',value:-1,type:'negative'}
 ];
 let data = JSON.parse(localStorage.getItem('rasdData')||'null') || {
  classes:[], students:[], logs:[], exams:{}, behaviors:DEFAULT_BEHAVIORS, selectedClass:null,
@@ -2515,10 +2548,15 @@ let data = JSON.parse(localStorage.getItem('rasdData')||'null') || {
  wheel:{remaining:[],history:[]}, schedule:{}, periodTimes:{}, sessions:[]
 };
 data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.sessions=data.sessions||[];
+if(data.behaviorsVersion!=='v1.9.2'){
+ data.behaviors=DEFAULT_BEHAVIORS.map(b=>({...b}));
+ data.behaviorsVersion='v1.9.2';
+ try{localStorage.setItem('rasdData',JSON.stringify(data))}catch(e){}
+}
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v1.9.1';
+const APP_VERSION='v1.9.2';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -2664,9 +2702,11 @@ function toggleAttendance(studentId){
 }
 function sessionBehaviorMenu(studentId){
  const s=data.students.find(x=>x.id===studentId);
- openModal(`<h2>${s.name}</h2><p class="muted">اختر السلوك لتسجيله في هذه الحصة</p><div class="beh-grid">${data.behaviors.map((b,i)=>`<button class="beh ${b.value<0?'negative':''}" data-session-b="${i}">${b.name}<span class="points">${b.value>0?'+':''}${b.value}</span></button>`).join('')}</div><div class="field"><label>ملاحظة اختيارية</label><textarea id="sessionNote"></textarea></div><button class="btn secondary" id="saveSessionNote">حفظ الملاحظة</button> <button class="btn light" id="closeSessionMenu">إغلاق</button>`);
- document.querySelectorAll('[data-session-b]').forEach(btn=>btn.onclick=()=>{
-   const b=data.behaviors[+btn.dataset.sessionB],log={id:crypto.randomUUID(),studentId,sessionId:currentSession.id,name:b.name,value:b.value,task:!!b.task,date:new Date().toISOString()};
+ openModal(`<h2>${s.name}</h2><p class="muted">اختر السلوك لتسجيله في هذه الحصة</p>${behaviorInputHtml()}<div class="field"><label>ملاحظة اختيارية</label><textarea id="sessionNote"></textarea></div><button class="btn secondary" id="saveSessionNote">حفظ الملاحظة</button> <button class="btn light" id="closeSessionMenu">إغلاق</button>`);
+ document.querySelectorAll('[data-classroom-behavior]').forEach(btn=>btn.onclick=()=>{
+   const name=decodeURIComponent(btn.dataset.classroomBehavior);
+   const b=data.behaviors.find(x=>x.name===name);
+   const log={id:crypto.randomUUID(),studentId,sessionId:currentSession.id,name:b.name,value:b.value,task:!!b.task,date:new Date().toISOString()};
    data.logs.push(log);save();closeModal();render();
    toast(`تم تسجيل ${b.name} للطالب ${s.name}`,()=>{data.logs=data.logs.filter(x=>x.id!==log.id);save();render()});
  });
@@ -2674,6 +2714,29 @@ function sessionBehaviorMenu(studentId){
  document.getElementById('closeSessionMenu').onclick=closeModal;
 }
 
+
+
+function behaviorInputHtml(){
+ const positive=data.behaviors.filter(b=>b.type==='positive'||b.value>0);
+ const negative=data.behaviors.filter(b=>b.type==='negative'||b.value<0);
+ const cards=items=>items.map(b=>`
+   <button class="classroom-behavior ${b.value>0?'positive':'negative'}"
+     data-classroom-behavior="${encodeURIComponent(b.name)}"
+     data-classroom-value="${b.value}"
+     data-classroom-task="${b.task?1:0}">
+     <span class="classroom-behavior-icon">${b.icon||'•'}</span>
+     ${b.name}
+   </button>`).join('');
+ return `
+   <div class="classroom-behavior-section">
+     <div class="classroom-behavior-title positive">🌟 سلوكيات إيجابية</div>
+     <div class="classroom-behavior-grid">${cards(positive)}</div>
+   </div>
+   <div class="classroom-behavior-section">
+     <div class="classroom-behavior-title negative">🚫 سلوكيات سلبية</div>
+     <div class="classroom-behavior-grid">${cards(negative)}</div>
+   </div>`;
+}
 
 function quickEvaluationCompact(studentId){
  const s=data.students.find(x=>x.id===studentId);
@@ -2700,13 +2763,8 @@ function quickEvaluationCompact(studentId){
    </div>
 
    <div class="rasd-eval-group">
-     <div class="rasd-eval-label">السلوك</div>
-     <div class="rasd-choice-grid four">
-       <button class="rasd-choice green" data-beh="2"><span>☺</span>ممتاز</button>
-       <button class="rasd-choice blue" data-beh="1"><span>◡</span>جيد</button>
-       <button class="rasd-choice amber" data-beh="0"><span>!</span>تنبيه</button>
-       <button class="rasd-choice red" data-beh="-1"><span>⚠</span>مخالفة</button>
-     </div>
+     <div class="rasd-eval-label">السلوك الصفي</div>
+     ${behaviorInputHtml()}
    </div>
 
    <button class="rasd-note-button" id="toggleNote">✎ إضافة ملاحظة اختيارية</button>
@@ -2715,14 +2773,14 @@ function quickEvaluationCompact(studentId){
    </div>
 
    <div class="rasd-eval-bottom">
-     <div class="rasd-eval-total">المجموع: <b id="evalTotal">0</b></div>
+     <div class="rasd-eval-total">اختر التقييم المناسب، ويتم الاحتساب تلقائيًا</div>
      <button class="rasd-eval-save" id="saveQuickEval">حفظ</button>
      <button class="rasd-eval-cancel" id="closeQuickEval">إلغاء</button>
    </div>
  </div>`);
 
  const calc=()=>((participation?.value||0)+(task?.value||0)+(behavior?.value||0));
- const refresh=()=>document.getElementById('evalTotal').textContent=calc();
+ const refresh=()=>{const el=document.getElementById('evalTotal');if(el)el.textContent=calc()};
 
  document.querySelectorAll('[data-part]').forEach(b=>b.onclick=()=>{
    const value=+b.dataset.part;
@@ -2739,10 +2797,11 @@ function quickEvaluationCompact(studentId){
    refresh();
  });
 
- document.querySelectorAll('[data-beh]').forEach(b=>b.onclick=()=>{
-   const value=+b.dataset.beh;
-   behavior={value,label:value===2?'سلوك ممتاز':value===1?'سلوك جيد':value===0?'تنبيه سلوكي':'مخالفة سلوكية'};
-   document.querySelectorAll('[data-beh]').forEach(x=>x.classList.remove('selected'));
+ document.querySelectorAll('[data-classroom-behavior]').forEach(b=>b.onclick=()=>{
+   const value=+b.dataset.classroomValue;
+   const label=decodeURIComponent(b.dataset.classroomBehavior);
+   behavior={value,label,task:b.dataset.classroomTask==='1'};
+   document.querySelectorAll('[data-classroom-behavior]').forEach(x=>x.classList.remove('selected'));
    b.classList.add('selected');
    refresh();
  });
@@ -2818,19 +2877,16 @@ function quickEvaluation(studentId){
  <button class="quick-option" data-task="1"><span class="icon">⏳</span>متأخر</button>
  <button class="quick-option" data-task="0"><span class="icon">❌</span>لم ينجز</button>
  </div></div>
- <div class="quick-eval-section"><div class="quick-eval-title">السلوك</div><div class="quick-options four">
- <button class="quick-option" data-beh="2"><span class="icon">😊</span>ممتاز</button>
- <button class="quick-option" data-beh="1"><span class="icon">🙂</span>جيد</button>
- <button class="quick-option" data-beh="0"><span class="icon">😐</span>تنبيه</button>
- <button class="quick-option" data-beh="-1"><span class="icon">⚠️</span>ملاحظة</button>
- </div></div>
+ <div class="quick-eval-section"><div class="quick-eval-title">السلوك الصفي</div>
+ ${behaviorInputHtml()}
+ </div>
  <div class="field"><label>ملاحظة المعلم (اختيارية)</label><textarea id="evalNote"></textarea></div>
  <div class="eval-summary">مجموع النقاط لهذه العملية: <b id="evalTotal">0</b></div>
  <button class="btn" id="saveQuickEval">حفظ التقييم</button> <button class="btn light" id="closeQuickEval">إلغاء</button>`);
  const refresh=()=>document.getElementById('evalTotal').textContent=calc();
  document.querySelectorAll('[data-part]').forEach(b=>b.onclick=()=>{participation={value:+b.dataset.part,label:`مشاركة ${b.dataset.part}/5`};document.querySelectorAll('[data-part]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');refresh()});
  document.querySelectorAll('[data-task]').forEach(b=>b.onclick=()=>{const v=+b.dataset.task;task={value:v,label:v===2?'أنجز المهمة':v===1?'أنجز المهمة متأخراً':'لم ينجز المهمة',task:true};document.querySelectorAll('[data-task]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');refresh()});
- document.querySelectorAll('[data-beh]').forEach(b=>b.onclick=()=>{const v=+b.dataset.beh;behavior={value:v,label:v===2?'سلوك ممتاز':v===1?'سلوك جيد':v===0?'تنبيه سلوكي':'ملاحظة سلوكية'};document.querySelectorAll('[data-beh]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');refresh()});
+ document.querySelectorAll('[data-classroom-behavior]').forEach(b=>b.onclick=()=>{const v=+b.dataset.classroomValue;behavior={value:v,label:decodeURIComponent(b.dataset.classroomBehavior),task:b.dataset.classroomTask==='1'};document.querySelectorAll('[data-classroom-behavior]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');refresh()});
  document.getElementById('saveQuickEval').onclick=()=>{
    if(!participation&&!task&&!behavior&&!document.getElementById('evalNote').value.trim()){alert('اختر تقييماً واحداً على الأقل');return}
    const created=[];
@@ -3705,7 +3761,7 @@ function avatarHtml(student){
 function totalPoints(id){return data.logs.filter(l=>l.studentId===id).reduce((a,l)=>a+l.value,0)}
 function taskPoints(id){return Math.min(20,data.logs.filter(l=>l.studentId===id&&l.task).reduce((a,l)=>a+l.value,0))}
 function openDaily(){
- openModal(`<h2>متابعة الحصة</h2><label>اختر الطالب</label><select id="dailyStudent">${students().map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select><div class="beh-grid" style="margin-top:12px">${data.behaviors.map((b,i)=>`<button class="beh ${b.value<0?'negative':''}" data-b="${i}">${b.name} <span class="points">${b.value>0?'+':''}${b.value}</span></button>`).join('')}</div><button class="btn light" id="closeM" style="margin-top:12px">إغلاق</button>`);
+ openModal(`<h2>متابعة الحصة</h2><label>اختر الطالب</label><select id="dailyStudent">${students().map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select><div class="beh-grid" style="margin-top:12px">${data.behaviors.map((b,i)=>`<button class="beh ${b.value<0?'negative':''}" data-b="${i}">${b.icon?`${b.icon} `:''}${b.name}</button>`).join('')}</div><button class="btn light" id="closeM" style="margin-top:12px">إغلاق</button>`);
  document.getElementById('closeM').onclick=closeModal;
  document.querySelectorAll('[data-b]').forEach(btn=>btn.onclick=()=>{
    const s=document.getElementById('dailyStudent').value,b=data.behaviors[+btn.dataset.b];
@@ -4013,7 +4069,7 @@ function spinWheel(){
  if(!data.wheel.remaining.length)return;
  const idx=Math.floor(Math.random()*data.wheel.remaining.length),id=data.wheel.remaining.splice(idx,1)[0],s=data.students.find(x=>x.id===id);
  const w=document.getElementById('wheel');w.style.transform=`rotate(${1440+Math.floor(Math.random()*720)}deg)`;
- setTimeout(()=>{winner.textContent=s.name;data.wheel.history.push(id);save();openModal(`<h2>${s.name}</h2><p>سجل نتيجة المشاركة مباشرة</p><div class="beh-grid">${data.behaviors.slice(0,6).map((b,i)=>`<button class="beh" data-p="${i}">${b.name} <b>${b.value>0?'+':''}${b.value}</b></button>`).join('')}</div><button class="btn light" id="closeM">إغلاق</button>`);document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const x=data.behaviors[+b.dataset.p];data.logs.push({id:crypto.randomUUID(),studentId:id,name:x.name,value:x.value,task:!!x.task,date:new Date().toISOString()});save();closeModal();render()});closeM.onclick=()=>{closeModal();render()}},3400);
+ setTimeout(()=>{winner.textContent=s.name;data.wheel.history.push(id);save();openModal(`<h2>${s.name}</h2><p>سجل نتيجة المشاركة مباشرة</p><div class="beh-grid">${data.behaviors.slice(0,6).map((b,i)=>`<button class="beh" data-p="${i}">${b.icon?`${b.icon} `:''}${b.name}</button>`).join('')}</div><button class="btn light" id="closeM">إغلاق</button>`);document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const x=data.behaviors[+b.dataset.p];data.logs.push({id:crypto.randomUUID(),studentId:id,name:x.name,value:x.value,task:!!x.task,date:new Date().toISOString()});save();closeModal();render()});closeM.onclick=()=>{closeModal();render()}},3400);
 }
 function renderExams(){
  const c=cls();setTitle('الاختبارات',c?c.name:'اختر فصلاً');
