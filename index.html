@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v4.1</title>
+<title>رَصْد — v4.2</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -4949,6 +4949,44 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   margin:4px 0 14px;
 }
 
+
+/* ===== مؤثر اختيار الطالب العشوائي v4.2 ===== */
+.student-picker-card.is-spinning{
+  border-color:#0f766e;
+  background:linear-gradient(145deg,#f0fdfa,#ecfeff);
+  box-shadow:0 0 0 3px #99f6e433,0 10px 24px #0f766e18;
+}
+.picked-student{
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.picked-student.spinning-name{
+  color:#0f766e;
+  animation:studentNamePulse .28s ease-in-out infinite alternate;
+}
+.picked-student.final-name{
+  color:#17324d;
+  animation:studentWinnerPop .55s ease;
+}
+.student-picker-message{
+  min-height:22px;
+  margin-top:2px;
+  font-size:13px;
+  font-weight:900;
+  color:#0f766e;
+}
+@keyframes studentNamePulse{
+  from{transform:scale(.97);opacity:.65}
+  to{transform:scale(1.04);opacity:1}
+}
+@keyframes studentWinnerPop{
+  0%{transform:scale(.72);opacity:.15}
+  60%{transform:scale(1.11);opacity:1}
+  100%{transform:scale(1);opacity:1}
+}
+
 </style>
 </head>
 <body>
@@ -5003,7 +5041,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v4.1';
+const APP_VERSION='v4.2';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -6684,7 +6722,64 @@ function renderActivityPlay(activityId){
  const baseQuestions=activity.questions||[];
  const order=activity.shuffle?[...baseQuestions].sort(()=>Math.random()-.5):[...baseQuestions];
  const activityStudents=getActivityStudents(activity);
- const state={index:0,questions:order,remaining:activityStudents.map(s=>s.id),selectedStudentId:null,correctCount:0,pointsAwarded:0,studentPoints:{},revealed:false,finished:false};
+ const state={index:0,questions:order,remaining:activityStudents.map(s=>s.id),selectedStudentId:null,correctCount:0,pointsAwarded:0,studentPoints:{},revealed:false,finished:false,isSpinning:false,spinPreviewId:null,spinInterval:null,spinTimeout:null};
+ const stopStudentSpin=(manual=false)=>{
+  if(!state.isSpinning)return;
+  clearInterval(state.spinInterval);
+  clearTimeout(state.spinTimeout);
+  state.spinInterval=null;
+  state.spinTimeout=null;
+  state.isSpinning=false;
+
+  if(!state.remaining.length){
+   state.remaining=activityStudents.map(s=>s.id);
+   toast('بدأت دورة اختيار جديدة');
+  }
+
+  const winnerIndex=Math.floor(Math.random()*state.remaining.length);
+  state.selectedStudentId=state.remaining.splice(winnerIndex,1)[0];
+  state.spinPreviewId=state.selectedStudentId;
+  draw();
+
+  const card=document.querySelector('.student-picker-card');
+  const name=document.querySelector('.picked-student');
+  const msg=document.querySelector('.student-picker-message');
+  card?.classList.remove('is-spinning');
+  name?.classList.add('final-name');
+  if(msg)msg.textContent='🎉 وقع الاختيار على هذا الطالب';
+  if(manual)toast('تم إيقاف الاختيار');
+ };
+
+ const startStudentSpin=()=>{
+  if(!activityStudents.length){alert('لا يوجد طلاب في الفصل المرتبط بالنشاط');return}
+  if(state.isSpinning){stopStudentSpin(true);return}
+
+  state.isSpinning=true;
+  state.selectedStudentId=null;
+  state.spinPreviewId=activityStudents[Math.floor(Math.random()*activityStudents.length)]?.id||null;
+  draw();
+
+  let delay=75;
+  const rotateName=()=>{
+   if(!state.isSpinning)return;
+   const previewPool=state.remaining.length
+    ? state.remaining.map(id=>activityStudents.find(s=>s.id===id)).filter(Boolean)
+    : activityStudents;
+   const preview=previewPool[Math.floor(Math.random()*previewPool.length)];
+   state.spinPreviewId=preview?.id||null;
+
+   const nameEl=document.querySelector('.picked-student');
+   if(nameEl&&preview)nameEl.textContent=preview.name;
+
+   delay=Math.min(delay+7,180);
+   clearInterval(state.spinInterval);
+   state.spinInterval=setInterval(rotateName,delay);
+  };
+
+  state.spinInterval=setInterval(rotateName,delay);
+  state.spinTimeout=setTimeout(()=>stopStudentSpin(false),3200);
+ };
+
  const draw=()=>{
   if(state.finished){
    const topId=Object.entries(state.studentPoints).sort((a,b)=>b[1]-a[1])[0]?.[0];
@@ -6694,17 +6789,15 @@ function renderActivityPlay(activityId){
   }
   const q=state.questions[state.index];
   const selected=data.students.find(s=>s.id===state.selectedStudentId);
+  const previewStudent=data.students.find(s=>s.id===state.spinPreviewId);
   const progress=Math.round((state.index+1)/state.questions.length*100);
   setTitle(activity.title,`${state.index+1} من ${state.questions.length}`);
-  view.innerHTML=`<div class="play-shell"><div class="play-top"><button class="btn light" id="exitPlay">خروج</button><b>${escapeHtml(activity.title)}</b></div><div class="play-progress"><div style="width:${progress}%"></div></div><div class="student-picker-card"><div class="picker-placeholder">الطالب المختار لهذا السؤال</div><div class="picked-student">${selected?selected.name:'لم يتم الاختيار بعد'}</div><button class="btn secondary" id="pickStudent">🎲 اختيار طالب عشوائي</button></div><div class="question-stage"><div class="question-number">السؤال ${state.index+1}</div>${q.image?`<img class="question-stage-image" src="${q.image}" alt="صورة السؤال">`:''}<div class="question-text">${escapeHtml(q.text)}</div><div class="play-options">${q.options.map((o,i)=>`<button class="play-option ${state.revealed?(i===q.correct?'reveal-correct':'reveal-wrong'):''}" ${state.revealed?'disabled':''}>${String.fromCharCode(65+i)} — ${escapeHtml(o)}</button>`).join('')}</div></div><div class="play-controls"><button class="btn light" id="revealAnswer">${state.revealed?'تم إظهار الإجابة':'إظهار الإجابة الصحيحة'}</button><button class="btn secondary" id="manualStudent">👆 اختيار يدوي</button></div><div class="play-result-controls"><button class="btn danger" id="markWrong" ${selected?'':'disabled'}>✕ غير صحيحة</button><button class="btn" id="markCorrect" ${selected?'':'disabled'}>✓ صحيحة +${q.points}</button></div><button class="btn play-next" id="nextQuestion">${state.index===state.questions.length-1?'إنهاء النشاط':'التالي ←'}</button></div>`;
-  exitPlay.onclick=()=>{if(confirm('هل تريد الخروج من النشاط؟')){page='activities';render()}};
-  pickStudent.onclick=()=>{
-   if(!activityStudents.length){alert('لا يوجد طلاب في الفصل المرتبط بالنشاط');return}
-   if(!state.remaining.length){state.remaining=activityStudents.map(s=>s.id);toast('بدأت دورة اختيار جديدة')}
-   const idx=Math.floor(Math.random()*state.remaining.length);
-   state.selectedStudentId=state.remaining.splice(idx,1)[0];
-   draw();
+  view.innerHTML=`<div class="play-shell"><div class="play-top"><button class="btn light" id="exitPlay">خروج</button><b>${escapeHtml(activity.title)}</b></div><div class="play-progress"><div style="width:${progress}%"></div></div><div class="student-picker-card ${state.isSpinning?'is-spinning':''}"><div class="picker-placeholder">${state.isSpinning?'جارٍ اختيار الطالب...':'الطالب المختار لهذا السؤال'}</div><div class="picked-student ${state.isSpinning?'spinning-name':selected?'final-name':''}">${state.isSpinning?(previewStudent?.name||'...'):(selected?selected.name:'لم يتم الاختيار بعد')}</div><div class="student-picker-message">${state.isSpinning?'الأسماء تتغير سريعًا — اضغط إيقاف في أي لحظة':selected?'🎉 وقع الاختيار على هذا الطالب':''}</div><button class="btn ${state.isSpinning?'danger':'secondary'}" id="pickStudent">${state.isSpinning?'⏹ إيقاف الآن':'🎲 اختيار طالب عشوائي'}</button></div><div class="question-stage"><div class="question-number">السؤال ${state.index+1}</div>${q.image?`<img class="question-stage-image" src="${q.image}" alt="صورة السؤال">`:''}<div class="question-text">${escapeHtml(q.text)}</div><div class="play-options">${q.options.map((o,i)=>`<button class="play-option ${state.revealed?(i===q.correct?'reveal-correct':'reveal-wrong'):''}" ${state.revealed?'disabled':''}>${String.fromCharCode(65+i)} — ${escapeHtml(o)}</button>`).join('')}</div></div><div class="play-controls"><button class="btn light" id="revealAnswer">${state.revealed?'تم إظهار الإجابة':'إظهار الإجابة الصحيحة'}</button><button class="btn secondary" id="manualStudent">👆 اختيار يدوي</button></div><div class="play-result-controls"><button class="btn danger" id="markWrong" ${selected?'':'disabled'}>✕ غير صحيحة</button><button class="btn" id="markCorrect" ${selected?'':'disabled'}>✓ صحيحة +${q.points}</button></div><button class="btn play-next" id="nextQuestion">${state.index===state.questions.length-1?'إنهاء النشاط':'التالي ←'}</button></div>`;
+  exitPlay.onclick=()=>{
+   if(state.isSpinning)stopStudentSpin(true);
+   if(confirm('هل تريد الخروج من النشاط؟')){page='activities';render()}
   };
+  pickStudent.onclick=()=>startStudentSpin();
   manualStudent.onclick=()=>{
    openModal(`<h2>اختيار طالب</h2><div class="student-action-menu">${activityStudents.map(s=>`<button class="student-action-item" data-manual-student="${s.id}"><span class="menu-icon">👨‍🎓</span><div>${s.name}</div></button>`).join('')}</div><button class="btn light" id="closeM" style="margin-top:10px">إغلاق</button>`);
    document.querySelectorAll('[data-manual-student]').forEach(b=>b.onclick=()=>{state.selectedStudentId=b.dataset.manualStudent;closeModal();draw()});
@@ -6719,7 +6812,12 @@ function renderActivityPlay(activityId){
    save();toast(`تمت إضافة ${q.points} نقطة`);state.revealed=true;draw()
   };
   markWrong.onclick=()=>{state.revealed=true;toast('تم تسجيل الإجابة دون إضافة نقاط');draw()};
-  nextQuestion.onclick=()=>{if(state.index>=state.questions.length-1)state.finished=true;else{state.index++;state.selectedStudentId=null;state.revealed=false}draw()};
+  nextQuestion.onclick=()=>{
+   if(state.isSpinning){stopStudentSpin(true);return}
+   if(state.index>=state.questions.length-1)state.finished=true;
+   else{state.index++;state.selectedStudentId=null;state.spinPreviewId=null;state.revealed=false}
+   draw()
+  };
  };
  draw();
 }
