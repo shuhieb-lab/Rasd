@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<title>رَصْد — v6.7.3</title>
+<title>رَصْد — v6.7.4</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -7426,6 +7426,193 @@ body.memory-fullscreen-mode .memory-card-back img,body.memory-fullscreen-mode .m
 body.memory-fullscreen-mode .memory-card-front img{object-fit:contain!important;padding:5px!important;box-sizing:border-box!important}
 @media(max-width:430px){body.memory-fullscreen-mode .memory-card-grid{gap:6px!important;padding:7px!important}body.memory-fullscreen-mode .memory-card-back,body.memory-fullscreen-mode .memory-card-front{border-radius:13px!important}}
 
+
+/* ===== إعادة إخراج التطابق الذكي v6.7.4 ===== */
+body.memory-fullscreen-mode{
+  overflow:hidden!important;
+  background:#f4f8f7!important;
+}
+
+/* نخفي هيدر الصفحة فقط أثناء اللعب، ونبقي شريط التنقل السفلي */
+body.memory-fullscreen-mode header{
+  display:none!important;
+}
+body.memory-fullscreen-mode #nav{
+  display:flex!important;
+  position:fixed!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  z-index:80!important;
+}
+
+body.memory-fullscreen-mode #view{
+  height:calc(100dvh - 78px)!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  padding:5px 7px 7px!important;
+  margin:0!important;
+}
+
+body.memory-fullscreen-mode .memory-game{
+  height:100%!important;
+  width:100%!important;
+  max-width:760px!important;
+  margin:0 auto!important;
+  display:flex!important;
+  flex-direction:column!important;
+  padding:0!important;
+}
+
+body.memory-fullscreen-mode .memory-game-header{
+  grid-template-columns:auto 1fr 60px!important;
+  gap:5px!important;
+  margin:0 0 3px!important;
+  min-height:54px!important;
+}
+body.memory-fullscreen-mode .memory-game-header .btn{
+  padding:6px 8px!important;
+  font-size:9px!important;
+  border-radius:12px!important;
+}
+body.memory-fullscreen-mode .memory-game-title h2{
+  font-size:15px!important;
+  line-height:1.2!important;
+}
+body.memory-fullscreen-mode .memory-game-title p{
+  display:none!important;
+}
+body.memory-fullscreen-mode .memory-time-ring{
+  width:54px!important;
+  height:54px!important;
+  padding:4px!important;
+}
+body.memory-fullscreen-mode .memory-time-ring b{
+  font-size:18px!important;
+}
+body.memory-fullscreen-mode .memory-time-ring span{
+  font-size:6px!important;
+}
+
+.memory-stats-compact{
+  min-height:23px!important;
+  margin:0 0 4px!important;
+}
+.memory-pair-dots{gap:4px!important}
+.memory-pair-dots span{
+  width:9px!important;
+  height:9px!important;
+  border-width:1px!important;
+}
+.memory-moves{
+  font-size:8px!important;
+  padding:4px 7px!important;
+}
+
+/* شبكة متقاربة تملأ المساحة المتاحة */
+body.memory-fullscreen-mode .memory-card-grid{
+  flex:1!important;
+  min-height:0!important;
+  width:100%!important;
+  max-height:none!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  grid-template-rows:repeat(3,minmax(0,1fr))!important;
+  gap:4px!important;
+  padding:4px!important;
+  border-radius:17px!important;
+  background:linear-gradient(145deg,#e9f3f0,#f7eee8)!important;
+  border:1px solid #d2e2de!important;
+  box-shadow:inset 0 2px 10px rgba(23,50,77,.06)!important;
+}
+
+body.memory-fullscreen-mode .memory-card{
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  aspect-ratio:auto!important;
+}
+body.memory-fullscreen-mode .memory-card-inner{
+  width:100%!important;
+  height:100%!important;
+  aspect-ratio:auto!important;
+}
+body.memory-fullscreen-mode .memory-card-back,
+body.memory-fullscreen-mode .memory-card-front{
+  inset:0!important;
+  border-radius:13px!important;
+  border:2px solid rgba(255,255,255,.92)!important;
+  box-shadow:0 4px 9px rgba(23,50,77,.16)!important;
+}
+
+/* ظهر بطاقة بتدرج وهوية ثلاثية الأبعاد بدون صورة */
+body.memory-fullscreen-mode .memory-card-back{
+  overflow:hidden!important;
+  background:
+    radial-gradient(circle at 25% 18%,rgba(255,255,255,.9),transparent 23%),
+    linear-gradient(145deg,#e9fff8 0%,#66d1b7 38%,#159688 68%,#0b655f 100%)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.memory-back-glow{
+  position:absolute;
+  width:70%;
+  aspect-ratio:1;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.7),rgba(255,255,255,0) 68%);
+  filter:blur(2px);
+}
+.memory-back-brain{
+  position:relative;
+  z-index:2;
+  font-size:clamp(25px,7vw,50px);
+  line-height:1;
+  filter:drop-shadow(0 5px 4px rgba(3,66,61,.32));
+  transform:translateY(-1px);
+}
+.memory-back-spark{
+  position:absolute;
+  z-index:2;
+  color:#fff8cf;
+  text-shadow:0 2px 4px rgba(0,0,0,.15);
+}
+.memory-back-spark.one{top:14%;right:15%;font-size:14px}
+.memory-back-spark.two{bottom:14%;left:15%;font-size:10px}
+
+body.memory-fullscreen-mode .memory-card-front{
+  background:linear-gradient(145deg,#ffffff,#f5fbf9)!important;
+  padding:3px!important;
+}
+body.memory-fullscreen-mode .memory-card-front img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  padding:2px!important;
+  box-sizing:border-box!important;
+  border-radius:9px!important;
+}
+
+body.memory-fullscreen-mode .memory-start-hint{
+  display:none!important;
+}
+
+@media(max-width:430px){
+  body.memory-fullscreen-mode #view{
+    height:calc(100dvh - 74px)!important;
+    padding:4px 5px 5px!important;
+  }
+  body.memory-fullscreen-mode .memory-card-grid{
+    gap:3px!important;
+    padding:3px!important;
+  }
+  body.memory-fullscreen-mode .memory-card-back,
+  body.memory-fullscreen-mode .memory-card-front{
+    border-radius:11px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -7480,7 +7667,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v6.7.3';
+const APP_VERSION='v6.7.4';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -10763,7 +10950,12 @@ function renderMemoryMatchPlay(activityId){
     const visible=state.opened.includes(index)||state.matched.has(index);
     return `<button class="memory-card ${visible?'flipped':''} ${state.matched.has(index)?'matched':''}" data-memory-card="${index}" ${state.matched.has(index)?'disabled':''}>
       <span class="memory-card-inner">
-       <span class="memory-card-back"><img src="${MEMORY_CARD_BACK_IMAGE}" alt=""></span>
+       <span class="memory-card-back">
+        <span class="memory-back-glow"></span>
+        <span class="memory-back-brain">🧠</span>
+        <span class="memory-back-spark one">✦</span>
+        <span class="memory-back-spark two">✦</span>
+       </span>
        <span class="memory-card-front"><img src="${card.image}" alt=""></span>
       </span>
      </button>`;
