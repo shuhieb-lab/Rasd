@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<title>رَصْد — v6.8.1</title>
+<title>رَصْد — v7.0</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -7847,6 +7847,304 @@ body.memory-fullscreen-mode .memory-card-front{
   }
 }
 
+
+/* ===== التطابق الذكي — إعادة تصميم كاملة v7.0 ===== */
+body.memory-fullscreen-mode{
+  overflow:hidden!important;
+  background:#f3f7f6!important;
+}
+body.memory-fullscreen-mode header{
+  display:none!important;
+}
+body.memory-fullscreen-mode #nav{
+  display:flex!important;
+  position:fixed!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  z-index:90!important;
+}
+body.memory-fullscreen-mode #view{
+  height:calc(100dvh - 78px)!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  padding:6px 8px 7px!important;
+}
+.memory-game-v7{
+  height:100%!important;
+  max-width:760px!important;
+  margin:0 auto!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:7px!important;
+}
+.memory-v7-titlebar{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:8px;
+  min-height:48px;
+}
+.memory-v7-exit{
+  padding:7px 10px!important;
+  font-size:10px!important;
+  border-radius:12px!important;
+}
+.memory-v7-title{
+  text-align:center;
+}
+.memory-v7-title h2{
+  margin:0;
+  font-size:16px;
+  color:#17324d;
+}
+.memory-v7-title p{
+  margin:2px 0 0;
+  font-size:9px;
+  color:#7b8794;
+}
+.memory-v7-badge{
+  min-width:58px;
+  padding:7px 9px;
+  border-radius:12px;
+  background:#e7f5f1;
+  color:#0f766e;
+  font-size:9px;
+  font-weight:900;
+  text-align:center;
+  border:1px solid #cfe6df;
+}
+.memory-v7-stats{
+  display:grid;
+  grid-template-columns:1fr 1.2fr 1fr;
+  gap:7px;
+}
+.memory-v7-stat{
+  min-height:70px;
+  border-radius:17px;
+  padding:8px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #d9e6e2;
+  background:#fff;
+  box-shadow:0 6px 16px rgba(23,50,77,.07);
+}
+.memory-v7-stat-label{
+  font-size:9px;
+  font-weight:800;
+  color:#6d7885;
+  margin-bottom:3px;
+}
+.memory-v7-stat b{
+  font-size:25px;
+  line-height:1;
+  color:#17324d;
+}
+.memory-v7-stat b span{
+  font-size:11px;
+  color:#81909f;
+  margin-right:2px;
+}
+.memory-v7-stat small{
+  margin-top:3px;
+  font-size:7px;
+  color:#8c98a4;
+}
+.memory-v7-time{
+  background:linear-gradient(145deg,#fff6ea,#fff);
+  border-color:#f2ddc2;
+}
+.memory-v7-correct{
+  background:linear-gradient(145deg,#ecfaf6,#fff);
+  border-color:#cae9df;
+}
+.memory-v7-attempts{
+  background:linear-gradient(145deg,#eef5ff,#fff);
+  border-color:#d9e5f4;
+}
+.memory-v7-dots{
+  display:flex;
+  gap:4px;
+  margin-top:7px;
+}
+.memory-v7-dots i{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#d6e0dd;
+  box-shadow:inset 0 0 0 1px rgba(15,118,110,.12);
+}
+.memory-v7-dots i.done{
+  background:#22b98b;
+  box-shadow:0 0 0 2px rgba(34,185,139,.14);
+}
+.memory-v7-board{
+  flex:1;
+  min-height:0;
+  border-radius:22px;
+  padding:8px;
+  background:linear-gradient(145deg,#f7faf9,#edf4f2);
+  border:1px solid #d7e4e0;
+  box-shadow:inset 0 2px 14px rgba(23,50,77,.05);
+}
+.memory-card-grid-v7{
+  width:100%!important;
+  height:100%!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  grid-template-rows:repeat(4,minmax(0,1fr))!important;
+  gap:7px!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+.memory-card-v7{
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  aspect-ratio:1/1!important;
+  padding:0!important;
+}
+.memory-card-v7 .memory-card-inner{
+  width:100%!important;
+  height:100%!important;
+  aspect-ratio:1/1!important;
+}
+.memory-card-back-v7,
+.memory-card-front-v7{
+  inset:0!important;
+  border-radius:15px!important;
+  border:2px solid rgba(255,255,255,.96)!important;
+  overflow:hidden!important;
+  box-shadow:0 5px 12px rgba(23,50,77,.16)!important;
+}
+.memory-card-back-v7{
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.16),transparent 40%),
+    linear-gradient(145deg,#2bb99a 0%,#0f8a7e 55%,#0f6e68 100%)!important;
+}
+.memory-v7-pattern{
+  position:absolute;
+  inset:0;
+  opacity:.18;
+  background-image:
+    linear-gradient(45deg,rgba(255,255,255,.4) 25%,transparent 25%),
+    linear-gradient(-45deg,rgba(255,255,255,.4) 25%,transparent 25%),
+    linear-gradient(45deg,transparent 75%,rgba(255,255,255,.4) 75%),
+    linear-gradient(-45deg,transparent 75%,rgba(255,255,255,.4) 75%);
+  background-size:18px 18px;
+  background-position:0 0,0 9px,9px -9px,-9px 0;
+}
+.memory-v7-shine{
+  position:absolute;
+  width:65%;
+  height:160%;
+  top:-30%;
+  left:-35%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);
+  transform:rotate(18deg);
+}
+.memory-card-front-v7{
+  background:#fff!important;
+  padding:4px!important;
+}
+.memory-card-front-v7 img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  border-radius:10px!important;
+}
+.memory-card-v7.matched .memory-card-front-v7{
+  border-color:#39c696!important;
+  box-shadow:0 0 0 3px rgba(57,198,150,.18),0 5px 12px rgba(23,50,77,.12)!important;
+  animation:memory-v7-success .45s ease;
+}
+.memory-card-v7.memory-wrong{
+  animation:memory-v7-wrong .35s ease;
+}
+@keyframes memory-v7-success{
+  50%{transform:scale(1.05)}
+}
+@keyframes memory-v7-wrong{
+  0%,100%{transform:none}
+  25%{transform:translateX(-4px)}
+  50%{transform:translateX(4px)}
+  75%{transform:translateX(-2px)}
+}
+.memory-result-v7{
+  max-width:680px!important;
+  margin:auto!important;
+  min-height:calc(100dvh - 95px)!important;
+  border-radius:24px!important;
+  padding:24px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  background:linear-gradient(145deg,#17324d,#0f766e)!important;
+}
+.memory-result-v7.lost{
+  background:linear-gradient(145deg,#39495a,#8b2f3d)!important;
+}
+.memory-result-mark{
+  width:76px;
+  height:76px;
+  border-radius:50%;
+  margin:0 auto 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.25);
+}
+.memory-result-summary{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:15px 0;
+}
+.memory-result-summary div{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.17);
+  border-radius:14px;
+  padding:10px;
+}
+.memory-result-summary span,
+.memory-result-summary b{
+  display:block;
+}
+.memory-result-summary span{
+  font-size:8px;
+  opacity:.8;
+}
+.memory-result-summary b{
+  margin-top:4px;
+  font-size:18px;
+}
+@media(max-width:430px){
+  body.memory-fullscreen-mode #view{
+    height:calc(100dvh - 74px)!important;
+    padding:4px 5px 5px!important;
+  }
+  .memory-game-v7{gap:5px!important}
+  .memory-v7-titlebar{min-height:42px}
+  .memory-v7-title h2{font-size:14px}
+  .memory-v7-title p{display:none}
+  .memory-v7-badge{min-width:52px;padding:6px;font-size:8px}
+  .memory-v7-stats{gap:5px}
+  .memory-v7-stat{min-height:62px;border-radius:14px;padding:6px}
+  .memory-v7-stat b{font-size:22px}
+  .memory-v7-dots{gap:3px;margin-top:5px}
+  .memory-v7-dots i{width:7px;height:7px}
+  .memory-v7-board{padding:6px;border-radius:18px}
+  .memory-card-grid-v7{gap:5px!important}
+  .memory-card-back-v7,.memory-card-front-v7{border-radius:12px!important}
+}
+
 </style>
 </head>
 <body>
@@ -7901,7 +8199,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v6.8.1';
+const APP_VERSION='v7.0';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -11124,8 +11422,6 @@ function renderMemoryMatchPlay(activityId){
    state.remaining=Math.max(0,state.remaining-1);
    const timer=document.getElementById('memoryTimerValue');
    if(timer)timer.textContent=state.remaining;
-   const ring=document.querySelector('.memory-time-ring');
-   if(ring)ring.style.setProperty('--time-progress',`${(state.remaining/(Number(activity.seconds)||60))*360}deg`);
    if(state.remaining<=0){
     clearInterval(window.__memoryTimer);state.lost=true;state.finished=true;draw();
    }
@@ -11144,7 +11440,13 @@ function renderMemoryMatchPlay(activityId){
     if(state.matched.size===state.cards.length)setTimeout(finishWin,350);
    }else{
     state.locked=true;
-    setTimeout(()=>{state.opened=[];state.locked=false;draw()},850);
+    setTimeout(()=>{
+     state.opened.forEach(i=>{
+      const el=document.querySelector(`[data-memory-card="${i}"]`);
+      if(el)el.classList.add('memory-wrong');
+     });
+    },180);
+    setTimeout(()=>{state.opened=[];state.locked=false;draw()},900);
    }
   }
   draw();
@@ -11155,10 +11457,15 @@ function renderMemoryMatchPlay(activityId){
 
   if(state.finished){
    const elapsed=(Number(activity.seconds)||60)-state.remaining;
-   view.innerHTML=`<div class="memory-result-screen ${state.lost?'lost':'won'}">
-    <div class="memory-result-icon">${state.lost?'⏰':'🎉'}</div>
-    <h2>${state.lost?'انتهى الوقت':'أحسنت! اكتمل التطابق'}</h2>
-    <p>${state.lost?'لم تكتمل جميع الأزواج خلال الوقت المحدد.':`أنهيت اللعبة خلال ${elapsed} ثانية وبعدد ${state.moves} محاولة.`}</p>
+   view.innerHTML=`<div class="memory-result-screen memory-result-v7 ${state.lost?'lost':'won'}">
+    <div class="memory-result-mark">${state.lost?'⏰':'✓'}</div>
+    <h2>${state.lost?'انتهى الوقت':'اكتمل التطابق'}</h2>
+    <p>${state.lost?'لم تكتمل جميع الأزواج خلال الوقت المحدد.':`أنهيت النشاط خلال ${elapsed} ثانية.`}</p>
+    <div class="memory-result-summary">
+     <div><span>الوقت</span><b>${elapsed}</b></div>
+     <div><span>المحاولات</span><b>${state.moves}</b></div>
+     <div><span>الأزواج</span><b>${state.matched.size/2}/8</b></div>
+    </div>
     ${state.lost?`<div class="memory-reveal-grid">${state.cards.map(c=>`<img src="${c.image}" alt="">`).join('')}</div>`:''}
     <button class="btn" id="replayMemory">إعادة اللعب</button>
     <button class="btn light" id="backMemory">العودة للأنشطة</button>
@@ -11168,44 +11475,48 @@ function renderMemoryMatchPlay(activityId){
    return;
   }
 
-  view.innerHTML=`<div class="memory-game">
-   <div class="memory-game-header">
-    <button class="btn light" id="exitMemory">خروج</button>
-    <div class="memory-game-title"><h2>${escapeHtml(activity.title)}</h2><p>طابق الصور الثماني قبل انتهاء الوقت</p></div>
-    <div class="memory-header-spacer"></div>
+  view.innerHTML=`<div class="memory-game memory-game-v7">
+   <div class="memory-v7-titlebar">
+    <button class="btn light memory-v7-exit" id="exitMemory">خروج</button>
+    <div class="memory-v7-title">
+     <h2>${escapeHtml(activity.title)}</h2>
+     <p>طابق البطاقات قبل انتهاء الوقت</p>
+    </div>
+    <div class="memory-v7-badge">8 أزواج</div>
    </div>
-   <div class="memory-yellow-zone">
-    <div class="memory-stat-card timer-card">
-     <span class="memory-stat-label">الوقت</span>
-     <div class="memory-time-ring" style="--time-progress:${(state.remaining/(Number(activity.seconds)||60))*360}deg">
-      <div><b id="memoryTimerValue">${state.remaining}</b><span>ثانية</span></div>
-     </div>
+
+   <div class="memory-v7-stats">
+    <div class="memory-v7-stat memory-v7-time">
+     <span class="memory-v7-stat-label">الوقت</span>
+     <b id="memoryTimerValue">${state.remaining}</b>
+     <small>ثانية</small>
     </div>
-    <div class="memory-stat-card correct-card">
-     <span class="memory-stat-label">المحاولات الصحيحة</span>
-     <b class="memory-stat-number">${state.matched.size/2}</b>
-     <div class="memory-pair-dots">${Array.from({length:8},(_,i)=>`<span class="${i<state.matched.size/2?'done':''}"></span>`).join('')}</div>
+    <div class="memory-v7-stat memory-v7-correct">
+     <span class="memory-v7-stat-label">الصحيح</span>
+     <b>${state.matched.size/2}<span>/8</span></b>
+     <div class="memory-v7-dots">${Array.from({length:8},(_,i)=>`<i class="${i<state.matched.size/2?'done':''}"></i>`).join('')}</div>
     </div>
-    <div class="memory-stat-card attempts-card">
-     <span class="memory-stat-label">عدد المحاولات</span>
-     <b class="memory-stat-number">${state.moves}</b>
+    <div class="memory-v7-stat memory-v7-attempts">
+     <span class="memory-v7-stat-label">المحاولات</span>
+     <b>${state.moves}</b>
+     <small>محاولة</small>
     </div>
    </div>
-   <div class="memory-card-grid">${state.cards.map((card,index)=>{
-    const visible=state.opened.includes(index)||state.matched.has(index);
-    return `<button class="memory-card ${visible?'flipped':''} ${state.matched.has(index)?'matched':''}" data-memory-card="${index}" ${state.matched.has(index)?'disabled':''}>
-      <span class="memory-card-inner">
-       <span class="memory-card-back">
-        <span class="memory-back-glow"></span>
-        <span class="memory-back-brain">🧠</span>
-        <span class="memory-back-spark one">✦</span>
-        <span class="memory-back-spark two">✦</span>
+
+   <div class="memory-v7-board">
+    <div class="memory-card-grid memory-card-grid-v7">${state.cards.map((card,index)=>{
+     const visible=state.opened.includes(index)||state.matched.has(index);
+     return `<button class="memory-card memory-card-v7 ${visible?'flipped':''} ${state.matched.has(index)?'matched':''}" data-memory-card="${index}" ${state.matched.has(index)?'disabled':''}>
+       <span class="memory-card-inner">
+        <span class="memory-card-back memory-card-back-v7">
+         <span class="memory-v7-pattern"></span>
+         <span class="memory-v7-shine"></span>
+        </span>
+        <span class="memory-card-front memory-card-front-v7"><img src="${card.image}" alt=""></span>
        </span>
-       <span class="memory-card-front"><img src="${card.image}" alt=""></span>
-      </span>
-     </button>`;
-   }).join('')}</div>
-   ${!state.started?`<div class="memory-start-hint">ابدأ باختيار أول بطاقة، وسيبدأ المؤقت تلقائيًا.</div>`:''}
+      </button>`;
+    }).join('')}</div>
+   </div>
   </div>`;
 
   exitMemory.onclick=()=>{clearInterval(window.__memoryTimer);if(confirm('هل تريد الخروج من اللعبة؟')){document.body.classList.remove('memory-fullscreen-mode');window.__activityStudioTab='memory';page='activities';render()}};
