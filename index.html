@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<title>رَصْد — v6.7</title>
+<title>رَصْد — v6.7.2</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -7291,6 +7291,130 @@ header > img{
 .memory-start-hint{text-align:center;margin-top:12px;padding:10px;border-radius:14px;background:#eaf7f3;color:#0f615b;font-size:11px}.memory-result-screen{max-width:720px;margin:auto;text-align:center;border-radius:27px;padding:25px;background:linear-gradient(135deg,#17324d,#0f766e);color:#fff}.memory-result-screen.lost{background:linear-gradient(135deg,#4b5563,#991b1b)}.memory-result-icon{font-size:68px}.memory-result-screen h2,.memory-result-screen p{margin:5px 0}.memory-result-screen .btn{width:100%;margin-top:9px}.memory-reveal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:16px 0}.memory-reveal-grid img{width:100%;aspect-ratio:1;object-fit:contain;border-radius:10px;background:#fff;padding:4px}
 @media(max-width:720px){.activity-tabs-four{grid-template-columns:repeat(2,1fr)!important}.memory-library-actions{grid-template-columns:repeat(2,1fr)}.memory-card-grid{grid-template-columns:repeat(3,1fr);gap:9px;padding:10px}.memory-game-header{grid-template-columns:auto 1fr 70px}.memory-time-ring{width:68px;height:68px}.memory-time-ring b{font-size:21px}.memory-upload-grid{grid-template-columns:1fr 1fr}}
 
+
+/* ===== وضع الشاشة الكاملة للتطابق الذكي v6.7.2 ===== */
+body.memory-fullscreen-mode{
+  overflow:hidden!important;
+  background:#f5f8f8!important;
+}
+body.memory-fullscreen-mode header,
+body.memory-fullscreen-mode #nav{
+  display:none!important;
+}
+body.memory-fullscreen-mode #view{
+  height:100dvh!important;
+  min-height:100dvh!important;
+  overflow:hidden!important;
+  padding:8px 10px 10px!important;
+}
+body.memory-fullscreen-mode .memory-game{
+  height:calc(100dvh - 18px)!important;
+  max-width:760px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  padding:0!important;
+}
+body.memory-fullscreen-mode .memory-game-header{
+  grid-template-columns:auto 1fr 66px!important;
+  gap:7px!important;
+  margin-bottom:4px!important;
+  min-height:62px;
+}
+body.memory-fullscreen-mode .memory-game-header .btn{
+  padding:7px 9px!important;
+  font-size:10px!important;
+}
+body.memory-fullscreen-mode .memory-game-title h2{
+  font-size:16px!important;
+}
+body.memory-fullscreen-mode .memory-game-title p{
+  display:none!important;
+}
+body.memory-fullscreen-mode .memory-time-ring{
+  width:60px!important;
+  height:60px!important;
+  padding:5px!important;
+}
+body.memory-fullscreen-mode .memory-time-ring b{
+  font-size:19px!important;
+}
+body.memory-fullscreen-mode .memory-time-ring span{
+  font-size:7px!important;
+}
+.memory-stats-compact{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:8px;
+  margin:2px 0 6px;
+}
+.memory-pair-dots{
+  display:flex;
+  justify-content:center;
+  gap:7px;
+}
+.memory-pair-dots span{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:#d7e2e0;
+  border:2px solid #fff;
+  box-shadow:0 0 0 1px #c7d6d2;
+}
+.memory-pair-dots span.done{
+  background:#22b98b;
+  box-shadow:0 0 0 1px #22b98b,0 2px 7px #22b98b44;
+}
+.memory-moves{
+  font-size:9px;
+  color:#64748b;
+  background:#fff;
+  border:1px solid #dbe5ea;
+  border-radius:999px;
+  padding:5px 8px;
+  white-space:nowrap;
+}
+.memory-moves b{color:#0f766e}
+body.memory-fullscreen-mode .memory-card-grid{
+  flex:1!important;
+  min-height:0!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,1fr)!important;
+  grid-template-rows:repeat(3,1fr)!important;
+  gap:7px!important;
+  padding:8px!important;
+  border-radius:18px!important;
+}
+body.memory-fullscreen-mode .memory-card{
+  aspect-ratio:auto!important;
+  min-height:0!important;
+}
+body.memory-fullscreen-mode .memory-card-back,
+body.memory-fullscreen-mode .memory-card-front{
+  border-radius:12px!important;
+  border-width:2px!important;
+}
+body.memory-fullscreen-mode .memory-card-front{
+  padding:3px!important;
+}
+body.memory-fullscreen-mode .memory-start-hint{
+  margin-top:5px!important;
+  padding:5px!important;
+  font-size:8px!important;
+}
+body.memory-fullscreen-mode .memory-result-screen{
+  min-height:calc(100dvh - 20px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+@media(max-width:430px){
+  body.memory-fullscreen-mode #view{padding:6px 7px 8px!important}
+  body.memory-fullscreen-mode .memory-card-grid{gap:5px!important;padding:6px!important}
+  .memory-pair-dots{gap:5px}
+  .memory-pair-dots span{width:10px;height:10px}
+}
+
 </style>
 </head>
 <body>
@@ -7345,7 +7469,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v6.7';
+const APP_VERSION='v6.7.2';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -9542,7 +9666,7 @@ function renderActivities(){
    <button class="activity-tool discover-tool ${tab==='error'?'active':''}" data-activity-tab="error">${premiumIcon('discover_error','activity-tool-premium-icon')}<div><b>اكتشف الخطأ</b></div></button>
    <button class="activity-tool missing-tool ${tab==='missing'?'active':''}" data-activity-tab="missing"><div class="missing-tool-icon">✏️</div><div><b>الكلمة المفقودة</b></div></button>
    <button class="activity-tool luck-tool ${tab==='luck'?'active':''}" data-activity-tab="luck"><div class="luck-tool-icon">🎁</div><div><b>صندوق المفاجآت</b></div></button>
-   <button class="activity-tool memory-tool ${tab==='memory'?'active':''}" data-activity-tab="memory"><div class="memory-tool-icon"><img src="''' + card_data_url + '''" alt=""></div><div><b>التطابق الذكي</b></div></button>
+   <button class="activity-tool memory-tool ${tab==='memory'?'active':''}" data-activity-tab="memory"><div class="memory-tool-icon"><img src="${MEMORY_CARD_BACK_IMAGE}" alt=""></div><div><b>التطابق الذكي</b></div></button>
  </div>
 
  <button class="activity-create-master" id="openActivityTypePicker">
@@ -9592,7 +9716,7 @@ function renderActivities(){
        <span><b>صندوق المفاجآت</b><small>تسعة صناديق ملونة تحتوي على أسئلة ومكافآت</small></span>
      </button>
      <button class="activity-type-option memory" data-create-type="memory">
-       <span class="activity-type-option-icon memory-picker-cover"><img src= + card_data_url +  alt=""></span>
+       <span class="activity-type-option-icon memory-picker-cover"><img src="${MEMORY_CARD_BACK_IMAGE}" alt=""></span>
        <span><b>التطابق الذكي</b><small>اثنتا عشرة بطاقة وسباق مع الوقت</small></span>
      </button>
      <button class="btn light" id="closeActivityPicker" style="width:100%">إغلاق</button>
@@ -10537,6 +10661,7 @@ function renderMemoryMatchEditor(activityId){
 }
 
 function renderMemoryMatchPlay(activityId){
+ document.body.classList.add('memory-fullscreen-mode');
  const activity=(data.memoryMatchActivities||[]).find(x=>x.id===activityId);
  if(!activity){window.__activityStudioTab='memory';page='activities';render();return}
  clearInterval(window.__memoryTimer);
@@ -10607,7 +10732,7 @@ function renderMemoryMatchPlay(activityId){
     <button class="btn light" id="backMemory">العودة للأنشطة</button>
    </div>`;
    replayMemory.onclick=()=>renderMemoryMatchPlay(activity.id);
-   backMemory.onclick=()=>{window.__activityStudioTab='memory';page='activities';render()};
+   backMemory.onclick=()=>{document.body.classList.remove('memory-fullscreen-mode');window.__activityStudioTab='memory';page='activities';render()};
    return;
   }
 
@@ -10619,7 +10744,10 @@ function renderMemoryMatchPlay(activityId){
      <div><b id="memoryTimerValue">${state.remaining}</b><span>ثانية</span></div>
     </div>
    </div>
-   <div class="memory-stats"><span>الأزواج المكتملة <b>${state.matched.size/2}/6</b></span><span>المحاولات <b>${state.moves}</b></span></div>
+   <div class="memory-stats-compact">
+    <div class="memory-pair-dots">${Array.from({length:6},(_,i)=>`<span class="${i<state.matched.size/2?'done':''}"></span>`).join('')}</div>
+    <div class="memory-moves">المحاولات <b>${state.moves}</b></div>
+   </div>
    <div class="memory-card-grid">${state.cards.map((card,index)=>{
     const visible=state.opened.includes(index)||state.matched.has(index);
     return `<button class="memory-card ${visible?'flipped':''} ${state.matched.has(index)?'matched':''}" data-memory-card="${index}" ${state.matched.has(index)?'disabled':''}>
@@ -10632,7 +10760,7 @@ function renderMemoryMatchPlay(activityId){
    ${!state.started?`<div class="memory-start-hint">ابدأ باختيار أول بطاقة، وسيبدأ المؤقت تلقائيًا.</div>`:''}
   </div>`;
 
-  exitMemory.onclick=()=>{clearInterval(window.__memoryTimer);if(confirm('هل تريد الخروج من اللعبة؟')){window.__activityStudioTab='memory';page='activities';render()}};
+  exitMemory.onclick=()=>{clearInterval(window.__memoryTimer);if(confirm('هل تريد الخروج من اللعبة؟')){document.body.classList.remove('memory-fullscreen-mode');window.__activityStudioTab='memory';page='activities';render()}};
   document.querySelectorAll('[data-memory-card]').forEach(btn=>btn.onclick=()=>openCard(Number(btn.dataset.memoryCard)));
  };
  draw();
