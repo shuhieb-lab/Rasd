@@ -6304,7 +6304,7 @@ function renderHome(){
    <div class="class-title">${c?.name||''}</div>
    <div class="next-class-time-row">
      <span>الحصة ${slot.period} — ${formatScheduleTime(slot.start)}</span>
-     <span class="next-class-countdown">${premiumIcon('next_class','home-inline-icon')}<span>تبدأ بعد ${slot.minutesUntil} دقيقة</span></span>
+     <span class="next-class-countdown">${premiumIcon('next_class','home-inline-icon')}<span>${slot.minutesUntil<=0?'🟢 يجري الآن':'تبدأ بعد '+slot.minutesUntil+' دقيقة'}</span></span>
    </div>
    <button class="btn premium-action-btn" id="quickStart">${premiumIcon('classes','button-premium-icon')}<span>فتح الفصل</span></button>`:
    `<p>انتهى جدول اليوم أو لم يتم ضبط أوقات الحصص.</p>
