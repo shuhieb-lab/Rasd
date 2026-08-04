@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v6.1</title>
+<title>رَصْد — v6.2</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -6921,6 +6921,90 @@ body:not(.focus-mode) #fab{
  .discover-timer-wrap{flex-direction:column;gap:9px}.discover-timer-actions{grid-template-columns:1fr 1fr;width:100%}
 }
 
+
+/* ===== تنظيم استوديو الأنشطة بالتبويبات v6.2 ===== */
+.activity-studio-tabs{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  margin-bottom:15px;
+}
+.activity-studio-tabs .activity-tool{
+  min-height:130px;
+  position:relative;
+  opacity:.72;
+  transform:scale(.985);
+  border:2px solid transparent;
+  transition:opacity .2s ease,transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.activity-studio-tabs .activity-tool.active{
+  opacity:1;
+  transform:scale(1);
+  border-color:#0f8b78;
+  box-shadow:0 8px 22px rgba(15,139,120,.15);
+}
+.activity-studio-tabs .activity-tool small{
+  display:block;
+  margin-top:5px;
+  font-size:9px;
+  opacity:.72;
+}
+.studio-recent-head{
+  align-items:flex-end;
+}
+.studio-recent-head small{
+  display:block;
+  margin-top:3px;
+  color:#0f766e;
+  font-weight:900;
+  font-size:11px;
+}
+.studio-recent-list{
+  display:grid;
+  gap:11px;
+}
+.studio-recent-card{
+  animation:studioRecentIn .28s ease both;
+}
+.studio-wheel-panel{
+  min-height:320px;
+  padding:28px 18px;
+  border:1px solid #d9cbed;
+  border-radius:23px;
+  text-align:center;
+  background:linear-gradient(145deg,#fbf8ff,#eee7ff);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.studio-wheel-panel h2{margin:11px 0 4px;color:#5c34b2}
+.studio-wheel-panel p{margin:0 0 15px;color:#6b7280;font-size:12px}
+.studio-wheel-icon{
+  width:84px;
+  height:84px;
+  border-radius:25px;
+  filter:drop-shadow(0 9px 16px rgba(92,52,178,.18));
+}
+@keyframes studioRecentIn{
+  from{opacity:0;transform:translateY(5px)}
+  to{opacity:1;transform:none}
+}
+@media(max-width:420px){
+  .activity-studio-tabs{gap:7px}
+  .activity-studio-tabs .activity-tool{
+    min-height:115px;
+    padding:10px 6px!important;
+  }
+  .activity-studio-tabs .activity-tool-premium-icon{
+    width:52px!important;
+    height:52px!important;
+  }
+  .activity-studio-tabs .activity-tool b{
+    font-size:12px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -6966,7 +7050,7 @@ let data = JSON.parse(localStorage.getItem('rasdData')||'null') || {
  teacher:{name:'',school:'',subject:'العلوم',whatsappMessage:'السلام عليكم، نرفق لكم التقرير الدراسي للطالب: {student}'},
  wheel:{remaining:[],history:[],byClass:{}}, activities:[], errorActivities:[], schedule:{}, periodTimes:{}, sessions:[], notes:[]
 };
-data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.sessions=data.sessions||[]; data.activities=data.activities||[]; data.errorActivities=data.errorActivities||[]; data.notes=data.notes||[]; data.classView=data.classView||'grid'; data.wheel=data.wheel||{remaining:[],history:[]}; data.wheel.byClass=data.wheel.byClass||{};
+data.schedule=data.schedule||{}; data.periodTimes=data.periodTimes||{}; data.sessions=data.sessions||[]; data.activities=data.activities||[]; data.errorActivities=data.errorActivities||[]; data.activityStudioTab=data.activityStudioTab||'quiz'; data.notes=data.notes||[]; data.classView=data.classView||'grid'; data.wheel=data.wheel||{remaining:[],history:[]}; data.wheel.byClass=data.wheel.byClass||{};
 if(data.behaviorsVersion!=='v1.9.2'){
  data.behaviors=DEFAULT_BEHAVIORS.map(b=>({...b}));
  data.behaviorsVersion='v1.9.2';
@@ -6975,7 +7059,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v6.1';
+const APP_VERSION='v6.2';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -9080,48 +9164,174 @@ function classesForActivityGrade(activity){
 
 function renderActivities(){
  setTitle('الأنشطة','استوديو الأنشطة الصفية');
- const activities=(data.activities||[]).slice().sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||''));
- view.innerHTML=`<div class="activities-hero">
-   <h2 class="activity-premium-title">${premiumIcon("act_studio","activity-title-icon")}<span>استوديو الأنشطة</span></h2>
-   <p>أنشئ أنشطة مشوقة واحتفظ بها لتستخدمها في أي حصة.</p>
-   <button class="btn activity-premium-button" id="newActivity" style="background:#fff;color:#17324d">${premiumIcon("act_new","activity-button-icon")}<span>ابتكار نشاط</span></button>
- </div>
- <div class="activity-tools">
-   <button class="activity-tool wheel-tool" id="openWheel">${premiumIcon("act_wheel","activity-tool-premium-icon")}<div><b>العجلة</b></div></button>
-   <button class="activity-tool quiz-tool" id="quickNewQuiz">${premiumIcon("act_quiz","activity-tool-premium-icon")}<div><b>سؤال وجواب</b></div></button>
-   <button class="activity-tool discover-tool" id="openDiscoverError">${premiumIcon("discover_error","activity-tool-premium-icon")}<div><b>اكتشف الخطأ</b></div></button>
- </div>
- <div class="students-page-head"><h2 style="margin:0">أنشطتي المحفوظة</h2><span class="students-count">${activities.length} نشاط</span></div>
- <div class="activities-list">${activities.length?activities.map(a=>{
+
+ const tab=['quiz','error','wheel'].includes(data.activityStudioTab)?data.activityStudioTab:'quiz';
+ const quizActivities=(data.activities||[]).slice().sort((a,b)=>(b.updatedAt||b.createdAt||'').localeCompare(a.updatedAt||a.createdAt||''));
+ const errorActivities=(data.errorActivities||[]).slice().sort((a,b)=>(b.updatedAt||b.createdAt||'').localeCompare(a.updatedAt||a.createdAt||''));
+ const counts={quiz:quizActivities.length,error:errorActivities.length,wheel:0};
+
+ const tabLabel=tab==='quiz'?'سؤال وجواب':tab==='error'?'اكتشف الخطأ':'العجلة';
+ const recentItems=tab==='quiz'?quizActivities.slice(0,8):tab==='error'?errorActivities.slice(0,8):[];
+
+ const quizCards=()=>recentItems.map(a=>{
    const grade=activityGrade(a);
-   return `<div class="activity-card">
-     <div class="activity-card-head"><div class="activity-cover">${premiumIcon("act_quiz","activity-card-premium-icon")}</div><div class="activity-card-main"><div class="activity-card-title">${escapeHtml(a.title)}</div><div class="activity-card-grade">${gradeLabel(grade)}</div><div class="activity-card-meta">${escapeHtml(a.subject||'بدون مادة')} • ${a.questions?.length||0} سؤال</div><div class="activity-card-meta">آخر تعديل: ${new Date(a.updatedAt||a.createdAt).toLocaleDateString('ar-SA')}</div></div></div>
-     <div class="activity-card-actions"><button class="btn activity-card-action" data-play-activity="${a.id}">${premiumIcon("act_play","activity-action-icon")}<span>تشغيل</span></button><button class="btn light activity-card-action icon-only" data-edit-activity="${a.id}">${premiumIcon("act_edit","activity-action-icon")}</button><button class="btn danger activity-card-action icon-only" data-delete-activity="${a.id}">${premiumIcon("act_delete","activity-action-icon")}</button></div>
-   </div>`}).join(''):`<div class="empty-students activity-empty-state">
-   <div class="empty-icon">${premiumIcon("act_new","activity-empty-icon")}</div>
-   <b>لا توجد أنشطة بعد</b>
-   <p>ابدأ بابتكار أول نشاط سؤال وجواب.</p>
-   <button class="btn activity-premium-button" id="emptyCreateActivity">
-     ${premiumIcon("act_new","activity-button-icon")}
-     <span>ابتكار نشاط</span>
+   return `<div class="activity-card studio-recent-card">
+     <div class="activity-card-head">
+       <div class="activity-cover">${premiumIcon('act_quiz','activity-card-premium-icon')}</div>
+       <div class="activity-card-main">
+         <div class="activity-card-title">${escapeHtml(a.title)}</div>
+         <div class="activity-card-grade">${gradeLabel(grade)}</div>
+         <div class="activity-card-meta">${escapeHtml(a.subject||'بدون مادة')} • ${a.questions?.length||0} سؤال</div>
+         <div class="activity-card-meta">آخر تعديل: ${new Date(a.updatedAt||a.createdAt).toLocaleDateString('ar-SA')}</div>
+       </div>
+     </div>
+     <div class="activity-card-actions">
+       <button class="btn activity-card-action" data-play-activity="${a.id}">${premiumIcon('act_play','activity-action-icon')}<span>تشغيل</span></button>
+       <button class="btn light activity-card-action icon-only" data-edit-activity="${a.id}">${premiumIcon('act_edit','activity-action-icon')}</button>
+       <button class="btn danger activity-card-action icon-only" data-delete-activity="${a.id}">${premiumIcon('act_delete','activity-action-icon')}</button>
+     </div>
+   </div>`;
+ }).join('');
+
+ const errorCards=()=>recentItems.map(item=>`
+   <div class="discover-library-card studio-recent-card">
+     <div class="discover-library-head">
+       ${premiumIcon('discover_error','discover-library-icon')}
+       <div>
+         <b>${escapeHtml(item.title)}</b>
+         <span>${escapeHtml(item.subject||'بدون مادة')}${item.lesson?` • ${escapeHtml(item.lesson)}`:''}</span>
+         <small>${item.questions?.length||0} سؤال · ${item.seconds||20} ثانية · استخدم ${item.useCount||0} مرة</small>
+       </div>
+     </div>
+     <div class="discover-library-actions">
+       <button class="btn" data-error-play="${item.id}">تشغيل</button>
+       <button class="btn light" data-error-edit="${item.id}">تعديل</button>
+       <button class="btn light" data-error-copy="${item.id}">نسخ</button>
+       <button class="btn danger" data-error-delete="${item.id}">حذف</button>
+     </div>
+   </div>`).join('');
+
+ view.innerHTML=`<div class="activities-hero">
+   <h2 class="activity-premium-title">${premiumIcon('act_studio','activity-title-icon')}<span>استوديو الأنشطة</span></h2>
+   <p>اختر نوع النشاط، ثم أنشئ أنشطتك واحفظها لإعادة استخدامها.</p>
+   <button class="btn activity-premium-button" id="newActivity" style="background:#fff;color:#17324d">
+     ${premiumIcon('act_new','activity-button-icon')}<span>${tab==='wheel'?'فتح العجلة':'ابتكار نشاط'}</span>
    </button>
- </div>`}</div>`;
- newActivity.onclick=quickNewQuiz.onclick=()=>{window.editActivityId=null;page='activityEditor';render()};
- document.getElementById('emptyCreateActivity')?.addEventListener('click',()=>{window.editActivityId=null;page='activityEditor';render()});
- openWheel.onclick=()=>{page='wheel';render()};
- openDiscoverError.onclick=()=>{page='errorActivities';render()};
- document.querySelectorAll('[data-play-activity]').forEach(b=>b.onclick=()=>{
-  window.playActivityId=b.dataset.playActivity;
-  window.playActivityClassId=null;
-  page='activityPlay';
-  render()
+ </div>
+
+ <div class="activity-studio-tabs">
+   <button class="activity-tool wheel-tool ${tab==='wheel'?'active':''}" data-studio-tab="wheel">
+     ${premiumIcon('act_wheel','activity-tool-premium-icon')}
+     <div><b>العجلة</b><small>تشغيل مباشر</small></div>
+   </button>
+   <button class="activity-tool quiz-tool ${tab==='quiz'?'active':''}" data-studio-tab="quiz">
+     ${premiumIcon('act_quiz','activity-tool-premium-icon')}
+     <div><b>سؤال وجواب</b><small>${counts.quiz} نشاط</small></div>
+   </button>
+   <button class="activity-tool discover-tool ${tab==='error'?'active':''}" data-studio-tab="error">
+     ${premiumIcon('discover_error','activity-tool-premium-icon')}
+     <div><b>اكتشف الخطأ</b><small>${counts.error} نشاط</small></div>
+   </button>
+ </div>
+
+ ${tab==='wheel'?`
+   <div class="studio-wheel-panel">
+     ${premiumIcon('act_wheel','studio-wheel-icon')}
+     <h2>العجلة</h2>
+     <p>شغّل العجلة لاختيار الطلاب بطريقة عشوائية وممتعة.</p>
+     <button class="btn" id="openWheelFromPanel">فتح العجلة</button>
+   </div>
+ `:`
+   <div class="students-page-head studio-recent-head">
+     <div><h2 style="margin:0">آخر الأنشطة المضافة</h2><small>${tabLabel}</small></div>
+     <span class="students-count">${recentItems.length} من ${counts[tab]} نشاط</span>
+   </div>
+   <div class="activities-list studio-recent-list">
+     ${recentItems.length
+       ? (tab==='quiz'?quizCards():errorCards())
+       : `<div class="empty-students activity-empty-state">
+           <div class="empty-icon">${premiumIcon(tab==='quiz'?'act_quiz':'discover_error','activity-empty-icon')}</div>
+           <b>لا توجد أنشطة في ${tabLabel}</b>
+           <p>ابدأ بإنشاء أول نشاط محفوظ في هذا التبويب.</p>
+           <button class="btn activity-premium-button" id="emptyCreateActivity">
+             ${premiumIcon('act_new','activity-button-icon')}<span>ابتكار نشاط</span>
+           </button>
+         </div>`}
+   </div>
+ `}`;
+
+ const openCurrentCreator=()=>{
+   if(tab==='quiz'){
+     window.editActivityId=null;
+     page='activityEditor';
+   }else if(tab==='error'){
+     window.editErrorActivityId=null;
+     page='errorActivityEditor';
+   }else{
+     page='wheel';
+   }
+   render();
+ };
+
+ newActivity.onclick=openCurrentCreator;
+ document.getElementById('emptyCreateActivity')?.addEventListener('click',openCurrentCreator);
+ document.getElementById('openWheelFromPanel')?.addEventListener('click',()=>{page='wheel';render()});
+
+ document.querySelectorAll('[data-studio-tab]').forEach(button=>button.onclick=()=>{
+   data.activityStudioTab=button.dataset.studioTab;
+   save();
+   renderActivities();
  });
- document.querySelectorAll('[data-edit-activity]').forEach(b=>b.onclick=()=>{window.editActivityId=b.dataset.editActivity;page='activityEditor';render()});
- document.querySelectorAll('[data-delete-activity]').forEach(b=>b.onclick=()=>{if(!confirm('هل تريد حذف هذا النشاط؟'))return;data.activities=data.activities.filter(a=>a.id!==b.dataset.deleteActivity);save();renderActivities()});
+
+ document.querySelectorAll('[data-play-activity]').forEach(b=>b.onclick=()=>{
+   window.playActivityId=b.dataset.playActivity;
+   window.playActivityClassId=null;
+   page='activityPlay';
+   render();
+ });
+ document.querySelectorAll('[data-edit-activity]').forEach(b=>b.onclick=()=>{
+   window.editActivityId=b.dataset.editActivity;
+   page='activityEditor';
+   render();
+ });
+ document.querySelectorAll('[data-delete-activity]').forEach(b=>b.onclick=()=>{
+   if(!confirm('هل تريد حذف هذا النشاط؟'))return;
+   data.activities=data.activities.filter(a=>a.id!==b.dataset.deleteActivity);
+   save();
+   renderActivities();
+ });
+
+ document.querySelectorAll('[data-error-play]').forEach(b=>b.onclick=()=>{
+   window.playErrorActivityId=b.dataset.errorPlay;
+   page='errorActivityPlay';
+   render();
+ });
+ document.querySelectorAll('[data-error-edit]').forEach(b=>b.onclick=()=>{
+   window.editErrorActivityId=b.dataset.errorEdit;
+   page='errorActivityEditor';
+   render();
+ });
+ document.querySelectorAll('[data-error-copy]').forEach(b=>b.onclick=()=>{
+   const source=data.errorActivities.find(x=>x.id===b.dataset.errorCopy);
+   if(!source)return;
+   const copy=JSON.parse(JSON.stringify(source));
+   copy.id=crypto.randomUUID();
+   copy.title=`${source.title} (نسخة)`;
+   copy.useCount=0;
+   copy.createdAt=copy.updatedAt=new Date().toISOString();
+   copy.questions=(copy.questions||[]).map(q=>({...q,id:crypto.randomUUID()}));
+   data.errorActivities.push(copy);
+   save();
+   renderActivities();
+ });
+ document.querySelectorAll('[data-error-delete]').forEach(b=>b.onclick=()=>{
+   if(!confirm('هل تريد حذف هذا النشاط؟'))return;
+   data.errorActivities=data.errorActivities.filter(x=>x.id!==b.dataset.errorDelete);
+   save();
+   renderActivities();
+ });
 }
-function escapeHtml(value=''){
- return String(value).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))
-}
+
 function emptyQuestion(){return {id:crypto.randomUUID(),text:'',image:'',options:['','','',''],correct:0,points:1}}
 function renderActivityEditor(activityId){
  const existing=data.activities.find(a=>a.id===activityId);
@@ -9176,7 +9386,7 @@ ${q.options.map((o,oi)=>`<div class="option-editor"><button class="option-correc
   document.querySelectorAll('[data-points]').forEach(el=>el.onchange=e=>draft.questions[+el.dataset.points].points=+e.target.value);
   document.querySelectorAll('[data-remove-question]').forEach(el=>el.onclick=()=>{draft.questions.splice(+el.dataset.removeQuestion,1);draw()});
   addQuestion.onclick=()=>{draft.questions.push(emptyQuestion());draw()};
-  cancelActivity.onclick=()=>{page='activities';render()};
+  cancelActivity.onclick=()=>{data.activityStudioTab='quiz';save();page='activities';render()};
   saveActivity.onclick=()=>{
    draft.title=draft.title.trim();draft.subject=draft.subject.trim();
    if(!draft.title){alert('اكتب عنوان النشاط');activityTitle.focus();return}
@@ -9186,7 +9396,7 @@ ${q.options.map((o,oi)=>`<div class="option-editor"><button class="option-correc
    const idx=data.activities.findIndex(a=>a.id===draft.id);
    if(idx>=0)data.activities[idx]=draft;else data.activities.push(draft);
    if(!save())return;
-   toast('تم حفظ النشاط');page='activities';render();
+   data.activityStudioTab='quiz';save();toast('تم حفظ النشاط');page='activities';render();
   };
  };
  draw();
@@ -9585,7 +9795,7 @@ function renderErrorActivityEditor(activityId){
   document.querySelectorAll('[data-remove-error-image]').forEach(el=>el.onclick=()=>{draft.questions[+el.dataset.removeErrorImage].image='';draw()});
   document.querySelectorAll('[data-remove-error-question]').forEach(el=>el.onclick=()=>{draft.questions.splice(+el.dataset.removeErrorQuestion,1);draw()});
   addErrorQuestion.onclick=()=>{draft.questions.push(emptyErrorQuestion());draw()};
-  cancelErrorActivity.onclick=()=>{page='errorActivities';render()};
+  cancelErrorActivity.onclick=()=>{data.activityStudioTab='error';save();page='activities';render()};
   saveErrorActivity.onclick=()=>{
    draft.title=draft.title.trim();draft.subject=draft.subject.trim();draft.lesson=draft.lesson.trim();
    draft.seconds=Math.max(5,Math.min(300,Number(draft.seconds)||20));
@@ -9597,7 +9807,7 @@ function renderErrorActivityEditor(activityId){
    const idx=data.errorActivities.findIndex(x=>x.id===draft.id);
    if(idx>=0)data.errorActivities[idx]=draft;else data.errorActivities.push(draft);
    if(!save())return;
-   toast('تم حفظ نشاط اكتشف الخطأ');page='errorActivities';render();
+   data.activityStudioTab='error';save();toast('تم حفظ نشاط اكتشف الخطأ');page='activities';render();
   };
  };
  draw();
@@ -9638,7 +9848,7 @@ function renderErrorActivityPlay(activityId){
     <button class="btn light" id="finishErrorActivity">العودة للأنشطة</button>
    </div>`;
    replayErrorActivity.onclick=()=>renderErrorActivityPlay(activity.id);
-   finishErrorActivity.onclick=()=>{page='errorActivities';render()};
+   finishErrorActivity.onclick=()=>{data.activityStudioTab='error';save();page='activities';render()};
    return;
   }
 
@@ -9664,7 +9874,7 @@ function renderErrorActivityPlay(activityId){
    </div>
   </div>`;
 
-  exitErrorPlay.onclick=()=>{clearInterval(window.__errorActivityTimer);if(confirm('هل تريد الخروج من النشاط؟')){page='errorActivities';render()}};
+  exitErrorPlay.onclick=()=>{clearInterval(window.__errorActivityTimer);if(confirm('هل تريد الخروج من النشاط؟')){data.activityStudioTab='error';save();page='activities';render()}};
   if(!state.revealed){
    toggleErrorTimer.onclick=()=>{state.paused=!state.paused;draw()};
    addErrorTime.onclick=()=>{state.remaining+=5;draw()};
