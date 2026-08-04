@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v6.0</title>
+<title>رَصْد — v6.0.1</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -6837,6 +6837,50 @@ body:not(.focus-mode) #fab{
   }
 }
 
+
+/* ===== دوران توصيات المساعد كل 6 ثوانٍ v6.0.1 ===== */
+.smart-assistant-message{
+  transition:opacity .22s ease,transform .22s ease,filter .22s ease;
+}
+.smart-assistant-message.changing{
+  opacity:0;
+  transform:translateY(7px) scale(.985);
+  filter:blur(2px);
+}
+.smart-assistant-message.changed{
+  animation:smartAssistantIn .42s ease both;
+}
+@keyframes smartAssistantIn{
+  from{opacity:0;transform:translateY(-6px) scale(.985)}
+  to{opacity:1;transform:none}
+}
+.smart-assistant-dots{
+  display:flex;
+  justify-content:center;
+  gap:5px;
+  margin-top:8px;
+}
+.smart-assistant-dots button{
+  width:6px;
+  height:6px;
+  padding:0;
+  border:0;
+  border-radius:999px;
+  background:#ffffff55;
+  transition:width .2s ease,background .2s ease;
+}
+.smart-assistant-dots button.active{
+  width:18px;
+  background:#fff;
+}
+@media(prefers-reduced-motion:reduce){
+  .smart-assistant-message,
+  .smart-assistant-message.changed{
+    transition:none!important;
+    animation:none!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -6891,7 +6935,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v6.0';
+const APP_VERSION='v6.0.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -6994,6 +7038,7 @@ function sessionStatus(studentId){
 
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal()})
 function render(){
+ if(page!=='home')clearInterval(window.__smartAssistantInterval);
  document.body.classList.toggle('focus-mode',page==='session');
  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
  const fab=document.getElementById('fab');
@@ -7223,7 +7268,7 @@ function renderHome(){
   </div>
  </div>
 
- <div class="smart-assistant-card">
+ <div class="smart-assistant-card" id="smartAssistantCard">
    <div class="smart-assistant-glow"></div>
    <div class="smart-assistant-head">
      <div class="smart-assistant-title">
@@ -7232,9 +7277,12 @@ function renderHome(){
      </div>
      <div class="smart-assistant-status"><i></i> نشط</div>
    </div>
-   <div class="smart-assistant-message">
+   <div class="smart-assistant-message" id="smartAssistantMessage">
      ${premiumIcon(assistantMain.icon||'smart_assistant','smart-insight-icon')}
-     <div><b>${escapeHtml(assistantMain.title)}</b><p>${escapeHtml(assistantMain.text)}</p></div>
+     <div><b id="smartAssistantTitle">${escapeHtml(assistantMain.title)}</b><p id="smartAssistantText">${escapeHtml(assistantMain.text)}</p></div>
+   </div>
+   <div class="smart-assistant-dots" id="smartAssistantDots">
+     ${assistantInsights.map((_,i)=>`<button class="${i===0?'active':''}" data-smart-dot="${i}" aria-label="التوصية ${i+1}"></button>`).join('')}
    </div>
    <div class="smart-assistant-actions">
      <button class="smart-assistant-primary" id="smartAssistantAction">${escapeHtml(assistantMain.action||'عرض التفاصيل')}</button>
@@ -7299,7 +7347,62 @@ function renderHome(){
    }
  };
 
- document.getElementById('smartAssistantAction')?.addEventListener('click',()=>runAssistantAction(assistantMain));
+ let smartAssistantIndex=0;
+ let smartAssistantCurrent=assistantInsights[0];
+
+ const showSmartAssistantInsight=(index,{animate=true}={})=>{
+   if(!assistantInsights.length)return;
+   smartAssistantIndex=(index+assistantInsights.length)%assistantInsights.length;
+   smartAssistantCurrent=assistantInsights[smartAssistantIndex];
+
+   const message=document.getElementById('smartAssistantMessage');
+   const title=document.getElementById('smartAssistantTitle');
+   const textEl=document.getElementById('smartAssistantText');
+   const action=document.getElementById('smartAssistantAction');
+
+   const update=()=>{
+     if(!message||!title||!textEl||!action)return;
+     const icon=message.querySelector('.smart-insight-icon');
+     if(icon)icon.src=EMBEDDED_PREMIUM_ICONS[smartAssistantCurrent.icon||'smart_assistant']||'';
+     title.textContent=smartAssistantCurrent.title;
+     textEl.textContent=smartAssistantCurrent.text;
+     action.textContent=smartAssistantCurrent.action||'عرض التفاصيل';
+     document.querySelectorAll('[data-smart-dot]').forEach((dot,i)=>dot.classList.toggle('active',i===smartAssistantIndex));
+   };
+
+   if(animate&&message){
+     message.classList.add('changing');
+     setTimeout(()=>{
+       update();
+       message.classList.remove('changing');
+       message.classList.add('changed');
+       setTimeout(()=>message.classList.remove('changed'),420);
+     },220);
+   }else{
+     update();
+   }
+ };
+
+ const restartSmartAssistantRotation=()=>{
+   clearInterval(window.__smartAssistantInterval);
+   if(assistantInsights.length>1&&page==='home'){
+     window.__smartAssistantInterval=setInterval(()=>{
+       if(page!=='home'){
+         clearInterval(window.__smartAssistantInterval);
+         return;
+       }
+       showSmartAssistantInsight(smartAssistantIndex+1);
+     },6000);
+   }
+ };
+
+ document.getElementById('smartAssistantAction')?.addEventListener('click',()=>runAssistantAction(smartAssistantCurrent));
+ document.querySelectorAll('[data-smart-dot]').forEach(dot=>dot.addEventListener('click',()=>{
+   showSmartAssistantInsight(Number(dot.dataset.smartDot));
+   restartSmartAssistantRotation();
+ }));
+ restartSmartAssistantRotation();
+
  document.getElementById('smartAssistantMore')?.addEventListener('click',()=>{
    openModal(`<div class="smart-assistant-modal">
      <div class="smart-assistant-modal-head">
