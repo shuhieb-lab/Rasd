@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<title>رَصْد — v6.8</title>
+<title>رَصْد — v6.8.1</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -7714,6 +7714,139 @@ body.memory-fullscreen-mode .memory-card-front{
   }
 }
 
+
+/* ===== ضبط التباعد والإحصاءات v6.8.1 ===== */
+body.memory-fullscreen-mode #view{
+  height:calc(100dvh - 78px)!important;
+  padding:4px 6px 6px!important;
+}
+body.memory-fullscreen-mode .memory-game-header{
+  display:grid!important;
+  grid-template-columns:auto 1fr auto!important;
+  min-height:46px!important;
+  margin:0 0 3mm!important;
+  align-items:center!important;
+}
+.memory-header-spacer{width:42px;height:1px}
+body.memory-fullscreen-mode .memory-game-title h2{
+  font-size:16px!important;
+}
+body.memory-fullscreen-mode .memory-game-title p{
+  display:none!important;
+}
+
+/* النطاق الأصفر فوق المربعات */
+.memory-yellow-zone{
+  display:grid;
+  grid-template-columns:1fr 1.35fr 1fr;
+  gap:3mm;
+  align-items:stretch;
+  padding:3mm;
+  margin-bottom:4mm;
+  border-radius:18px;
+  background:linear-gradient(145deg,#fff8dc 0%,#ffedb5 52%,#ffe29a 100%);
+  border:1px solid #f0d48d;
+  box-shadow:inset 0 2px 10px rgba(122,78,10,.06);
+}
+.memory-stat-card{
+  min-height:72px;
+  border-radius:16px;
+  background:rgba(255,255,255,.82);
+  border:1px solid rgba(255,255,255,.95);
+  box-shadow:0 4px 10px rgba(104,67,12,.10);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:7px;
+  text-align:center;
+}
+.memory-stat-label{
+  font-size:9px;
+  color:#7a5b24;
+  font-weight:800;
+  margin-bottom:3px;
+}
+.memory-stat-number{
+  font-size:25px;
+  line-height:1;
+  color:#17324d;
+}
+.memory-yellow-zone .memory-time-ring{
+  width:58px!important;
+  height:58px!important;
+  padding:4px!important;
+}
+.memory-yellow-zone .memory-time-ring b{
+  font-size:19px!important;
+}
+.memory-yellow-zone .memory-time-ring span{
+  font-size:6px!important;
+}
+.memory-yellow-zone .memory-pair-dots{
+  display:grid!important;
+  grid-template-columns:repeat(4,8px)!important;
+  gap:4px!important;
+  margin-top:6px!important;
+}
+.memory-yellow-zone .memory-pair-dots span{
+  width:8px!important;
+  height:8px!important;
+}
+
+/* شبكة 4×4، مسافة موحدة 4 ملم من جميع الجهات */
+body.memory-fullscreen-mode .memory-card-grid{
+  flex:0 0 auto!important;
+  width:100%!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  grid-template-rows:repeat(4,auto)!important;
+  gap:4mm!important;
+  padding:4mm!important;
+  border-radius:18px!important;
+  background:linear-gradient(145deg,#fff8df 0%,#ffefbd 48%,#ffe5a0 100%)!important;
+  border:1px solid #f1d79a!important;
+  box-sizing:border-box!important;
+}
+body.memory-fullscreen-mode .memory-card{
+  width:100%!important;
+  aspect-ratio:1 / 1!important;
+  height:auto!important;
+}
+body.memory-fullscreen-mode .memory-card-inner{
+  width:100%!important;
+  height:100%!important;
+  aspect-ratio:1 / 1!important;
+}
+body.memory-fullscreen-mode .memory-card-back,
+body.memory-fullscreen-mode .memory-card-front{
+  inset:0!important;
+  border-radius:13px!important;
+}
+.memory-back-brain{
+  font-size:clamp(34px,9vw,58px)!important;
+}
+
+@media(max-width:430px){
+  body.memory-fullscreen-mode #view{
+    height:calc(100dvh - 74px)!important;
+    padding:3px 4px 4px!important;
+  }
+  .memory-yellow-zone{
+    gap:2.5mm;
+    padding:2.5mm;
+    margin-bottom:3mm;
+  }
+  .memory-stat-card{
+    min-height:66px;
+    padding:5px;
+  }
+  body.memory-fullscreen-mode .memory-card-grid{
+    gap:4mm!important;
+    padding:4mm!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -7768,7 +7901,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v6.8';
+const APP_VERSION='v6.8.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -11039,13 +11172,24 @@ function renderMemoryMatchPlay(activityId){
    <div class="memory-game-header">
     <button class="btn light" id="exitMemory">خروج</button>
     <div class="memory-game-title"><h2>${escapeHtml(activity.title)}</h2><p>طابق الصور الثماني قبل انتهاء الوقت</p></div>
-    <div class="memory-time-ring" style="--time-progress:${(state.remaining/(Number(activity.seconds)||60))*360}deg">
-     <div><b id="memoryTimerValue">${state.remaining}</b><span>ثانية</span></div>
-    </div>
+    <div class="memory-header-spacer"></div>
    </div>
-   <div class="memory-stats-compact">
-    <div class="memory-pair-dots">${Array.from({length:8},(_,i)=>`<span class="${i<state.matched.size/2?'done':''}"></span>`).join('')}</div>
-    <div class="memory-moves">المحاولات <b>${state.moves}</b></div>
+   <div class="memory-yellow-zone">
+    <div class="memory-stat-card timer-card">
+     <span class="memory-stat-label">الوقت</span>
+     <div class="memory-time-ring" style="--time-progress:${(state.remaining/(Number(activity.seconds)||60))*360}deg">
+      <div><b id="memoryTimerValue">${state.remaining}</b><span>ثانية</span></div>
+     </div>
+    </div>
+    <div class="memory-stat-card correct-card">
+     <span class="memory-stat-label">المحاولات الصحيحة</span>
+     <b class="memory-stat-number">${state.matched.size/2}</b>
+     <div class="memory-pair-dots">${Array.from({length:8},(_,i)=>`<span class="${i<state.matched.size/2?'done':''}"></span>`).join('')}</div>
+    </div>
+    <div class="memory-stat-card attempts-card">
+     <span class="memory-stat-label">عدد المحاولات</span>
+     <b class="memory-stat-number">${state.moves}</b>
+    </div>
    </div>
    <div class="memory-card-grid">${state.cards.map((card,index)=>{
     const visible=state.opened.includes(index)||state.matched.has(index);
