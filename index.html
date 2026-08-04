@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v6.2.4</title>
+<title>رَصْد — v6.3</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -7084,6 +7084,54 @@ body{
   }
 }
 
+
+/* ===== سجل المتابعة اليدوي v6.3 ===== */
+.follow-formula-note{
+  margin:10px 0;
+  padding:10px 12px;
+  border-radius:13px;
+  background:#edf8f5;
+  border:1px solid #cde9e2;
+  color:#0f615b;
+  font-size:11px;
+  line-height:1.65;
+}
+.follow-table-wrap{
+  overflow:auto!important;
+  -webkit-overflow-scrolling:touch;
+}
+.follow-table{
+  min-width:980px;
+}
+.follow-table th{
+  min-width:105px;
+  font-size:10px;
+  line-height:1.4;
+  white-space:nowrap;
+}
+.follow-table th:first-child,
+.follow-table td:first-child{
+  position:sticky;
+  right:0;
+  z-index:3;
+  min-width:165px;
+  background:#fff;
+  box-shadow:-6px 0 10px rgba(23,50,77,.05);
+}
+.follow-table thead th:first-child{
+  z-index:5;
+  background:#edf7f6;
+}
+.follow-table .exam-score{
+  width:70px!important;
+}
+.follow-total{
+  font-weight:900;
+  color:#0f766e;
+  background:#eef8f5!important;
+  min-width:72px;
+}
+
 </style>
 </head>
 <body>
@@ -7096,7 +7144,7 @@ body{
 <button data-page="home" class="active"><span class="premium-icon-wrap"><img class="premium-nav-icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiMyMGM3YjciLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwODdmNzgiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KPHJlY3QgeD0iMyIgeT0iMyIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiByeD0iMTciIGZpbGw9InVybCgjZykiLz4KCjxwYXRoIGQ9Ik0xNSAzMSAzMiAxNmwxNyAxNXYxOEgzN1YzN0gyN3YxMkgxNVoiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RmZmRmOSIgc3Ryb2tlLXdpZHRoPSIyLjMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPHBhdGggZD0iTTQ0IDE4djkiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+" alt=""></span><span class="nav-label">الرئيسية</span></button>
 <button data-page="classes"><span class="premium-icon-wrap"><img class="premium-nav-icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiM1NWQ5OGEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMxNjkzNTciLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KPHJlY3QgeD0iMyIgeT0iMyIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiByeD0iMTciIGZpbGw9InVybCgjZykiLz4KCjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjgiIGZpbGw9IiNmZmYiLz4KPGNpcmNsZSBjeD0iMTgiIGN5PSIyOCIgcj0iNiIgZmlsbD0iI2VhZmZmMSIvPgo8Y2lyY2xlIGN4PSI0NiIgY3k9IjI4IiByPSI2IiBmaWxsPSIjZWFmZmYxIi8+CjxwYXRoIGQ9Ik0yMCA0OGMxLTEwIDYtMTUgMTItMTVzMTEgNSAxMiAxNSIgZmlsbD0iI2ZmZiIvPgo8cGF0aCBkPSJNOCA0OGMxLTggNS0xMiAxMC0xMk01NiA0OGMtMS04LTUtMTItMTAtMTIiIHN0cm9rZT0iI2VhZmZmMSIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+" alt=""></span><span class="nav-label">الفصول</span></button>
 <button data-page="activities"><span class="premium-icon-wrap"><img class="premium-nav-icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiNhZDc3ZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM2ODQwYzkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KPHJlY3QgeD0iMyIgeT0iMyIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiByeD0iMTciIGZpbGw9InVybCgjZykiLz4KCjxjaXJjbGUgY3g9IjI5IiBjeT0iMzUiIHI9IjE3IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuOTYiLz4KPGNpcmNsZSBjeD0iMjkiIGN5PSIzNSIgcj0iMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzdjNGRkZSIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxjaXJjbGUgY3g9IjI5IiBjeT0iMzUiIHI9IjMuNyIgZmlsbD0iIzdjNGRkZSIvPgo8cGF0aCBkPSJtMzcgMjcgMTQtMTRNNDQgMTNoN3Y3IiBzdHJva2U9IiNmZmQ5OGEiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPg==" alt=""></span><span class="nav-label">الأنشطة</span></button>
-<button data-page="exams"><span class="premium-icon-wrap"><img class="premium-nav-icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmJkNTgiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlZjdmMjQiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KPHJlY3QgeD0iMyIgeT0iMyIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiByeD0iMTciIGZpbGw9InVybCgjZykiLz4KCjxyZWN0IHg9IjE2IiB5PSIxMyIgd2lkdGg9IjMxIiBoZWlnaHQ9IjM5IiByeD0iNSIgZmlsbD0iI2ZmZiIvPgo8cmVjdCB4PSIyNCIgeT0iMTAiIHdpZHRoPSIxNSIgaGVpZ2h0PSI3IiByeD0iMy41IiBmaWxsPSIjMzI0ZDczIi8+CjxwYXRoIGQ9Ik0yMiAyNmgxOE0yMiAzNGgxNE0yMiA0MmgxMCIgc3Ryb2tlPSIjNmI3ODkwIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8cGF0aCBkPSJtMzkgNDMgMTEtMTEgNSA1LTExIDExLTcgMloiIGZpbGw9IiM3YTRjZTAiLz4KPC9zdmc+" alt=""></span><span class="nav-label">الاختبارات</span></button>
+<button data-page="exams"><span class="premium-icon-wrap"><img class="premium-nav-icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmJkNTgiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlZjdmMjQiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KPHJlY3QgeD0iMyIgeT0iMyIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiByeD0iMTciIGZpbGw9InVybCgjZykiLz4KCjxyZWN0IHg9IjE2IiB5PSIxMyIgd2lkdGg9IjMxIiBoZWlnaHQ9IjM5IiByeD0iNSIgZmlsbD0iI2ZmZiIvPgo8cmVjdCB4PSIyNCIgeT0iMTAiIHdpZHRoPSIxNSIgaGVpZ2h0PSI3IiByeD0iMy41IiBmaWxsPSIjMzI0ZDczIi8+CjxwYXRoIGQ9Ik0yMiAyNmgxOE0yMiAzNGgxNE0yMiA0MmgxMCIgc3Ryb2tlPSIjNmI3ODkwIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8cGF0aCBkPSJtMzkgNDMgMTEtMTEgNSA1LTExIDExLTcgMloiIGZpbGw9IiM3YTRjZTAiLz4KPC9zdmc+" alt=""></span><span class="nav-label">المتابعة</span></button>
 <button data-page="settings"><span class="premium-icon-wrap"><img class="premium-nav-icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiM5ZmIyY2YiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM1NjZiOGQiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KPHJlY3QgeD0iMyIgeT0iMyIgd2lkdGg9IjU4IiBoZWlnaHQ9IjU4IiByeD0iMTciIGZpbGw9InVybCgjZykiLz4KCjxwYXRoIGQ9Ik0zMiAxN3Y1TTMyIDQydjVNMTcgMzJoNU00MiAzMmg1TTIxLjQgMjEuNGwzLjUgMy41TTM5LjEgMzkuMWwzLjUgMy41TTQyLjYgMjEuNGwtMy41IDMuNU0yNC45IDM5LjFsLTMuNSAzLjUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMTMiIGZpbGw9IiNmZmYiLz4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iNiIgZmlsbD0iIzY1N2I5ZCIvPgo8L3N2Zz4=" alt=""></span><span class="nav-label">الإعدادات</span></button>
 </nav>
 </div>
@@ -7138,7 +7186,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v6.2.4';
+const APP_VERSION='v6.3';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -9996,14 +10044,21 @@ function buildExamDraft(classId){
  const draft={classId,updatedAt:new Date().toISOString(),students:{}};
  data.students.filter(s=>s.classId===classId).forEach(s=>{
   const e=data.exams[s.id]||{};
-  draft.students[s.id]={p1:examCellValue(e,'p1'),p2:examCellValue(e,'p2'),final:examCellValue(e,'final')}
+  draft.students[s.id]={
+   participation:examCellValue(e,'participation'),
+   homework:examCellValue(e,'homework'),
+   tasks:examCellValue(e,'tasks'),
+   p1:examCellValue(e,'p1'),
+   p2:examCellValue(e,'p2'),
+   final:examCellValue(e,'final')
+  };
  });
  return draft
 }
 function renderExams(){
  let classId=window.examSelectedClassId||null;
  const c=data.classes.find(x=>x.id===classId);
- setTitle('الاختبارات',c?c.name:'اختر الفصل أولاً');
+ setTitle('المتابعة',c?c.name:'اختر الفصل أولاً');
 
  if(!data.classes.length){
   view.innerHTML='<div class="notice">أضف فصلاً أولاً من شاشة الفصول</div>';
@@ -10011,34 +10066,78 @@ function renderExams(){
  }
 
  const classStudents=classId
-  ? data.students
-      .filter(s=>s.classId===classId)
-      .sort((a,b)=>a.name.localeCompare(b.name,'ar'))
+  ? data.students.filter(s=>s.classId===classId).sort((a,b)=>a.name.localeCompare(b.name,'ar'))
   : [];
 
  let draft=classId?loadExamDraft(classId):null;
  const hasDraft=!!draft;
  if(classId&&!draft)draft=buildExamDraft(classId);
 
+ const fields=[
+  {key:'participation',label:'المشاركة',max:10},
+  {key:'homework',label:'الواجبات',max:10},
+  {key:'tasks',label:'المهام الأدائية',max:20},
+  {key:'p1',label:'الفتري الأول',max:20},
+  {key:'p2',label:'الفتري الثاني',max:20},
+  {key:'final',label:'نهاية الفصل',max:40}
+ ];
+
+ const scoreOrBlank=(record,key)=>{
+  const value=record?.[key];
+  return value===undefined||value===null||value===''?null:Number(value);
+ };
+
+ const calculateTotal=record=>{
+  const participation=scoreOrBlank(record,'participation');
+  const homework=scoreOrBlank(record,'homework');
+  const tasks=scoreOrBlank(record,'tasks');
+  const p1=scoreOrBlank(record,'p1');
+  const p2=scoreOrBlank(record,'p2');
+  const final=scoreOrBlank(record,'final');
+
+  if([participation,homework,tasks,p1,p2,final].every(v=>v===null))return null;
+
+  const periodicValues=[p1,p2].filter(v=>v!==null);
+  const periodicAverage=periodicValues.length
+   ? periodicValues.reduce((a,b)=>a+b,0)/periodicValues.length
+   : 0;
+
+  return (participation||0)+(homework||0)+(tasks||0)+periodicAverage+(final||0);
+ };
+
+ const formatScore=value=>{
+  if(value===null||value===undefined||!Number.isFinite(Number(value)))return '—';
+  const number=Number(value);
+  return Number.isInteger(number)?String(number):number.toFixed(1);
+ };
+
  const rows=classStudents.map(s=>{
-  const d=draft.students?.[s.id]||{p1:'',p2:'',final:''};
+  const d={
+   participation:'',homework:'',tasks:'',p1:'',p2:'',final:'',
+   ...(draft.students?.[s.id]||{})
+  };
   const saved=data.exams[s.id]||{};
   const modified=k=>String(d[k]??'')!==examCellValue(saved,k);
+  const total=calculateTotal(d);
+
   return `<tr>
-    <td><b>${s.name}</b></td>
-    <td><input class="exam-score ${modified('p1')?'modified':''}" inputmode="decimal" type="number" min="0" max="20" data-s="${s.id}" data-k="p1" value="${d.p1??''}"></td>
-    <td><input class="exam-score ${modified('p2')?'modified':''}" inputmode="decimal" type="number" min="0" max="20" data-s="${s.id}" data-k="p2" value="${d.p2??''}"></td>
-    <td><input class="exam-score ${modified('final')?'modified':''}" inputmode="decimal" type="number" min="0" max="40" data-s="${s.id}" data-k="final" value="${d.final??''}"></td>
+    <td class="follow-student-name"><b>${escapeHtml(s.name)}</b></td>
+    ${fields.map(field=>`<td>
+      <input class="exam-score ${modified(field.key)?'modified':''}"
+       inputmode="decimal" type="number" min="0" max="${field.max}"
+       data-s="${s.id}" data-k="${field.key}" value="${d[field.key]??''}">
+    </td>`).join('')}
+    <td class="follow-total" data-total-student="${s.id}">${formatScore(total)}</td>
   </tr>`;
  }).join('');
 
- view.innerHTML=`<div class="exam-page">
+ view.innerHTML=`<div class="exam-page follow-page">
    <div class="exam-toolbar">
      <div class="field">
        <label>الفصل</label>
        <select id="examClassSelect">
          <option value="" ${classId?'':'selected'} disabled>اختر الفصل</option>
-         ${data.classes.map(x=>`<option value="${x.id}" ${x.id===classId?'selected':''}>${x.name}</option>`).join('')}
+         ${data.classes.map(x=>`<option value="${x.id}" ${x.id===classId?'selected':''}>${escapeHtml(x.name)}</option>`).join('')}
        </select>
      </div>
      <div class="exam-toolbar-side">
@@ -10050,20 +10149,34 @@ function renderExams(){
      </div>
    </div>
 
+   ${classId?`<div class="follow-formula-note">
+     <b>آلية المجموع من 100:</b>
+     المشاركة 10 + الواجبات 10 + المهام الأدائية 20 + متوسط الفتريين 20 + نهاية الفصل 40
+   </div>`:''}
+
    ${classId?`<div id="examDraftStatus" class="exam-draft-status ${hasDraft?'dirty':'clean'}">
      ${hasDraft?'🟡 توجد درجات محفوظة كمسودة وغير معتمدة':'✅ لا توجد تعديلات غير معتمدة'}
    </div>`:''}
 
    ${!classId?`
    <div class="exam-select-placeholder">
-     <div class="exam-select-placeholder-icon">📝</div>
-     <b>اختر الفصل لعرض الطلاب والدرجات</b>
-     <p>لن تظهر أي درجات قبل تحديد الفصل من القائمة أعلاه.</p>
+     <div class="exam-select-placeholder-icon">📋</div>
+     <b>اختر الفصل لعرض سجل المتابعة</b>
+     <p>جميع الدرجات تُدخل يدويًا، ويحسب التطبيق المتوسط والمجموع تلقائيًا.</p>
    </div>
    `:classStudents.length?`
-   <div class="exam-table-wrap">
-     <table class="exam-table">
-       <thead><tr><th>الطالب</th><th>الفتري الأول /20</th><th>الفتري الثاني /20</th><th>نهاية الفصل /40</th></tr></thead>
+   <div class="exam-table-wrap follow-table-wrap">
+     <table class="exam-table follow-table">
+       <thead><tr>
+        <th>الطالب</th>
+        <th>المشاركة<br>/10</th>
+        <th>الواجبات<br>/10</th>
+        <th>المهام الأدائية<br>/20</th>
+        <th>الفتري الأول<br>/20</th>
+        <th>الفتري الثاني<br>/20</th>
+        <th>نهاية الفصل<br>/40</th>
+        <th>المجموع<br>/100</th>
+       </tr></thead>
        <tbody>${rows}</tbody>
      </table>
    </div>
@@ -10086,6 +10199,11 @@ function renderExams(){
 
  if(!classId)return;
 
+ const refreshStudentTotal=studentId=>{
+  const totalCell=document.querySelector(`[data-total-student="${studentId}"]`);
+  if(totalCell)totalCell.textContent=formatScore(calculateTotal(draft.students[studentId]||{}));
+ };
+
  document.getElementById('exportExamPdf')?.addEventListener('click',()=>{
    const teacherName=escapeHtml(data.teacher.name||'غير محدد');
    const schoolName=escapeHtml(data.teacher.school||'غير محددة');
@@ -10095,68 +10213,63 @@ function renderExams(){
    const todayHijri=new Date().toLocaleDateString('ar-SA-u-ca-islamic',{year:'numeric',month:'long',day:'numeric'});
 
    const reportRows=classStudents.map((student,index)=>{
-     const exam=data.exams[student.id]||{};
-     const p1=exam.p1??'—';
-     const p2=exam.p2??'—';
-     const final=exam.final??'—';
-     const numeric=[exam.p1,exam.p2,exam.final].filter(v=>v!==undefined&&v!==null&&v!=='').map(Number);
-     const total=numeric.length?numeric.reduce((a,b)=>a+b,0):'—';
+     const record=data.exams[student.id]||{};
+     const periodicValues=['p1','p2'].map(k=>scoreOrBlank(record,k)).filter(v=>v!==null);
+     const periodicAverage=periodicValues.length
+      ? periodicValues.reduce((a,b)=>a+b,0)/periodicValues.length
+      : null;
+     const total=calculateTotal(record);
+
      return `<tr>
        <td>${index+1}</td>
        <td class="student-name-cell">${escapeHtml(student.name)}</td>
-       <td>${p1}</td>
-       <td>${p2}</td>
-       <td>${final}</td>
-       <td>${total}</td>
+       <td>${formatScore(scoreOrBlank(record,'participation'))}</td>
+       <td>${formatScore(scoreOrBlank(record,'homework'))}</td>
+       <td>${formatScore(scoreOrBlank(record,'tasks'))}</td>
+       <td>${formatScore(scoreOrBlank(record,'p1'))}</td>
+       <td>${formatScore(scoreOrBlank(record,'p2'))}</td>
+       <td>${formatScore(periodicAverage)}</td>
+       <td>${formatScore(scoreOrBlank(record,'final'))}</td>
+       <td class="pdf-total">${formatScore(total)}</td>
      </tr>`;
    }).join('');
 
-   const totals=classStudents.map(student=>{
-     const e=data.exams[student.id]||{};
-     return ['p1','p2','final']
-       .filter(k=>e[k]!==undefined&&e[k]!==null&&e[k]!=='')
-       .reduce((sum,k)=>sum+Number(e[k]),0);
-   }).filter(v=>Number.isFinite(v)&&v>0);
+   const totals=classStudents
+    .map(student=>calculateTotal(data.exams[student.id]||{}))
+    .filter(v=>v!==null&&Number.isFinite(v));
 
    const average=totals.length?(totals.reduce((a,b)=>a+b,0)/totals.length).toFixed(1):'—';
-   const highest=totals.length?Math.max(...totals):'—';
-   const lowest=totals.length?Math.min(...totals):'—';
+   const highest=totals.length?formatScore(Math.max(...totals)):'—';
+   const lowest=totals.length?formatScore(Math.min(...totals)):'—';
 
    const reportHtml=`<!doctype html>
    <html lang="ar" dir="rtl">
    <head>
      <meta charset="utf-8">
      <meta name="viewport" content="width=device-width,initial-scale=1">
-     <title>سجل درجات الاختبارات - ${className}</title>
+     <title>سجل المتابعة والدرجات - ${className}</title>
      <style>
-       @page{size:A4 portrait;margin:12mm}
+       @page{size:A4 landscape;margin:9mm}
        *{box-sizing:border-box}
        body{margin:0;font-family:Tahoma,Arial,sans-serif;color:#17233b;background:#fff}
-       .sheet{width:100%;min-height:273mm;display:flex;flex-direction:column}
-       .report-header{display:grid;grid-template-columns:72px 1fr 72px;align-items:center;border-bottom:3px solid #0f766e;padding-bottom:10px;margin-bottom:12px}
-       .logo-box{width:64px;height:64px;border-radius:14px;border:1px solid #dbe5ea;display:flex;align-items:center;justify-content:center;background:#f5fbfa;color:#0f766e;font-weight:900;font-size:20px}
-       .report-title{text-align:center}
-       .report-title h1{font-size:22px;margin:0 0 5px;color:#17324d}
-       .report-title p{margin:0;color:#5f6c7b;font-size:12px}
-       .meta{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:12px}
-       .meta-item{border:1px solid #dbe5ea;border-radius:9px;padding:7px 9px;font-size:11px}
-       .meta-item b{color:#0f766e}
-       table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:10px}
+       .sheet{width:100%;min-height:190mm;display:flex;flex-direction:column}
+       .report-header{display:grid;grid-template-columns:64px 1fr 64px;align-items:center;border-bottom:3px solid #0f766e;padding-bottom:8px;margin-bottom:9px}
+       .logo-box{width:56px;height:56px;border-radius:13px;border:1px solid #dbe5ea;display:flex;align-items:center;justify-content:center;background:#f5fbfa;color:#0f766e;font-weight:900;font-size:18px}
+       .report-title{text-align:center}.report-title h1{font-size:20px;margin:0 0 4px;color:#17324d}.report-title p{margin:0;color:#5f6c7b;font-size:11px}
+       .meta{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
+       .meta-item{border:1px solid #dbe5ea;border-radius:8px;padding:6px 8px;font-size:9px}.meta-item b{color:#0f766e}
+       .formula{margin-bottom:8px;padding:6px 8px;border-radius:8px;background:#edf8f5;color:#0f615b;font-size:9px;text-align:center}
+       table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:8px}
        thead{display:table-header-group}
-       th{background:#e7f4f2;color:#17324d;border:1px solid #9fc9c3;padding:7px 4px}
-       td{border:1px solid #cfdbe2;padding:7px 4px;text-align:center}
-       .student-name-cell{text-align:right;font-weight:700;width:34%}
-       tbody tr:nth-child(even){background:#f8fafb}
-       .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-       .summary-item{border:1px solid #dbe5ea;border-radius:9px;padding:8px;text-align:center}
-       .summary-item span{display:block;color:#687586;font-size:10px}
-       .summary-item b{display:block;margin-top:4px;color:#17324d;font-size:15px}
-       .signatures{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:24px;font-size:11px}
-       .signature{text-align:center;border-top:1px solid #94a3b8;padding-top:7px}
-       .footer{margin-top:auto;padding-top:10px;border-top:1px solid #dbe5ea;text-align:center;color:#7b8795;font-size:9px}
-       .print-actions{position:fixed;left:14px;bottom:14px;display:flex;gap:8px}
-       .print-actions button{border:0;border-radius:10px;padding:10px 15px;font-weight:700;cursor:pointer}
-       .print-btn{background:#0f766e;color:#fff}.close-btn{background:#eef2f5;color:#17324d}
+       th{background:#e7f4f2;color:#17324d;border:1px solid #9fc9c3;padding:6px 2px;line-height:1.35}
+       td{border:1px solid #cfdbe2;padding:6px 2px;text-align:center}
+       .student-name-cell{text-align:right;font-weight:700;width:20%}
+       tbody tr:nth-child(even){background:#f8fafb}.pdf-total{font-weight:900;background:#eef8f5}
+       .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
+       .summary-item{border:1px solid #dbe5ea;border-radius:8px;padding:6px;text-align:center}.summary-item span{display:block;color:#687586;font-size:9px}.summary-item b{display:block;margin-top:3px;color:#17324d;font-size:13px}
+       .signatures{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:16px;font-size:10px}.signature{text-align:center;border-top:1px solid #94a3b8;padding-top:6px}
+       .footer{margin-top:auto;padding-top:7px;border-top:1px solid #dbe5ea;text-align:center;color:#7b8795;font-size:8px}
+       .print-actions{position:fixed;left:14px;bottom:14px;display:flex;gap:8px}.print-actions button{border:0;border-radius:10px;padding:10px 15px;font-weight:700;cursor:pointer}.print-btn{background:#0f766e;color:#fff}.close-btn{background:#eef2f5;color:#17324d}
        @media print{.print-actions{display:none}.sheet{min-height:auto}}
      </style>
    </head>
@@ -10164,53 +10277,41 @@ function renderExams(){
      <div class="sheet">
        <div class="report-header">
          <div class="logo-box">رَصْد</div>
-         <div class="report-title">
-           <h1>سجل درجات الاختبارات</h1>
-           <p>${className} · ${subjectName}</p>
-         </div>
+         <div class="report-title"><h1>سجل المتابعة والدرجات</h1><p>${className} · ${subjectName}</p></div>
          <div></div>
        </div>
-
        <div class="meta">
          <div class="meta-item"><b>المدرسة:</b> ${schoolName}</div>
          <div class="meta-item"><b>المعلم:</b> ${teacherName}</div>
          <div class="meta-item"><b>الفصل:</b> ${className}</div>
          <div class="meta-item"><b>التاريخ:</b> ${todayGregorian} · ${todayHijri}</div>
        </div>
-
+       <div class="formula">المجموع من 100 = المشاركة 10 + الواجبات 10 + المهام الأدائية 20 + متوسط الفتريين 20 + نهاية الفصل 40</div>
        <table>
-         <thead>
-           <tr>
-             <th style="width:6%">م</th>
-             <th style="width:34%">اسم الطالب</th>
-             <th style="width:15%">الفتري الأول<br>/20</th>
-             <th style="width:15%">الفتري الثاني<br>/20</th>
-             <th style="width:15%">نهاية الفصل<br>/40</th>
-             <th style="width:15%">المجموع<br>/80</th>
-           </tr>
-         </thead>
+         <thead><tr>
+           <th style="width:4%">م</th>
+           <th style="width:20%">اسم الطالب</th>
+           <th>المشاركة<br>/10</th>
+           <th>الواجبات<br>/10</th>
+           <th>المهام<br>/20</th>
+           <th>الفتري 1<br>/20</th>
+           <th>الفتري 2<br>/20</th>
+           <th>متوسط الفتريين<br>/20</th>
+           <th>نهاية الفصل<br>/40</th>
+           <th>المجموع<br>/100</th>
+         </tr></thead>
          <tbody>${reportRows}</tbody>
        </table>
-
        <div class="summary">
          <div class="summary-item"><span>متوسط الفصل</span><b>${average}</b></div>
          <div class="summary-item"><span>أعلى مجموع</span><b>${highest}</b></div>
          <div class="summary-item"><span>أقل مجموع</span><b>${lowest}</b></div>
        </div>
-
-       <div class="signatures">
-         <div class="signature">توقيع المعلم</div>
-         <div class="signature">اعتماد قائد المدرسة</div>
-       </div>
-
+       <div class="signatures"><div class="signature">توقيع المعلم</div><div class="signature">اعتماد قائد المدرسة</div></div>
        <div class="footer">تم إنشاء هذا السجل بواسطة تطبيق رَصْد ${APP_VERSION}</div>
      </div>
-     <div class="print-actions">
-       <button class="print-btn" onclick="window.print()">طباعة / حفظ PDF</button>
-       <button class="close-btn" onclick="window.close()">إغلاق</button>
-     </div>
-   </body>
-   </html>`;
+     <div class="print-actions"><button class="print-btn" onclick="window.print()">طباعة / حفظ PDF</button><button class="close-btn" onclick="window.close()">إغلاق</button></div>
+   </body></html>`;
 
    const reportWindow=window.open('','_blank');
    if(!reportWindow){
@@ -10243,10 +10344,13 @@ function renderExams(){
    const invalid=numeric!==null&&(!Number.isFinite(numeric)||numeric<0||numeric>max);
    input.classList.toggle('invalid',invalid);
 
-   draft.students[input.dataset.s]=draft.students[input.dataset.s]||{p1:'',p2:'',final:''};
+   draft.students[input.dataset.s]=draft.students[input.dataset.s]||{
+    participation:'',homework:'',tasks:'',p1:'',p2:'',final:''
+   };
    draft.students[input.dataset.s][input.dataset.k]=raw;
    const saved=data.exams[input.dataset.s]||{};
    input.classList.toggle('modified',raw!==examCellValue(saved,input.dataset.k));
+   refreshStudentTotal(input.dataset.s);
    persistDraft();
   });
  });
@@ -10277,36 +10381,40 @@ function renderExams(){
    const d=draft.students[s.id]||{};
    const e=data.exams[s.id]=data.exams[s.id]||{};
 
-   ['p1','p2','final'].forEach(k=>{
-    const raw=String(d[k]??'').trim();
-    if(raw==='')delete e[k];
-    else e[k]=Number(raw);
+   fields.forEach(field=>{
+    const raw=String(d[field.key]??'').trim();
+    if(raw==='')delete e[field.key];
+    else e[field.key]=Number(raw);
    });
 
    const periodicValues=['p1','p2']
     .filter(k=>e[k]!==undefined&&e[k]!==null)
     .map(k=>Number(e[k]));
+
    if(periodicValues.length){
-    const total=periodicValues.reduce((a,b)=>a+b,0);
-    const max=periodicValues.length*20;
-    e.periodicScore=Math.round(total/max*100);
+    const periodicAverage=periodicValues.reduce((a,b)=>a+b,0)/periodicValues.length;
+    e.periodicAverage=periodicAverage;
+    e.periodicScore=Math.round(periodicAverage/20*100);
    }else{
+    delete e.periodicAverage;
     delete e.periodicScore;
    }
 
-   if(e.final!==undefined&&e.final!==null){
-    e.finalScore=Math.round(Number(e.final)/40*100);
-   }else{
-    delete e.finalScore;
-   }
+   if(e.final!==undefined&&e.final!==null)e.finalScore=Math.round(Number(e.final)/40*100);
+   else delete e.finalScore;
+
+   const total=calculateTotal(e);
+   if(total!==null)e.totalScore=total;
+   else delete e.totalScore;
   });
 
   if(!save())return;
   clearExamDraft(classId);
-  toast('تم حفظ واعتماد درجات الفصل بنجاح');
+  toast('تم حفظ واعتماد سجل المتابعة بنجاح');
   renderExams();
  };
 }
+
 function renderSettings(){
  setTitle('الإعدادات','تخصيص رَصْد');
  view.innerHTML=`<div class="card"><h3>بيانات المعلم</h3><div class="field"><label>الاسم</label><input id="tname" value="${data.teacher.name||''}"></div><div class="field"><label>المدرسة</label><input id="school" value="${data.teacher.school||''}"></div><div class="field"><label>المادة</label><input id="subject" value="${data.teacher.subject||''}"></div><button class="btn" id="saveTeacher">حفظ</button></div>
