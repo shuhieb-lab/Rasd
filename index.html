@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>رَصْد — v5.5.2</title>
+<title>رَصْد — v5.5.3</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -6031,6 +6031,43 @@ body:not(.focus-mode) #fab{
   transition:none!important;
 }
 
+
+/* ===== توحيد وقت الحصة القادمة والعداد في صف واحد v5.5.3 ===== */
+.next-class-time-row{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  flex-wrap:nowrap!important;
+  margin-top:4px!important;
+  font-size:14px!important;
+}
+.next-class-time-row > span:first-child{
+  white-space:nowrap!important;
+}
+.next-class-countdown{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:5px!important;
+  white-space:nowrap!important;
+  font-size:13px!important;
+  font-weight:900!important;
+}
+.next-class-countdown .home-inline-icon{
+  width:20px!important;
+  height:20px!important;
+  flex:0 0 20px!important;
+}
+@media(max-width:390px){
+  .next-class-time-row{
+    gap:7px!important;
+    font-size:12.5px!important;
+  }
+  .next-class-countdown{
+    font-size:11.5px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -6085,7 +6122,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v5.5.2';
+const APP_VERSION='v5.5.3';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -6265,8 +6302,10 @@ function renderHome(){
    <button class="btn premium-action-btn" id="quickStart">${premiumIcon('play','button-premium-icon')}<span>بدء الحصة</span></button>`:
    slot.type==='next'?`
    <div class="class-title">${c?.name||''}</div>
-   <div>الحصة ${slot.period} — ${formatScheduleTime(slot.start)}</div>
-   <div class="home-live-time">${premiumIcon('next_class','home-inline-icon')}<span>تبدأ بعد ${slot.minutesUntil} دقيقة</span></div>
+   <div class="next-class-time-row">
+     <span>الحصة ${slot.period} — ${formatScheduleTime(slot.start)}</span>
+     <span class="next-class-countdown">${premiumIcon('next_class','home-inline-icon')}<span>تبدأ بعد ${slot.minutesUntil} دقيقة</span></span>
+   </div>
    <button class="btn premium-action-btn" id="quickStart">${premiumIcon('classes','button-premium-icon')}<span>فتح الفصل</span></button>`:
    `<p>انتهى جدول اليوم أو لم يتم ضبط أوقات الحصص.</p>
    <button class="btn premium-action-btn" id="goSchedule">${premiumIcon('calendar','button-premium-icon')}<span>إعداد الجدول</span></button>`}
