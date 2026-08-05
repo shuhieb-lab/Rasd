@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<title>رَصْد — v7.4.2</title>
+<title>رَصْد — v7.4.3</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -7769,6 +7769,149 @@ header > img{
   font-size:14px!important;
 }
 
+
+/* ===== تصغير لوحة النتيجة ومنع التمرير v7.4.3 ===== */
+.smartmatch-result-v3{
+  width:min(100%,760px)!important;
+  max-height:calc(100dvh - 94px)!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  padding:16px 18px!important;
+  border-radius:24px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  gap:6px!important;
+  margin:0 auto!important;
+  box-sizing:border-box!important;
+}
+
+.smartmatch-result-v3 .smartmatch-perfect-ribbon{
+  top:10px!important;
+  right:10px!important;
+  padding:5px 10px!important;
+  font-size:9px!important;
+}
+
+.smartmatch-result-v3 .smartmatch-trophy-icon{
+  width:76px!important;
+  height:76px!important;
+  margin:0 auto 3px!important;
+  border-radius:24px!important;
+}
+.smartmatch-result-v3 .smartmatch-trophy-icon svg{
+  width:58px!important;
+  height:58px!important;
+}
+
+.smartmatch-result-v3 h2{
+  margin:2px 0!important;
+  font-size:24px!important;
+  line-height:1.2!important;
+}
+.smartmatch-result-v3 p{
+  margin:2px 0 4px!important;
+  font-size:13px!important;
+  line-height:1.4!important;
+}
+
+.smartmatch-result-v3 .smartmatch-result-stars{
+  margin:2px 0 5px!important;
+  gap:6px!important;
+}
+.smartmatch-result-v3 .smartmatch-result-stars span{
+  font-size:21px!important;
+}
+
+.smartmatch-result-v3 .smartmatch-result-stats{
+  gap:7px!important;
+  margin:5px 0!important;
+}
+.smartmatch-result-v3 .smartmatch-result-stats div{
+  padding:7px!important;
+  border-radius:12px!important;
+}
+.smartmatch-result-v3 .smartmatch-result-stats span{
+  font-size:7px!important;
+}
+.smartmatch-result-v3 .smartmatch-result-stats b{
+  font-size:18px!important;
+  margin-top:2px!important;
+}
+
+.smartmatch-result-v3 .smartmatch-participation-box{
+  margin:3px 0 5px!important;
+  padding:8px 9px!important;
+  border-radius:14px!important;
+  gap:7px!important;
+}
+.smartmatch-result-v3 .smartmatch-participation-box b{
+  font-size:10px!important;
+}
+.smartmatch-result-v3 .smartmatch-participation-box span{
+  font-size:7px!important;
+  margin-top:2px!important;
+}
+.smartmatch-result-v3 .smartmatch-participation-box .btn{
+  padding:7px 9px!important;
+  font-size:8px!important;
+  min-height:36px!important;
+}
+
+.smartmatch-result-v3 > .btn{
+  min-height:44px!important;
+  padding:9px 12px!important;
+  font-size:14px!important;
+  margin-top:4px!important;
+  border-radius:13px!important;
+}
+
+.smartmatch-result-v3 .memory-reveal-grid{
+  max-height:120px!important;
+  overflow:hidden!important;
+  margin:5px 0!important;
+}
+
+/* حركة دخول ناعمة */
+.smartmatch-result-v3{
+  animation:smartMatchCompactEnter .26s ease-out both!important;
+}
+@keyframes smartMatchCompactEnter{
+  from{opacity:0;transform:scale(.92) translateY(8px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+
+@media(max-width:430px){
+  .smartmatch-result-v3{
+    max-height:calc(100dvh - 88px)!important;
+    padding:13px 14px!important;
+    gap:4px!important;
+  }
+  .smartmatch-result-v3 .smartmatch-trophy-icon{
+    width:68px!important;
+    height:68px!important;
+  }
+  .smartmatch-result-v3 .smartmatch-trophy-icon svg{
+    width:52px!important;
+    height:52px!important;
+  }
+  .smartmatch-result-v3 h2{
+    font-size:21px!important;
+  }
+  .smartmatch-result-v3 p{
+    font-size:12px!important;
+  }
+  .smartmatch-result-v3 .smartmatch-result-stars span{
+    font-size:19px!important;
+  }
+  .smartmatch-result-v3 .smartmatch-participation-box{
+    grid-template-columns:1fr!important;
+  }
+  .smartmatch-result-v3 .smartmatch-participation-box .btn{
+    width:100%!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -7823,7 +7966,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v7.4.2';
+const APP_VERSION='v7.4.3';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
