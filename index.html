@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<title>رَصْد — v7.4.5</title>
+<title>رَصْد — v7.5</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -8047,6 +8047,150 @@ header > img{
   }
 }
 
+
+/* ===== قائمة الأنشطة الأفقية v7.5 ===== */
+.activity-list-view{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:9px!important;
+  margin:12px 0 14px!important;
+}
+.activity-row{
+  width:100%!important;
+  min-height:82px!important;
+  display:grid!important;
+  grid-template-columns:64px minmax(0,1fr) 28px!important;
+  align-items:center!important;
+  gap:12px!important;
+  padding:10px 14px!important;
+  border-radius:18px!important;
+  text-align:right!important;
+  border:1px solid #dce7e3!important;
+  background:#fff!important;
+  box-shadow:0 6px 16px rgba(23,50,77,.07)!important;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important;
+}
+.activity-row:active{
+  transform:scale(.985)!important;
+}
+.activity-row:hover{
+  transform:translateY(-1px)!important;
+  box-shadow:0 9px 20px rgba(23,50,77,.10)!important;
+}
+.activity-row.active{
+  border-color:#55bca6!important;
+  box-shadow:0 0 0 3px rgba(47,180,151,.12),0 8px 18px rgba(23,50,77,.09)!important;
+  background:linear-gradient(145deg,#f7fffc,#ffffff)!important;
+}
+.activity-row-icon{
+  width:58px!important;
+  height:58px!important;
+  border-radius:17px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:none!important;
+  overflow:hidden!important;
+}
+.activity-row-icon .activity-tool-premium-icon,
+.activity-row-icon img,
+.activity-row-icon svg{
+  width:58px!important;
+  height:58px!important;
+  object-fit:contain!important;
+  margin:0!important;
+}
+.activity-row-copy{
+  min-width:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+}
+.activity-row-copy b{
+  width:100%!important;
+  font-size:17px!important;
+  line-height:1.25!important;
+  color:#17324d!important;
+  margin:0!important;
+}
+.activity-row-copy small{
+  width:100%!important;
+  font-size:11px!important;
+  line-height:1.45!important;
+  color:#73808d!important;
+  margin-top:4px!important;
+}
+.activity-row-arrow{
+  font-size:22px!important;
+  color:#9aa7b3!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.activity-row.active .activity-row-arrow{
+  color:#0f766e!important;
+}
+.activity-row .missing-tool-icon,
+.activity-row .luck-tool-icon,
+.activity-row .smartmatch-tool-icon{
+  width:58px!important;
+  height:58px!important;
+  margin:0!important;
+  transform:none!important;
+  border-radius:17px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:30px!important;
+}
+.activity-row .missing-tool-icon{
+  background:linear-gradient(145deg,#efe8ff,#d8c9ff)!important;
+}
+.activity-row .luck-tool-icon{
+  background:linear-gradient(145deg,#fff2ce,#ffd87a)!important;
+}
+.activity-row .smartmatch-tool-icon{
+  background:linear-gradient(145deg,#ddf8f1,#8cd8c4)!important;
+  color:#0f766e!important;
+}
+
+/* إلغاء قواعد الشبكة القديمة داخل قائمة الصفوف */
+.activity-list-view .activity-tool > div:first-child,
+.activity-list-view .activity-tool > div:last-child{
+  width:auto!important;
+  height:auto!important;
+  min-width:0!important;
+  min-height:0!important;
+  margin:0!important;
+  display:initial!important;
+  transform:none!important;
+}
+@media(max-width:650px){
+  .activity-row{
+    min-height:78px!important;
+    grid-template-columns:58px minmax(0,1fr) 24px!important;
+    gap:10px!important;
+    padding:9px 12px!important;
+  }
+  .activity-row-icon,
+  .activity-row-icon .activity-tool-premium-icon,
+  .activity-row-icon img,
+  .activity-row-icon svg,
+  .activity-row .missing-tool-icon,
+  .activity-row .luck-tool-icon,
+  .activity-row .smartmatch-tool-icon{
+    width:54px!important;
+    height:54px!important;
+  }
+  .activity-row-copy b{
+    font-size:16px!important;
+  }
+  .activity-row-copy small{
+    font-size:10px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -8101,7 +8245,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v7.4.5';
+const APP_VERSION='v7.5';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -10290,13 +10434,37 @@ function renderActivities(){
    <h2 class="activity-premium-title">${premiumIcon('act_studio','activity-title-icon')}<span>استوديو الأنشطة</span></h2>
    <p>اختر نوع النشاط، ثم أنشئ أنشطتك واحفظها لتستخدمها في أي حصة.</p>
 </div>
- <div class="activity-tools activity-tabs-safe activity-tabs-four">
-   <button class="activity-tool wheel-tool ${tab==='wheel'?'active':''}" data-activity-tab="wheel">${premiumIcon('act_wheel','activity-tool-premium-icon')}<div><b>العجلة</b></div></button>
-   <button class="activity-tool quiz-tool ${tab==='quiz'?'active':''}" data-activity-tab="quiz">${premiumIcon('act_quiz','activity-tool-premium-icon')}<div><b>سؤال وجواب</b></div></button>
-   <button class="activity-tool discover-tool ${tab==='error'?'active':''}" data-activity-tab="error">${premiumIcon('discover_error','activity-tool-premium-icon')}<div><b>اكتشف الخطأ</b></div></button>
-   <button class="activity-tool missing-tool ${tab==='missing'?'active':''}" data-activity-tab="missing"><div class="missing-tool-icon">✏️</div><div><b>الكلمة المفقودة</b></div></button>
-   <button class="activity-tool luck-tool ${tab==='luck'?'active':''}" data-activity-tab="luck"><div class="luck-tool-icon">🎁</div><div><b>صندوق المفاجآت</b></div></button>
-   <button class="activity-tool smartmatch-tool ${tab==='smartmatch'?'active':''}" data-activity-tab="smartmatch"><div class="smartmatch-tool-icon">↔️</div><div><b>المطابقة الذكية</b></div></button>
+ <div class="activity-tools activity-list-view">
+   <button class="activity-tool activity-row wheel-tool ${tab==='wheel'?'active':''}" data-activity-tab="wheel">
+    <span class="activity-row-icon">${premiumIcon('act_wheel','activity-tool-premium-icon')}</span>
+    <span class="activity-row-copy"><b>العجلة</b><small>اختر طالبًا عشوائيًا بطريقة تفاعلية.</small></span>
+    <span class="activity-row-arrow">←</span>
+   </button>
+   <button class="activity-tool activity-row quiz-tool ${tab==='quiz'?'active':''}" data-activity-tab="quiz">
+    <span class="activity-row-icon">${premiumIcon('act_quiz','activity-tool-premium-icon')}</span>
+    <span class="activity-row-copy"><b>سؤال وجواب</b><small>أسئلة اختيار من متعدد مع صور اختيارية.</small></span>
+    <span class="activity-row-arrow">←</span>
+   </button>
+   <button class="activity-tool activity-row discover-tool ${tab==='error'?'active':''}" data-activity-tab="error">
+    <span class="activity-row-icon">${premiumIcon('discover_error','activity-tool-premium-icon')}</span>
+    <span class="activity-row-copy"><b>اكتشف الخطأ</b><small>اكتشف الخطأ في العبارة ثم صححه.</small></span>
+    <span class="activity-row-arrow">←</span>
+   </button>
+   <button class="activity-tool activity-row missing-tool ${tab==='missing'?'active':''}" data-activity-tab="missing">
+    <span class="activity-row-icon missing-tool-icon">✏️</span>
+    <span class="activity-row-copy"><b>الكلمة المفقودة</b><small>أكمل الجملة بالكلمة الصحيحة.</small></span>
+    <span class="activity-row-arrow">←</span>
+   </button>
+   <button class="activity-tool activity-row luck-tool ${tab==='luck'?'active':''}" data-activity-tab="luck">
+    <span class="activity-row-icon luck-tool-icon">🎁</span>
+    <span class="activity-row-copy"><b>صندوق المفاجآت</b><small>أسئلة ومكافآت ومفاجآت داخل الصناديق.</small></span>
+    <span class="activity-row-arrow">←</span>
+   </button>
+   <button class="activity-tool activity-row smartmatch-tool ${tab==='smartmatch'?'active':''}" data-activity-tab="smartmatch">
+    <span class="activity-row-icon smartmatch-tool-icon">↔️</span>
+    <span class="activity-row-copy"><b>المطابقة الذكية</b><small>اسحب الإجابة الصحيحة إلى مكانها المناسب.</small></span>
+    <span class="activity-row-arrow">←</span>
+   </button>
  </div>
 
  <button class="activity-create-master" id="openActivityTypePicker">
