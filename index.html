@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<title>رَصْد — v7.5.1</title>
+<title>رَصْد — v7.6</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -8380,6 +8380,70 @@ header > img{
   }
 }
 
+
+/* ===== صفحات أقسام الأنشطة وأحدث نشاط v7.6 ===== */
+.activity-category-head{
+ display:grid;
+ grid-template-columns:48px minmax(0,1fr) auto;
+ align-items:center;
+ gap:11px;
+ padding:13px;
+ margin:4px 0 14px;
+ border-radius:20px;
+ background:linear-gradient(145deg,#17324d,#0f766e);
+ color:#fff;
+ box-shadow:0 9px 23px rgba(23,50,77,.17);
+}
+.activity-category-head h2,.activity-category-head p{margin:0}
+.activity-category-head h2{font-size:21px}
+.activity-category-head p{font-size:10px;margin-top:4px;opacity:.83}
+.activity-category-back{
+ width:42px;height:42px;border:0;border-radius:13px;
+ background:rgba(255,255,255,.16);color:#fff;font-size:22px;font-weight:900;
+}
+.activity-category-create{
+ white-space:nowrap!important;padding:9px 11px!important;font-size:10px!important;
+ background:#fff!important;color:#0f766e!important;
+}
+.latest-global-section{margin-top:14px}
+.latest-global-card{
+ width:100%;
+ display:grid;
+ grid-template-columns:56px minmax(0,1fr) 58px;
+ align-items:center;
+ gap:10px;
+ padding:10px 12px;
+ border:1px solid #d9e7e3;
+ border-radius:17px;
+ background:linear-gradient(145deg,#fff,#f7fcfa);
+ box-shadow:0 5px 14px rgba(23,50,77,.07);
+ text-align:right;
+}
+.latest-global-icon{
+ width:52px;height:52px;border-radius:15px;
+ display:flex;align-items:center;justify-content:center;
+ background:linear-gradient(145deg,#dff8f1,#8cd8c4);
+ font-size:27px;overflow:hidden;
+}
+.latest-global-icon .latest-activity-icon,
+.latest-global-icon img,.latest-global-icon svg{
+ width:52px!important;height:52px!important;object-fit:contain!important;
+}
+.latest-global-copy{display:flex;flex-direction:column;min-width:0}
+.latest-global-copy b{font-size:16px;color:#17324d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.latest-global-copy small{font-size:10px;color:#75818d;margin-top:4px}
+.latest-global-action{
+ width:54px;height:32px;border-radius:10px;
+ display:flex;align-items:center;justify-content:center;
+ background:#0f766e;color:#fff;font-size:10px;font-weight:900;
+}
+@media(max-width:650px){
+ .activity-category-head{grid-template-columns:42px minmax(0,1fr);padding:11px}
+ .activity-category-create{grid-column:1/-1;width:100%!important}
+ .activity-category-head h2{font-size:19px}
+ .latest-global-card{grid-template-columns:52px minmax(0,1fr) 54px;padding:9px 10px}
+}
+
 </style>
 </head>
 <body>
@@ -8434,7 +8498,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v7.5.1';
+const APP_VERSION='v7.6';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -10618,64 +10682,112 @@ function renderActivities(){
  const labels={quiz:'سؤال وجواب',error:'اكتشف الخطأ',missing:'الكلمة المفقودة',luck:'صندوق المفاجآت',smartmatch:'المطابقة الذكية',wheel:'العجلة'};
  const counts={quiz:quizItems.length,error:errorItems.length,missing:missingItems.length,luck:luckItems.length,smartmatch:smartMatchItems.length,wheel:0};
  const label=labels[tab]||labels.quiz;
+ const categoryPage=window.__activityCategoryPage||null;
+ const categoryDescriptions={
+  quiz:'أسئلة اختيار من متعدد مع صور اختيارية.',
+  error:'اكتشف الخطأ في العبارة ثم صححه.',
+  missing:'أكمل الجملة بالكلمة الصحيحة.',
+  luck:'أسئلة ومكافآت ومفاجآت داخل الصناديق.',
+  smartmatch:'اسحب الإجابة الصحيحة إلى مكانها المناسب.'
+ };
+ const allLatest=[
+  ...quizItems.map(item=>({type:'quiz',item,date:item.updatedAt||item.createdAt||''})),
+  ...errorItems.map(item=>({type:'error',item,date:item.updatedAt||item.createdAt||''})),
+  ...missingItems.map(item=>({type:'missing',item,date:item.updatedAt||item.createdAt||''})),
+  ...luckItems.map(item=>({type:'luck',item,date:item.updatedAt||item.createdAt||''})),
+  ...smartMatchItems.map(item=>({type:'smartmatch',item,date:item.updatedAt||item.createdAt||''}))
+ ].sort((a,b)=>b.date.localeCompare(a.date));
+ const latestActivity=allLatest[0]||null;
+ const latestIcon=type=>type==='quiz'?premiumIcon('act_quiz','latest-activity-icon'):
+  type==='error'?premiumIcon('discover_error','latest-activity-icon'):
+  type==='missing'?'✏️':type==='luck'?'🎁':'↔️';
+ const latestMeta=entry=>{
+  if(!entry)return'';
+  const item=entry.item;
+  if(entry.type==='quiz')return`${item.questions?.length||0} سؤال`;
+  if(entry.type==='error')return`${item.questions?.length||0} سؤال · ${item.seconds||20} ثانية`;
+  if(entry.type==='missing')return`${item.questions?.length||0} سؤال`;
+  if(entry.type==='luck')return`9 صناديق · ${item.boxes?.filter(b=>b.type==='question').length||0} سؤال`;
+  return`${item.pairs?.length||0} مطابقة · ${item.seconds||60} ثانية`;
+ };
 
- view.innerHTML=`<div class="activities-hero">
-   <h2 class="activity-premium-title">${premiumIcon('act_studio','activity-title-icon')}<span>استوديو الأنشطة</span></h2>
-   <p>اختر نوع النشاط، ثم أنشئ أنشطتك واحفظها لتستخدمها في أي حصة.</p>
-</div>
- <div class="activity-tools activity-list-view">
-   <button class="activity-tool activity-row wheel-tool ${tab==='wheel'?'active':''}" data-activity-tab="wheel">
-    <span class="activity-row-icon">${premiumIcon('act_wheel','activity-tool-premium-icon')}</span>
-    <span class="activity-row-copy"><b>العجلة</b><small>اختر طالبًا عشوائيًا بطريقة تفاعلية.</small></span>
-    <span class="activity-row-arrow">←</span>
-   </button>
-   <button class="activity-tool activity-row quiz-tool ${tab==='quiz'?'active':''}" data-activity-tab="quiz">
-    <span class="activity-row-icon">${premiumIcon('act_quiz','activity-tool-premium-icon')}</span>
-    <span class="activity-row-copy"><b>سؤال وجواب</b><small>أسئلة اختيار من متعدد مع صور اختيارية.</small></span>
-    <span class="activity-row-arrow">←</span>
-   </button>
-   <button class="activity-tool activity-row discover-tool ${tab==='error'?'active':''}" data-activity-tab="error">
-    <span class="activity-row-icon">${premiumIcon('discover_error','activity-tool-premium-icon')}</span>
-    <span class="activity-row-copy"><b>اكتشف الخطأ</b><small>اكتشف الخطأ في العبارة ثم صححه.</small></span>
-    <span class="activity-row-arrow">←</span>
-   </button>
-   <button class="activity-tool activity-row missing-tool ${tab==='missing'?'active':''}" data-activity-tab="missing">
-    <span class="activity-row-icon missing-tool-icon">✏️</span>
-    <span class="activity-row-copy"><b>الكلمة المفقودة</b><small>أكمل الجملة بالكلمة الصحيحة.</small></span>
-    <span class="activity-row-arrow">←</span>
-   </button>
-   <button class="activity-tool activity-row luck-tool ${tab==='luck'?'active':''}" data-activity-tab="luck">
-    <span class="activity-row-icon luck-tool-icon">🎁</span>
-    <span class="activity-row-copy"><b>صندوق المفاجآت</b><small>أسئلة ومكافآت ومفاجآت داخل الصناديق.</small></span>
-    <span class="activity-row-arrow">←</span>
-   </button>
-   <button class="activity-tool activity-row smartmatch-tool ${tab==='smartmatch'?'active':''}" data-activity-tab="smartmatch">
-    <span class="activity-row-icon smartmatch-tool-icon">↔️</span>
-    <span class="activity-row-copy"><b>المطابقة الذكية</b><small>اسحب الإجابة الصحيحة إلى مكانها المناسب.</small></span>
-    <span class="activity-row-arrow">←</span>
-   </button>
- </div>
+ if(categoryPage){
+  const currentLabel=labels[categoryPage]||'الأنشطة';
+  const currentCount=counts[categoryPage]||0;
+  view.innerHTML=`<div class="activity-category-head">
+    <button class="activity-category-back" id="backToActivityStudio">→</button>
+    <div><h2>${currentLabel}</h2><p>${categoryDescriptions[categoryPage]||''}</p></div>
+    <button class="btn activity-category-create" id="createCategoryActivity">＋ نشاط جديد</button>
+   </div>
+   <div class="students-page-head"><div><h2 style="margin:0">أنشطة ${currentLabel}</h2>
+    <small class="activity-section-type ${categoryPage==='error'?'error':''}">المحفوظة في هذا القسم</small></div>
+    <span class="students-count">${currentCount} نشاط</span></div>
+   <div class="${categoryPage==='quiz'?'activities-list':categoryPage==='error'?'discover-library':categoryPage==='missing'?'missing-library':categoryPage==='luck'?'luck-library':'smartmatch-library'}">
+    ${categoryPage==='quiz'?renderQuizItems():categoryPage==='error'?renderErrorItems():categoryPage==='missing'?renderMissingItems():categoryPage==='luck'?renderLuckItems():renderSmartMatchItems()}
+   </div>`;
+ }else{
+  view.innerHTML=`<div class="activities-hero">
+    <h2 class="activity-premium-title">${premiumIcon('act_studio','activity-title-icon')}<span>استوديو الأنشطة</span></h2>
+    <p>اختر نوع النشاط، ثم أنشئ أنشطتك واحفظها لتستخدمها في أي حصة.</p>
+   </div>
+   <div class="activity-tools activity-list-view">
+    <button class="activity-tool activity-row wheel-tool" data-activity-open="wheel">
+     <span class="activity-row-icon">${premiumIcon('act_wheel','activity-tool-premium-icon')}</span>
+     <span class="activity-row-copy"><b>العجلة</b><small>اختر طالبًا عشوائيًا بطريقة تفاعلية.</small></span>
+     <span class="activity-row-arrow">←</span>
+    </button>
+    <button class="activity-tool activity-row quiz-tool" data-activity-open="quiz">
+     <span class="activity-row-icon">${premiumIcon('act_quiz','activity-tool-premium-icon')}</span>
+     <span class="activity-row-copy"><b>سؤال وجواب</b><small>أسئلة اختيار من متعدد مع صور اختيارية.</small></span>
+     <span class="activity-row-arrow">←</span>
+    </button>
+    <button class="activity-tool activity-row discover-tool" data-activity-open="error">
+     <span class="activity-row-icon">${premiumIcon('discover_error','activity-tool-premium-icon')}</span>
+     <span class="activity-row-copy"><b>اكتشف الخطأ</b><small>اكتشف الخطأ في العبارة ثم صححه.</small></span>
+     <span class="activity-row-arrow">←</span>
+    </button>
+    <button class="activity-tool activity-row missing-tool" data-activity-open="missing">
+     <span class="activity-row-icon missing-tool-icon">✏️</span>
+     <span class="activity-row-copy"><b>الكلمة المفقودة</b><small>أكمل الجملة بالكلمة الصحيحة.</small></span>
+     <span class="activity-row-arrow">←</span>
+    </button>
+    <button class="activity-tool activity-row luck-tool" data-activity-open="luck">
+     <span class="activity-row-icon luck-tool-icon">🎁</span>
+     <span class="activity-row-copy"><b>صندوق المفاجآت</b><small>أسئلة ومكافآت ومفاجآت داخل الصناديق.</small></span>
+     <span class="activity-row-arrow">←</span>
+    </button>
+    <button class="activity-tool activity-row smartmatch-tool" data-activity-open="smartmatch">
+     <span class="activity-row-icon smartmatch-tool-icon">↔️</span>
+     <span class="activity-row-copy"><b>المطابقة الذكية</b><small>اسحب الإجابة الصحيحة إلى مكانها المناسب.</small></span>
+     <span class="activity-row-arrow">←</span>
+    </button>
+   </div>
 
- <button class="activity-create-master" id="openActivityTypePicker">
-   <span class="activity-create-master-icon">＋</span>
-   <span><b>ابتكار نشاط جديد</b><small>اختر نوع النشاط الذي تريد إنشاءه وحفظه</small></span>
-   <span class="activity-create-master-arrow">←</span>
- </button>
+   <button class="activity-create-master" id="openActivityTypePicker">
+    <span class="activity-create-master-icon">＋</span>
+    <span><b>ابتكار نشاط جديد</b><small>اختر نوع النشاط الذي تريد إنشاءه وحفظه</small></span>
+    <span class="activity-create-master-arrow">←</span>
+   </button>
 
- ${tab==='wheel'?`<div class="activity-wheel-safe-panel">${premiumIcon('act_wheel','activity-wheel-safe-icon')}<h2>العجلة</h2>
-   <p>اختر طالبًا بطريقة عشوائية وممتعة داخل الفصل.</p><button class="btn" id="openWheelPanel">فتح العجلة</button></div>`:
- `<div class="students-page-head"><div><h2 style="margin:0">آخر الأنشطة المضافة</h2>
-   <small class="activity-section-type ${tab==='error'?'error':''}">${label}</small></div><span class="students-count">${counts[tab]||0} نشاط</span></div>
-  <div class="${tab==='quiz'?'activities-list':tab==='error'?'discover-library':tab==='missing'?'missing-library':tab==='luck'?'luck-library':'smartmatch-library'}">
-   ${tab==='quiz'?renderQuizItems():tab==='error'?renderErrorItems():tab==='missing'?renderMissingItems():tab==='luck'?renderLuckItems():renderSmartMatchItems()}
-  </div>`}`;
+   <div class="latest-global-section">
+    <div class="students-page-head"><div><h2 style="margin:0">آخر الأنشطة المضافة</h2>
+     <small class="activity-section-type">من جميع الأقسام</small></div></div>
+    ${latestActivity?`<button class="latest-global-card" data-latest-play="${latestActivity.item.id}" data-latest-type="${latestActivity.type}">
+      <span class="latest-global-icon">${latestIcon(latestActivity.type)}</span>
+      <span class="latest-global-copy"><b>${escapeHtml(latestActivity.item.title)}</b>
+       <small>${labels[latestActivity.type]} · ${latestMeta(latestActivity)}</small></span>
+      <span class="latest-global-action">تشغيل</span>
+     </button>`:`<div class="empty-students activity-empty-state"><div class="empty-icon">✨</div><b>لا توجد أنشطة محفوظة بعد</b><p>أنشئ أول نشاط ليظهر هنا تلقائيًا.</p></div>`}
+   </div>`;
+ }
 
  const createCurrent=()=>{
-   if(tab==='quiz'){window.editActivityId=null;page='activityEditor'}
-   else if(tab==='error'){window.editErrorActivityId=null;page='errorActivityEditor'}
-   else if(tab==='missing'){window.editMissingWordId=null;page='missingWordEditor'}
-   else if(tab==='luck'){window.editLuckBoxId=null;page='luckBoxEditor'}
-   else if(tab==='smartmatch'){window.editSmartMatchId=null;page='smartMatchEditor'}
+   const type=window.__activityCategoryPage||tab;
+   if(type==='quiz'){window.editActivityId=null;page='activityEditor'}
+   else if(type==='error'){window.editErrorActivityId=null;page='errorActivityEditor'}
+   else if(type==='missing'){window.editMissingWordId=null;page='missingWordEditor'}
+   else if(type==='luck'){window.editLuckBoxId=null;page='luckBoxEditor'}
+   else if(type==='smartmatch'){window.editSmartMatchId=null;page='smartMatchEditor'}
    else{window.__resetWheelOnEntry=true;page='wheel'}
    render();
  };
@@ -10722,7 +10834,24 @@ function renderActivities(){
    });
  });
  document.getElementById('openWheelPanel')?.addEventListener('click',()=>{window.__resetWheelOnEntry=true;page='wheel';render()});
- document.querySelectorAll('[data-activity-tab]').forEach(button=>button.onclick=()=>{window.__activityStudioTab=button.dataset.activityTab;renderActivities()});
+ document.querySelectorAll('[data-activity-open]').forEach(button=>button.onclick=()=>{
+   const type=button.dataset.activityOpen;
+   if(type==='wheel'){window.__resetWheelOnEntry=true;page='wheel';render();return}
+   window.__activityStudioTab=type;
+   window.__activityCategoryPage=type;
+   renderActivities();
+ });
+ document.getElementById('backToActivityStudio')?.addEventListener('click',()=>{window.__activityCategoryPage=null;renderActivities()});
+ document.getElementById('createCategoryActivity')?.addEventListener('click',createCurrent);
+ document.querySelectorAll('[data-latest-play]').forEach(button=>button.onclick=()=>{
+   const type=button.dataset.latestType,id=button.dataset.latestPlay;
+   if(type==='quiz'){window.playActivityId=id;window.playActivityClassId=null;page='activityPlay'}
+   else if(type==='error'){window.playErrorActivityId=id;page='errorActivityPlay'}
+   else if(type==='missing'){window.playMissingWordId=id;page='missingWordPlay'}
+   else if(type==='luck'){window.playLuckBoxId=id;page='luckBoxPlay'}
+   else if(type==='smartmatch'){window.playSmartMatchId=id;page='smartMatchPlay'}
+   render();
+ });
 
  document.querySelectorAll('[data-play-activity]').forEach(b=>b.onclick=()=>{window.playActivityId=b.dataset.playActivity;window.playActivityClassId=null;page='activityPlay';render()});
  document.querySelectorAll('[data-edit-activity]').forEach(b=>b.onclick=()=>{window.editActivityId=b.dataset.editActivity;page='activityEditor';render()});
