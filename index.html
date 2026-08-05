@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<title>رَصْد — v7.4</title>
+<title>رَصْد — v7.4.1</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -7483,6 +7483,128 @@ header > img{
  .quick-question-row .smartmatch-question-text{min-height:92px;font-size:17px}
 }
 
+
+/* ===== تخطيط أفقي ثابت للمطابقة الذكية v7.4.1 ===== */
+
+/* العبارة يسار، ومربع الإجابة يمين دائماً حتى على الجوال */
+.smartmatch-question-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.35fr) minmax(112px,.8fr)!important;
+  gap:6px!important;
+  align-items:stretch!important;
+  direction:ltr!important;
+}
+.smartmatch-question-text,
+.smartmatch-drop-zone{
+  direction:rtl!important;
+}
+.smartmatch-question-text{
+  min-height:48px!important;
+  padding:8px 10px!important;
+  border-radius:13px!important;
+  font-size:11px!important;
+  line-height:1.45!important;
+}
+.smartmatch-drop-zone{
+  min-height:48px!important;
+  padding:7px 8px!important;
+  border-radius:13px!important;
+  font-size:9px!important;
+}
+
+/* ضغط المساحات ليستوعب عدداً أكبر من العبارات */
+.smartmatch-question-list{
+  gap:5px!important;
+}
+.smartmatch-answer-bank{
+  padding:7px!important;
+  gap:5px!important;
+  margin-bottom:7px!important;
+  border-radius:14px!important;
+}
+.smartmatch-answer-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:5px!important;
+}
+.smartmatch-answer-card{
+  min-height:39px!important;
+  padding:6px 7px!important;
+  border-radius:12px!important;
+  font-size:9px!important;
+  box-shadow:0 4px 9px rgba(23,50,77,.13)!important;
+}
+.smartmatch-answer-image{
+  width:27px!important;
+  height:27px!important;
+}
+.smartmatch-game-head{
+  margin-bottom:5px!important;
+}
+.smartmatch-game-head h2{
+  font-size:14px!important;
+}
+.smartmatch-game-head p{
+  display:none!important;
+}
+.smartmatch-timer{
+  width:52px!important;
+  height:52px!important;
+}
+.smartmatch-timer b{
+  font-size:18px!important;
+}
+.smartmatch-score-row{
+  margin-bottom:6px!important;
+}
+.smartmatch-score-pills{
+  margin-top:4px!important;
+}
+.smartmatch-score-pills span{
+  padding:4px 7px!important;
+  font-size:8px!important;
+}
+.smartmatch-progress-track{
+  height:6px!important;
+}
+.smartmatch-hint{
+  margin-top:5px!important;
+  padding:5px!important;
+  font-size:8px!important;
+}
+
+/* إلغاء تحويل الصف إلى عمودي على الشاشات الصغيرة */
+@media(max-width:650px){
+  .smartmatch-question-row{
+    grid-template-columns:minmax(0,1.35fr) minmax(105px,.78fr)!important;
+  }
+  .smartmatch-question-text{
+    min-height:45px!important;
+    padding:7px 8px!important;
+    font-size:10px!important;
+  }
+  .smartmatch-drop-zone{
+    min-height:45px!important;
+    padding:6px!important;
+    font-size:8px!important;
+  }
+  .smartmatch-answer-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+}
+
+/* وضع التحدي السريع يبقى سؤالاً واحداً كبيراً */
+.quick-mode .quick-question-row{
+  grid-template-columns:1fr!important;
+  direction:rtl!important;
+}
+.quick-mode .quick-question-row .smartmatch-question-text{
+  min-height:88px!important;
+  font-size:17px!important;
+}
+.quick-mode .quick-question-row .smartmatch-drop-zone{
+  min-height:62px!important;
+}
+
 </style>
 </head>
 <body>
@@ -7537,7 +7659,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v7.4';
+const APP_VERSION='v7.4.1';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
