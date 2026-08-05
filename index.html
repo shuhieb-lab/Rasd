@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<title>رَصْد — v7.2</title>
+<title>رَصْد — v7.3</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -7310,6 +7310,111 @@ header > img{
 .smartmatch-result-stars{font-size:24px;letter-spacing:5px;color:#ffd35a;margin:8px 0;text-shadow:0 3px 8px #0003}
 @media(max-width:650px){.smartmatch-answer-card{min-height:44px;padding:9px 11px!important}.smartmatch-answer-image{width:34px;height:34px}.smartmatch-filled-content .smartmatch-answer-image{width:30px;height:30px}}
 
+
+/* ===== تطوير شاشة نهاية المطابقة ومنح المشاركة v7.3 ===== */
+.smartmatch-result-v3{
+ position:relative;
+ overflow:hidden;
+ background:
+  radial-gradient(circle at 50% 12%,rgba(63,220,190,.30),transparent 31%),
+  linear-gradient(145deg,#152f49 0%,#124d5c 54%,#0f766e 100%)!important;
+ box-shadow:0 18px 45px rgba(23,50,77,.25);
+ animation:smartMatchResultEnter .42s ease both;
+}
+.smartmatch-result-v3.lost{
+ background:linear-gradient(145deg,#374151,#7f1d1d)!important;
+}
+@keyframes smartMatchResultEnter{
+ from{opacity:0;transform:translateY(12px) scale(.94)}
+ to{opacity:1;transform:none}
+}
+.smartmatch-result-glow{
+ position:absolute;
+ width:230px;height:230px;border-radius:50%;
+ top:-120px;left:50%;transform:translateX(-50%);
+ background:radial-gradient(circle,rgba(255,255,255,.24),transparent 70%);
+ pointer-events:none;
+}
+.smartmatch-perfect-ribbon{
+ position:absolute;top:14px;right:14px;
+ border-radius:999px;padding:7px 12px;
+ background:linear-gradient(145deg,#ffe889,#eeb026);
+ color:#724800;font-size:10px;font-weight:950;
+ box-shadow:0 5px 14px rgba(199,130,0,.28);
+}
+.smartmatch-trophy-icon{
+ position:relative;
+ width:94px;height:94px;margin:0 auto 8px;
+ display:flex;align-items:center;justify-content:center;
+ border-radius:30px;
+ background:rgba(255,255,255,.12);
+ border:1px solid rgba(255,255,255,.20);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 10px 24px rgba(0,0,0,.16);
+}
+.smartmatch-trophy-icon svg{width:74px;height:74px;filter:drop-shadow(0 7px 5px rgba(0,0,0,.22))}
+.smartmatch-result-stars{
+ display:flex;justify-content:center;gap:8px;
+ margin:8px 0 12px!important;
+}
+.smartmatch-result-stars span{
+ display:inline-block;color:#ffd85a;font-size:25px;
+ text-shadow:0 4px 9px rgba(0,0,0,.25);
+ animation:smartMatchStarIn .35s ease both;
+}
+.smartmatch-result-stars span:nth-child(2){animation-delay:.12s}
+.smartmatch-result-stars span:nth-child(3){animation-delay:.24s}
+@keyframes smartMatchStarIn{
+ from{opacity:0;transform:translateY(-9px) scale(.4) rotate(-18deg)}
+ to{opacity:1;transform:none}
+}
+.smartmatch-result-stats-v3 div{
+ border:1px solid rgba(255,255,255,.18);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+}
+.smartmatch-result-stats-v3 .time{background:rgba(59,130,246,.20)}
+.smartmatch-result-stats-v3 .correct{background:rgba(34,197,94,.20)}
+.smartmatch-result-stats-v3 .errors{background:rgba(239,68,68,.18)}
+.smartmatch-participation-box{
+ margin:4px 0 9px;
+ padding:11px;
+ border-radius:16px;
+ background:linear-gradient(145deg,rgba(255,245,190,.96),rgba(255,255,255,.94));
+ color:#664b0a;
+ display:grid;
+ grid-template-columns:1fr auto;
+ align-items:center;
+ gap:9px;
+ text-align:right;
+ border:1px solid rgba(255,226,112,.85);
+ box-shadow:0 7px 18px rgba(0,0,0,.12);
+}
+.smartmatch-participation-box b,.smartmatch-participation-box span{display:block}
+.smartmatch-participation-box b{font-size:11px}
+.smartmatch-participation-box span{font-size:8px;color:#826b30;margin-top:3px}
+.smartmatch-participation-box .btn{margin:0!important;white-space:nowrap;padding:9px 11px!important;font-size:9px!important}
+.smartmatch-participation-box.awarded{
+ background:linear-gradient(145deg,#dff8ed,#f8fffc);
+ color:#0f6b52;border-color:#9ce0c8;
+}
+.smartmatch-participation-box.awarded .btn{background:#24a77e!important}
+.smartmatch-replay-btn{margin-top:4px!important}
+.smartmatch-award-modal{text-align:center}
+.smartmatch-award-modal-icon{
+ width:66px;height:66px;border-radius:22px;
+ margin:0 auto 8px;display:flex;align-items:center;justify-content:center;
+ font-size:32px;background:linear-gradient(145deg,#fff2a6,#f4bd35);
+ box-shadow:0 8px 18px rgba(199,130,0,.20);
+}
+.smartmatch-award-modal h2,.smartmatch-award-modal p{margin:0}
+.smartmatch-award-modal p{margin-top:4px;font-size:10px;color:#6b7280}
+.smartmatch-award-modal .field{text-align:right;margin-top:10px}
+.smartmatch-award-modal .btn{width:100%;margin-top:8px}
+@media(max-width:520px){
+ .smartmatch-participation-box{grid-template-columns:1fr}
+ .smartmatch-participation-box .btn{width:100%}
+ .smartmatch-perfect-ribbon{top:10px;right:10px}
+}
+
 </style>
 </head>
 <body>
@@ -7364,7 +7469,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v7.2';
+const APP_VERSION='v7.3';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
@@ -10555,9 +10660,64 @@ function renderSmartMatchPlay(activityId){
  const pairs=[...activity.pairs];
  const shuffledQuestions=[...pairs].sort(()=>Math.random()-.5);
  const shuffledAnswers=[...pairs].sort(()=>Math.random()-.5);
- const state={remaining:Number(activity.seconds)||60,started:false,finished:false,lost:false,errors:0,placed:new Map(),selected:null};
+ const state={remaining:Number(activity.seconds)||60,started:false,finished:false,lost:false,errors:0,placed:new Map(),selected:null,participationAwarded:false};
 
  const renderSmartAnswerContent=pair=>`${pair.answerImage?`<img src="${pair.answerImage}" class="smartmatch-answer-image" alt="">`:''}${pair.answer?`<span>${escapeHtml(pair.answer)}</span>`:''}`;
+
+
+ const awardParticipationPoint=()=>{
+  if(state.participationAwarded)return;
+  if(!data.classes.length){alert('لا توجد فصول مضافة');return}
+
+  modalBody.innerHTML=`<div class="smartmatch-award-modal">
+   <div class="smartmatch-award-modal-icon">⭐</div>
+   <h2>إضافة نقطة مشاركة</h2>
+   <p>اختر الطالب الذي حقق النتيجة المثالية.</p>
+   <div class="field"><label>الفصل</label>
+    <select id="smartMatchAwardClass"><option value="">اختر الفصل</option>
+     ${data.classes.map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('')}
+    </select>
+   </div>
+   <div class="field"><label>الطالب</label>
+    <select id="smartMatchAwardStudent" disabled><option value="">اختر الطالب</option></select>
+   </div>
+   <button class="btn" id="confirmSmartMatchAward">إضافة النقطة</button>
+   <button class="btn light" id="cancelSmartMatchAward">إلغاء</button>
+  </div>`;
+
+  modal.classList.remove('hidden');
+
+  smartMatchAwardClass.onchange=()=>{
+   const students=data.students.filter(s=>s.classId===smartMatchAwardClass.value);
+   smartMatchAwardStudent.disabled=false;
+   smartMatchAwardStudent.innerHTML='<option value="">اختر الطالب</option>'+
+    students.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
+  };
+
+  cancelSmartMatchAward.onclick=()=>modal.classList.add('hidden');
+
+  confirmSmartMatchAward.onclick=()=>{
+   const studentId=smartMatchAwardStudent.value;
+   if(!studentId){alert('اختر الطالب');return}
+   const student=data.students.find(s=>s.id===studentId);
+   const record=data.exams[studentId]=data.exams[studentId]||{};
+   const current=Number(record.participation)||0;
+
+   if(current>=10){
+    alert('درجة مشاركة الطالب مكتملة بالفعل (10 من 10)');
+    return;
+   }
+
+   record.participation=Math.min(10,current+1);
+   state.participationAwarded=true;
+
+   if(!save())return;
+
+   modal.classList.add('hidden');
+   toast(`تمت إضافة نقطة مشاركة إلى ${student?.name||'الطالب'}`);
+   draw();
+  };
+ };
 
  const startTimer=()=>{
   if(state.started)return;
@@ -10627,14 +10787,44 @@ function renderSmartMatchPlay(activityId){
   setTitle(activity.title,'المطابقة الذكية');
   if(state.finished){
    const elapsed=(Number(activity.seconds)||60)-state.remaining;
-   view.innerHTML=`<div class="smartmatch-result ${state.lost?'lost':'won'}">
-    <div class="smartmatch-result-icon">${state.lost?'⏰':'🏆'}</div>
-    <h2>${state.lost?'انتهى الوقت':'ممتاز! اكتملت المطابقة'}</h2>
+   view.innerHTML=`<div class="smartmatch-result smartmatch-result-v3 ${state.lost?'lost':'won'}">
+    ${!state.lost&&state.errors===0?`<div class="smartmatch-perfect-ribbon">نتيجة مثالية</div>`:''}
+    <div class="smartmatch-result-glow"></div>
+    <div class="smartmatch-trophy-icon">
+     <svg viewBox="0 0 96 96" aria-hidden="true">
+      <defs>
+       <linearGradient id="smartMatchCup" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ffe88c"/>
+        <stop offset=".5" stop-color="#f6bd35"/>
+        <stop offset="1" stop-color="#d8880d"/>
+       </linearGradient>
+      </defs>
+      <path d="M31 17h34v16c0 15-7 25-17 29-10-4-17-14-17-29V17Z" fill="url(#smartMatchCup)"/>
+      <path d="M31 25H18v7c0 12 8 20 20 21M65 25h13v7c0 12-8 20-20 21" fill="none" stroke="#f6bd35" stroke-width="7" stroke-linecap="round"/>
+      <path d="M48 61v12M35 80h26" stroke="#f6bd35" stroke-width="8" stroke-linecap="round"/>
+      <path d="m48 27 4 8 9 1-7 6 2 9-8-4-8 4 2-9-7-6 9-1 4-8Z" fill="#fff7cf"/>
+     </svg>
+    </div>
+    <h2>${state.lost?'انتهى الوقت':state.errors===0?'أداء رائع!':'ممتاز! اكتملت المطابقة'}</h2>
     <p>${state.lost?'لم تكتمل جميع الإجابات في الوقت المحدد.':`أكملت النشاط خلال ${elapsed} ثانية.`}</p>
-    <div class="smartmatch-result-stars">${state.lost?'':'★ ★ ★'}</div>
-    <div class="smartmatch-result-stats"><div><span>الصحيح</span><b>${state.placed.size}/${pairs.length}</b></div><div><span>الأخطاء</span><b>${state.errors}</b></div><div><span>الوقت</span><b>${elapsed}</b></div></div>
-    <button class="btn" id="replaySmartMatch">إعادة النشاط</button><button class="btn light" id="backSmartMatch">العودة للأنشطة</button>
+    <div class="smartmatch-result-stars">${state.lost?'':'<span>★</span><span>★</span><span>★</span>'}</div>
+    <div class="smartmatch-result-stats smartmatch-result-stats-v3">
+     <div class="time"><span>الوقت</span><b>${elapsed}</b></div>
+     <div class="correct"><span>الصحيح</span><b>${state.placed.size}/${pairs.length}</b></div>
+     <div class="errors"><span>الأخطاء</span><b>${state.errors}</b></div>
+    </div>
+    ${!state.lost&&state.errors===0?`
+     <div class="smartmatch-participation-box ${state.participationAwarded?'awarded':''}">
+      <div><b>${state.participationAwarded?'تم منح نقطة المشاركة':'هذا الطالب استحق نقطة مشاركة'}</b>
+       <span>${state.participationAwarded?'تم تسجيلها في المتابعة':'اختر الطالب لإضافة نقطة واحدة إلى المشاركة'}</span></div>
+      <button class="btn" id="awardSmartMatchParticipation" ${state.participationAwarded?'disabled':''}>
+       ${state.participationAwarded?'✓ تمت الإضافة':'＋ إضافة نقطة مشاركة'}
+      </button>
+     </div>`:''}
+    <button class="btn smartmatch-replay-btn" id="replaySmartMatch">↻ إعادة النشاط</button>
+    <button class="btn light" id="backSmartMatch">العودة للأنشطة</button>
    </div>`;
+   document.getElementById('awardSmartMatchParticipation')?.addEventListener('click',awardParticipationPoint);
    replaySmartMatch.onclick=()=>renderSmartMatchPlay(activity.id);
    backSmartMatch.onclick=()=>{window.__activityStudioTab='smartmatch';page='activities';render()};
    return;
