@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<title>رَصْد — v7.4.3</title>
+<title>رَصْد — v7.4.4</title>
 <style>
 :root{--primary:#0f766e;--navy:#17324d;--bg:#f5f8fb;--card:#fff;--muted:#6b7280;--danger:#b91c1c;--border:#dbe4ea}
 *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#14213d}
@@ -7912,6 +7912,60 @@ header > img{
   }
 }
 
+
+/* ===== توحيد محاذاة أيقونات بطاقات الأنشطة v7.4.4 ===== */
+.activity-tool{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  padding-top:26px!important;
+}
+
+.activity-tool > div:first-child{
+  width:58px!important;
+  height:58px!important;
+  min-width:58px!important;
+  min-height:58px!important;
+  margin:0 auto 14px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:none!important;
+}
+
+.activity-tool > div:last-child{
+  min-height:42px!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  text-align:center!important;
+}
+
+.activity-tool > div:last-child b{
+  line-height:1.3!important;
+}
+
+/* رفع أيقونة المطابقة الذكية لتتطابق بصرياً مع بقية الأيقونات */
+.smartmatch-tool-icon{
+  transform:translateY(-5px)!important;
+  margin-bottom:9px!important;
+}
+
+/* الحفاظ على اتساق المسافة الداخلية على الجوال */
+@media(max-width:650px){
+  .activity-tool{
+    padding-top:24px!important;
+  }
+  .activity-tool > div:first-child{
+    margin-bottom:12px!important;
+  }
+  .smartmatch-tool-icon{
+    transform:translateY(-4px)!important;
+    margin-bottom:8px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -7966,7 +8020,7 @@ if(data.behaviorsVersion!=='v1.9.2'){
 data.classes.forEach((c,i)=>{if(!c.color)c.color=['#0f766e','#2563eb','#7c3aed','#ea580c','#db2777','#0891b2'][i%6]});
 const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
 const PERIODS=[1,2,3,4,5,6,7];
-const APP_VERSION='v7.4.3';
+const APP_VERSION='v7.4.4';
 let currentSession=null,lastUndo=null,longPressTimer=null;
 function save(){
  try{
