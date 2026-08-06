@@ -1,4 +1,36 @@
-const CACHE = 'rasd-v1';
-const ASSETS = ['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
-self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS))));
-self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
+const APP_VERSION='v8.2.1';
+const CACHE_NAME=`rasd-${APP_VERSION}`;
+const APP_SHELL=['./','./index.html','./manifest.webmanifest','./apple-touch-icon.png','./favicon-32.png'];
+
+self.addEventListener('install',event=>{
+  event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)));
+});
+
+self.addEventListener('activate',event=>{
+  event.waitUntil(
+    caches.keys()
+      .then(keys=>Promise.all(keys.filter(key=>key.startsWith('rasd-')&&key!==CACHE_NAME).map(key=>caches.delete(key))))
+      .then(()=>self.clients.claim())
+  );
+});
+
+self.addEventListener('message',event=>{
+  if(event.data&&event.data.type==='SKIP_WAITING')self.skipWaiting();
+});
+
+self.addEventListener('fetch',event=>{
+  const request=event.request;
+  if(request.method!=='GET')return;
+  const url=new URL(request.url);
+  if(url.origin!==self.location.origin)return;
+
+  event.respondWith(
+    fetch(request)
+      .then(response=>{
+        const copy=response.clone();
+        caches.open(CACHE_NAME).then(cache=>cache.put(request,copy));
+        return response;
+      })
+      .catch(()=>caches.match(request).then(cached=>cached||caches.match('./index.html')))
+  );
+});
