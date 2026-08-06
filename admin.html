@@ -58,21 +58,17 @@ button.secondary{background:#e2eef0;color:var(--p2)}button.danger{background:#fe
       <button id="refreshBtn">تحديث</button>
     </div>
 
-  <div class="create" style="grid-template-columns:repeat(2,1fr)">
-  <input id="customerNameInput" placeholder="اسم العميل">
-  <input id="phoneInput" placeholder="رقم الجوال">
-  <input id="schoolInput" placeholder="اسم المدرسة">
-  <input id="notesInput" placeholder="ملاحظات">
-  <input id="prefixInput" value="RASD" placeholder="بادئة الرمز">
-  <input id="countInput" type="number" min="1" max="200" value="1">
-  <button id="createBtn" style="grid-column:1/-1">إنشاء الترخيص</button>
-</div>
+  <div class="create" style="grid-template-columns:1fr 130px auto">
+      <input id="notesInput" placeholder="ملاحظات على الترخيص">
+      <input id="countInput" type="number" min="1" max="200" value="1">
+      <button id="createBtn">إنشاء الترخيص</button>
+    </div>
 
     <div id="msg" class="msg"></div>
 
     <div class="tableWrap">
       <table class="table">
-        <thead><tr><th>الرمز</th><th>الحالة</th><th>تاريخ التفعيل</th><th>الانتهاء</th><th>الإجراءات</th></tr></thead>
+        <thead><tr><th>الرمز</th><th>الملاحظات</th><th>الحالة</th><th>تاريخ التفعيل</th><th>الانتهاء</th><th>الإجراءات</th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
@@ -127,8 +123,14 @@ async function loadRows(){
   const status=encodeURIComponent($('statusFilter').value);
   const {licenses}=await api(`/admin/licenses?q=${q}&status=${status}&limit=300`);
   $('rows').innerHTML=licenses.map(x=>`<tr>
-    <td><b>${x.code}</b></td><td><span class="badge ${x.status}">${statusName(x.status)}</span></td>
-    <td>${fmt(x.activated_at)}</td><td>${fmt(x.expires_at)}</td>
+    <td>
+      <b>${x.code}</b>
+      <button class="small secondary" style="margin-right:6px" onclick="copyCode('${x.code}')">نسخ</button>
+    </td>
+    <td>${x.notes||'—'}</td>
+    <td><span class="badge ${x.status}">${statusName(x.status)}</span></td>
+    <td>${fmt(x.activated_at)}</td>
+    <td>${fmt(x.expires_at)}</td>
     <td><div class="actions">
       <button class="small secondary" onclick="act('reset','${x.code}')">إعادة تعيين</button>
       ${x.status==='revoked'?`<button class="small" onclick="act('restore','${x.code}')">استعادة</button>`:`<button class="small danger" onclick="act('revoke','${x.code}')">إيقاف</button>`}
@@ -141,23 +143,27 @@ async function refresh(){setMsg('جارٍ التحديث...');try{await Promise.
 
 async function createCodes(){
   const count = Number($('countInput').value || 1),
-      prefix = $('prefixInput').value.trim(),
-      customer_name = $('customerNameInput').value.trim(),
-      phone = $('phoneInput').value.trim(),
-      school = $('schoolInput').value.trim(),
-      notes = $('notesInput').value.trim();
+        notes = $('notesInput').value.trim();
   setMsg('جارٍ إنشاء الرموز...');
   try{
     const r=await api('/admin/create',{method:'POST',body:JSON.stringify({
-  count,
-  prefix,
-  customer_name,
-  phone,
-  school,
-  notes
+    count,
+    prefix:'RASD',
+    notes
 })});
     setMsg(r.message+' '+r.created.join('، '),'ok');await refresh();
   }catch(e){setMsg(e.message,'err')}
+}
+
+async function copyCode(code){
+  try{
+    await navigator.clipboard.writeText(code);
+    setMsg('تم نسخ رمز التفعيل','ok');
+  }catch{
+    const area=document.createElement('textarea');
+    area.value=code;document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();
+    setMsg('تم نسخ رمز التفعيل','ok');
+  }
 }
 
 async function act(action,code,confirmDelete=false){
