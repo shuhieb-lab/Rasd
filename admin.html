@@ -58,11 +58,15 @@ button.secondary{background:#e2eef0;color:var(--p2)}button.danger{background:#fe
       <button id="refreshBtn">تحديث</button>
     </div>
 
-    <div class="create">
-      <input id="prefixInput" value="RASD" placeholder="بادئة الرمز">
-      <input id="countInput" type="number" min="1" max="200" value="10">
-      <button id="createBtn">إنشاء رموز</button>
-    </div>
+  <div class="create" style="grid-template-columns:repeat(2,1fr)">
+  <input id="customerNameInput" placeholder="اسم العميل">
+  <input id="phoneInput" placeholder="رقم الجوال">
+  <input id="schoolInput" placeholder="اسم المدرسة">
+  <input id="notesInput" placeholder="ملاحظات">
+  <input id="prefixInput" value="RASD" placeholder="بادئة الرمز">
+  <input id="countInput" type="number" min="1" max="200" value="1">
+  <button id="createBtn" style="grid-column:1/-1">إنشاء الترخيص</button>
+</div>
 
     <div id="msg" class="msg"></div>
 
@@ -136,10 +140,22 @@ async function loadRows(){
 async function refresh(){setMsg('جارٍ التحديث...');try{await Promise.all([loadStats(),loadRows()]);setMsg('تم التحديث','ok')}catch(e){setMsg(e.message,'err')}}
 
 async function createCodes(){
-  const count=Number($('countInput').value||1),prefix=$('prefixInput').value.trim();
+  const count = Number($('countInput').value || 1),
+      prefix = $('prefixInput').value.trim(),
+      customer_name = $('customerNameInput').value.trim(),
+      phone = $('phoneInput').value.trim(),
+      school = $('schoolInput').value.trim(),
+      notes = $('notesInput').value.trim();
   setMsg('جارٍ إنشاء الرموز...');
   try{
-    const r=await api('/admin/create',{method:'POST',body:JSON.stringify({count,prefix})});
+    const r=await api('/admin/create',{method:'POST',body:JSON.stringify({
+  count,
+  prefix,
+  customer_name,
+  phone,
+  school,
+  notes
+})});
     setMsg(r.message+' '+r.created.join('، '),'ok');await refresh();
   }catch(e){setMsg(e.message,'err')}
 }
