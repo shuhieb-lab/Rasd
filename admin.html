@@ -5,37 +5,510 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>لوحة إدارة تراخيص رَصْد</title>
 <style>
-:root{--p:#0f766e;--p2:#164e63;--bg:#f3f7f8;--card:#fff;--text:#17324d;--muted:#64748b;--line:#dce7ea;--danger:#b91c1c;--shadow:0 16px 40px rgba(23,50,77,.10)}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top right,rgba(15,118,110,.10),transparent 28%),var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;color:var(--text)}button,input,select{font:inherit}.hidden{display:none!important}.wrap{max-width:1180px;margin:auto;padding:18px}
-.hero{background:linear-gradient(135deg,var(--p2),var(--p));color:#fff;border-radius:24px;padding:24px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;gap:16px}.hero h1{margin:0 0 8px;font-size:28px}.hero p{margin:0;opacity:.88}.hero-badge{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);padding:12px 16px;border-radius:16px;min-width:190px;text-align:center}.hero-badge b{display:block;font-size:18px}.hero-badge span{font-size:12px;opacity:.9}
-.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:16px 0}.stat,.panel{background:var(--card);border:1px solid var(--line);box-shadow:0 8px 24px rgba(23,50,77,.05)}.stat{border-radius:18px;padding:16px}.stat b{display:block;font-size:28px}.stat span{font-size:13px;color:var(--muted)}.panel{border-radius:22px;padding:16px;box-shadow:var(--shadow)}
-.toolbar{display:grid;grid-template-columns:minmax(220px,1fr) 180px auto;gap:10px}.create{display:grid;grid-template-columns:minmax(220px,1fr) 130px auto;gap:10px;margin-top:10px}input,select{width:100%;min-height:46px;border:1px solid var(--line);border-radius:13px;padding:0 13px;background:#fff;color:var(--text);outline:none}input:focus,select:focus{border-color:#7dd3c7;box-shadow:0 0 0 3px rgba(15,118,110,.10)}
-.btn{min-height:46px;border:0;border-radius:13px;padding:0 17px;font-weight:800;background:var(--p);color:#fff;cursor:pointer}.btn.secondary{background:#e8f2f4;color:var(--p2)}.btn.danger{background:#fee2e2;color:var(--danger)}.btn.warning{background:#fef3c7;color:#b45309}.btn.small{min-height:34px;padding:0 11px;font-size:12px}.msg{min-height:25px;margin-top:10px;font-size:13px;font-weight:800}.ok{color:#15803d}.err{color:var(--danger)}
-.table-wrap{overflow:auto;margin-top:12px}table{width:100%;border-collapse:separate;border-spacing:0}th{background:#f7fafb;color:#475569;font-size:12px;padding:12px 10px;text-align:right;border-bottom:1px solid var(--line)}td{padding:12px 10px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle;white-space:nowrap}.code-cell{display:flex;align-items:center;gap:8px}.code-text{font-weight:900}.note-cell{max-width:220px;white-space:normal;line-height:1.55}.badge{display:inline-flex;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900}.unused{background:#e0f2fe;color:#0369a1}.active{background:#dcfce7;color:#15803d}.expired,.revoked{background:#fee2e2;color:#b91c1c}.remaining{font-weight:900}.good{color:#15803d}.mid{color:#b45309}.bad{color:#b91c1c}.actions{display:flex;flex-wrap:wrap;gap:6px}.login{max-width:440px;margin:80px auto;background:#fff;border-radius:24px;padding:24px;border:1px solid var(--line);box-shadow:var(--shadow)}.login h2{margin:0 0 8px}.login p{color:var(--muted)}.login .btn{width:100%;margin-top:10px}.empty{text-align:center;color:var(--muted);padding:30px}
-@media(max-width:850px){.stats{grid-template-columns:repeat(2,1fr)}.toolbar,.create{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}.hero-badge{width:100%}}
-@media(max-width:620px){.wrap{padding:10px}.hero{padding:19px}.hero h1{font-size:23px}.panel{padding:11px}.table-wrap{overflow:visible}table,thead,tbody,tr,th,td{display:block}thead{display:none}tr{background:#fff;border:1px solid var(--line);border-radius:17px;margin-bottom:10px;padding:12px}td{border:0;padding:7px 0;white-space:normal;display:flex;justify-content:space-between;gap:12px}td::before{content:attr(data-label);color:var(--muted);font-size:12px;font-weight:800;flex:0 0 90px}.code-cell,.actions{justify-content:flex-end}}
+:root{
+  --primary:#0f766e;
+  --primary-dark:#164e63;
+  --primary-soft:#ecfdf5;
+  --bg:#f3f7f8;
+  --card:#ffffff;
+  --text:#17324d;
+  --muted:#64748b;
+  --line:#dce7ea;
+  --danger:#b91c1c;
+  --danger-soft:#fee2e2;
+  --warning:#b45309;
+  --warning-soft:#fef3c7;
+  --info:#0369a1;
+  --info-soft:#e0f2fe;
+  --shadow:0 16px 40px rgba(23,50,77,.10);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at top right,rgba(15,118,110,.12),transparent 30%),
+    var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:auto;padding:18px}
+.hero{
+  background:linear-gradient(135deg,var(--primary-dark),var(--primary));
+  color:#fff;
+  border-radius:24px;
+  padding:24px;
+  box-shadow:var(--shadow);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+}
+.hero h1{margin:0 0 8px;font-size:29px}
+.hero p{margin:0;opacity:.88}
+.license-term{
+  min-width:210px;
+  text-align:center;
+  padding:14px 18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.22);
+}
+.license-term b{display:block;font-size:18px;margin-bottom:3px}
+.license-term span{font-size:12px;opacity:.9}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+  margin:16px 0;
+}
+.stat{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 8px 24px rgba(23,50,77,.05);
+}
+.stat b{display:block;font-size:29px;margin-bottom:4px}
+.stat span{color:var(--muted);font-size:13px}
+
+.panel{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:16px;
+  box-shadow:var(--shadow);
+}
+.toolbar{
+  display:grid;
+  grid-template-columns:minmax(220px,1fr) 180px auto;
+  gap:10px;
+}
+.create{
+  display:grid;
+  grid-template-columns:minmax(220px,1fr) 130px auto;
+  gap:10px;
+  margin-top:10px;
+}
+input,select{
+  width:100%;
+  min-height:47px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:0 13px;
+  background:#fff;
+  color:var(--text);
+  outline:none;
+}
+input:focus,select:focus{
+  border-color:#7dd3c7;
+  box-shadow:0 0 0 3px rgba(15,118,110,.10);
+}
+.btn{
+  min-height:46px;
+  border:0;
+  border-radius:13px;
+  padding:0 17px;
+  font-weight:800;
+  background:var(--primary);
+  color:#fff;
+}
+.btn.secondary{background:#e8f2f4;color:var(--primary-dark)}
+.btn.danger{background:var(--danger-soft);color:var(--danger)}
+.btn.warning{background:var(--warning-soft);color:var(--warning)}
+.btn.small{min-height:36px;padding:0 12px;font-size:12px}
+.msg{min-height:25px;margin-top:10px;font-size:13px;font-weight:800}
+.ok{color:#15803d}.err{color:var(--danger)}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin-top:14px;
+}
+.license-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:16px;
+  box-shadow:0 8px 24px rgba(23,50,77,.06);
+  transition:.18s ease;
+}
+.license-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 28px rgba(23,50,77,.10);
+}
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+.code{
+  font-weight:900;
+  font-size:18px;
+  letter-spacing:.4px;
+  word-break:break-all;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.badge.unused{background:var(--info-soft);color:var(--info)}
+.badge.active{background:#dcfce7;color:#15803d}
+.badge.expired,.badge.revoked{background:var(--danger-soft);color:var(--danger)}
+.copy-row{margin-top:10px}
+.details{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:14px;
+}
+.detail{
+  background:#f8fafb;
+  border:1px solid #edf2f4;
+  border-radius:14px;
+  padding:11px;
+}
+.detail span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  margin-bottom:4px;
+}
+.detail b{font-size:13px}
+.remaining.good{color:#15803d}
+.remaining.mid{color:var(--warning)}
+.remaining.bad{color:var(--danger)}
+.notes{
+  margin-top:12px;
+  background:#f8fafb;
+  border:1px solid #edf2f4;
+  border-radius:14px;
+  padding:12px;
+  line-height:1.6;
+}
+.notes span{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}
+.notes b{font-size:13px;font-weight:700}
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:14px;
+}
+.empty{
+  grid-column:1/-1;
+  text-align:center;
+  color:var(--muted);
+  padding:35px 10px;
+  border:1px dashed var(--line);
+  border-radius:18px;
+  background:#fbfdfe;
+}
+
+.login{
+  max-width:440px;
+  margin:80px auto;
+  background:#fff;
+  border-radius:24px;
+  padding:24px;
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+}
+.login h2{margin:0 0 8px}
+.login p{color:var(--muted);margin:0 0 14px}
+.login .btn{width:100%;margin-top:10px}
+
+@media(max-width:900px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .cards{grid-template-columns:1fr}
+  .toolbar,.create{grid-template-columns:1fr}
+  .hero{align-items:flex-start;flex-direction:column}
+  .license-term{width:100%}
+}
+@media(max-width:600px){
+  .wrap{padding:10px}
+  .hero{padding:19px;border-radius:20px}
+  .hero h1{font-size:23px}
+  .panel{padding:11px;border-radius:18px}
+  .stats{gap:8px}
+  .stat{padding:13px}
+  .stat b{font-size:24px}
+  .details{grid-template-columns:1fr}
+  .actions .btn{flex:1 1 100%}
+}
 </style>
 </head>
 <body>
-<div id="loginBox" class="login"><h2>دخول لوحة التراخيص</h2><p>أدخل رمز إدارة Cloudflare السري.</p><input id="tokenInput" type="password" placeholder="رمز الإدارة"><button id="loginBtn" class="btn">دخول</button><div id="loginMsg" class="msg"></div></div>
-<div id="app" class="wrap hidden">
-<section class="hero"><div><h1>لوحة إدارة تراخيص رَصْد</h1><p>إنشاء التراخيص ومتابعتها والتحكم في الأجهزة المرتبطة.</p></div><div class="hero-badge"><b>مدة الترخيص</b><span>سنة كاملة من تاريخ التفعيل</span></div></section>
-<section class="stats"><div class="stat"><b id="sTotal">0</b><span>إجمالي التراخيص</span></div><div class="stat"><b id="sUnused">0</b><span>غير مستخدمة</span></div><div class="stat"><b id="sActive">0</b><span>مفعّلة</span></div><div class="stat"><b id="sExpired">0</b><span>منتهية</span></div><div class="stat"><b id="sRevoked">0</b><span>موقوفة</span></div></section>
-<section class="panel"><div class="toolbar"><input id="searchInput" placeholder="ابحث برمز التفعيل أو معرّف الجهاز أو الملاحظات"><select id="statusFilter"><option value="">كل الحالات</option><option value="unused">غير مستخدم</option><option value="active">مفعّل</option><option value="expired">منتهي</option><option value="revoked">موقوف</option></select><button id="refreshBtn" class="btn">تحديث</button></div><div class="create"><input id="notesInput" placeholder="ملاحظات على الترخيص"><input id="countInput" type="number" min="1" max="200" value="1"><button id="createBtn" class="btn">إنشاء الترخيص</button></div><div id="msg" class="msg"></div><div class="table-wrap"><table><thead><tr><th>الرمز</th><th>الملاحظات</th><th>الحالة</th><th>تاريخ التفعيل</th><th>تاريخ الانتهاء</th><th>المتبقي</th><th>الإجراءات</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+
+<div id="loginBox" class="login">
+  <h2>دخول لوحة التراخيص</h2>
+  <p>أدخل رمز إدارة Cloudflare السري.</p>
+  <input id="tokenInput" type="password" placeholder="رمز الإدارة">
+  <button id="loginBtn" class="btn">دخول</button>
+  <div id="loginMsg" class="msg"></div>
 </div>
+
+<div id="app" class="wrap hidden">
+  <section class="hero">
+    <div>
+      <h1>لوحة إدارة تراخيص رَصْد</h1>
+      <p>إنشاء التراخيص ومتابعتها والتحكم في الأجهزة المرتبطة.</p>
+    </div>
+    <div class="license-term">
+      <b>مدة الترخيص</b>
+      <span>سنة كاملة من تاريخ التفعيل</span>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><b id="sTotal">0</b><span>إجمالي التراخيص</span></div>
+    <div class="stat"><b id="sUnused">0</b><span>غير مستخدمة</span></div>
+    <div class="stat"><b id="sActive">0</b><span>مفعّلة</span></div>
+    <div class="stat"><b id="sExpired">0</b><span>منتهية</span></div>
+    <div class="stat"><b id="sRevoked">0</b><span>موقوفة</span></div>
+  </section>
+
+  <section class="panel">
+    <div class="toolbar">
+      <input id="searchInput" placeholder="ابحث برمز التفعيل أو معرّف الجهاز أو الملاحظات">
+      <select id="statusFilter">
+        <option value="">كل الحالات</option>
+        <option value="unused">غير مستخدم</option>
+        <option value="active">مفعّل</option>
+        <option value="expired">منتهي</option>
+        <option value="revoked">موقوف</option>
+      </select>
+      <button id="refreshBtn" class="btn">تحديث</button>
+    </div>
+
+    <div class="create">
+      <input id="notesInput" placeholder="ملاحظات على الترخيص">
+      <input id="countInput" type="number" min="1" max="200" value="1">
+      <button id="createBtn" class="btn">إنشاء الترخيص</button>
+    </div>
+
+    <div id="msg" class="msg"></div>
+    <div id="cards" class="cards"></div>
+  </section>
+</div>
+
 <script>
-const API='https://rasd-license-system.shuhieb.workers.dev';let token=sessionStorage.getItem('rasd_admin_token')||'';const $=id=>document.getElementById(id),loginBox=$('loginBox'),app=$('app'),msg=$('msg');
-function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}function setMsg(t,c=''){msg.textContent=t;msg.className='msg '+c}function statusName(s){return({unused:'غير مستخدم',active:'مفعّل',expired:'منتهي',revoked:'موقوف'})[s]||s}function fmt(v){if(!v)return'—';try{return new Date(v).toLocaleString('ar-SA',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}catch{return v}}function remain(exp,status){if(status==='unused')return{text:'لم يبدأ',cls:''};if(status==='revoked')return{text:'موقوف',cls:'bad'};if(!exp)return{text:'—',cls:''};const d=Math.ceil((new Date(exp)-Date.now())/86400000);if(d<=0)return{text:'منتهي',cls:'bad'};if(d<=30)return{text:d+' يوم',cls:'bad'};if(d<=90)return{text:d+' يوم',cls:'mid'};return{text:d+' يوم',cls:'good'}}
-async function api(path,options={}){const res=await fetch(API+path,{...options,headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,...(options.headers||{})},cache:'no-store'});let data={};try{data=await res.json()}catch{}if(res.status===401){logout();throw new Error('رمز الإدارة غير صحيح')}if(!res.ok)throw new Error(data.message||'تعذر تنفيذ العملية');return data}
-function logout(){token='';sessionStorage.removeItem('rasd_admin_token');app.classList.add('hidden');loginBox.classList.remove('hidden')}
-async function login(){token=$('tokenInput').value.trim();$('loginMsg').textContent='جارٍ التحقق...';try{await api('/admin/stats');sessionStorage.setItem('rasd_admin_token',token);loginBox.classList.add('hidden');app.classList.remove('hidden');$('loginMsg').textContent='';await refresh()}catch(e){$('loginMsg').textContent=e.message;$('loginMsg').className='msg err'}}
-async function loadStats(){const{stats}=await api('/admin/stats');$('sTotal').textContent=stats.total||0;$('sUnused').textContent=stats.unused||0;$('sActive').textContent=stats.active||0;$('sExpired').textContent=stats.expired||0;$('sRevoked').textContent=stats.revoked||0}
-async function loadRows(){const q=encodeURIComponent($('searchInput').value.trim()),status=encodeURIComponent($('statusFilter').value),{licenses}=await api(`/admin/licenses?q=${q}&status=${status}&limit=300`);if(!licenses.length){$('rows').innerHTML='<tr><td colspan="7"><div class="empty">لا توجد تراخيص مطابقة.</div></td></tr>';return}$('rows').innerHTML=licenses.map(x=>{const r=remain(x.expires_at,x.status);return`<tr><td data-label="الرمز"><div class="code-cell"><span class="code-text">${esc(x.code)}</span><button class="btn small secondary" onclick='copyCode(${JSON.stringify(x.code)})'>نسخ الرمز</button></div></td><td data-label="الملاحظات" class="note-cell">${esc(x.notes||'—')}</td><td data-label="الحالة"><span class="badge ${esc(x.status)}">${statusName(x.status)}</span></td><td data-label="تاريخ التفعيل">${fmt(x.activated_at)}</td><td data-label="تاريخ الانتهاء">${fmt(x.expires_at)}</td><td data-label="المتبقي"><span class="remaining ${r.cls}">${r.text}</span></td><td data-label="الإجراءات"><div class="actions"><button class="btn small secondary" onclick='act("reset",${JSON.stringify(x.code)})'>إعادة تعيين الجهاز</button>${x.status==='revoked'?`<button class="btn small" onclick='act("restore",${JSON.stringify(x.code)})'>تفعيل الترخيص</button>`:`<button class="btn small warning" onclick='act("revoke",${JSON.stringify(x.code)})'>إيقاف الترخيص</button>`}<button class="btn small danger" onclick='act("delete",${JSON.stringify(x.code)})'>حذف</button></div></td></tr>`}).join('')}
-async function refresh(){setMsg('جارٍ التحديث...');try{await Promise.all([loadStats(),loadRows()]);setMsg('تم التحديث','ok')}catch(e){setMsg(e.message,'err')}}
-async function createCodes(){const count=Number($('countInput').value||1),notes=$('notesInput').value.trim();setMsg('جارٍ إنشاء التراخيص...');try{const r=await api('/admin/create',{method:'POST',body:JSON.stringify({count,prefix:'RASD',notes})});setMsg(r.message+' '+r.created.join('، '),'ok');$('notesInput').value='';await refresh()}catch(e){setMsg(e.message,'err')}}
-async function copyCode(code){try{await navigator.clipboard.writeText(code)}catch{const a=document.createElement('textarea');a.value=code;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}setMsg('تم نسخ رمز التفعيل','ok')}
-async function act(action,code){const texts={reset:'سيتم فصل الترخيص عن الجهاز الحالي وإعادته إلى حالة غير مستخدم. هل أنت متأكد؟',revoke:'سيتم إيقاف الترخيص. هل أنت متأكد؟',restore:'سيتم تفعيل الترخيص من جديد. هل أنت متأكد؟',delete:'سيتم حذف الترخيص نهائيًا. هل أنت متأكد؟'};if(!confirm(texts[action]))return;try{await api('/admin/'+action,{method:'POST',body:JSON.stringify({code})});await refresh()}catch(e){setMsg(e.message,'err')}}
-$('loginBtn').onclick=login;$('tokenInput').addEventListener('keydown',e=>{if(e.key==='Enter')login()});$('refreshBtn').onclick=refresh;$('createBtn').onclick=createCodes;$('searchInput').oninput=()=>{clearTimeout(window.t);window.t=setTimeout(loadRows,300)};$('statusFilter').onchange=loadRows;if(token){loginBox.classList.add('hidden');app.classList.remove('hidden');refresh().catch(logout)}
+const API='https://rasd-license-system.shuhieb.workers.dev';
+let token=sessionStorage.getItem('rasd_admin_token')||'';
+
+const $=id=>document.getElementById(id);
+const loginBox=$('loginBox'),app=$('app'),msg=$('msg');
+
+function escapeHtml(value){
+  return String(value??'')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'","&#039;");
+}
+function setMsg(text,type=''){msg.textContent=text;msg.className='msg '+type}
+function statusName(s){return ({unused:'غير مستخدم',active:'مفعّل',expired:'منتهي',revoked:'موقوف'})[s]||s}
+function fmt(v){
+  if(!v)return '—';
+  try{return new Date(v).toLocaleString('ar-SA',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}
+  catch{return v}
+}
+function remainingInfo(expiresAt,status){
+  if(status==='unused')return {text:'لم يبدأ',cls:''};
+  if(status==='revoked')return {text:'موقوف',cls:'bad'};
+  if(!expiresAt)return {text:'—',cls:''};
+  const diff=new Date(expiresAt).getTime()-Date.now();
+  const days=Math.ceil(diff/86400000);
+  if(days<=0)return {text:'منتهي',cls:'bad'};
+  if(days<=30)return {text:days+' يوم',cls:'bad'};
+  if(days<=90)return {text:days+' يوم',cls:'mid'};
+  return {text:days+' يوم',cls:'good'};
+}
+
+async function api(path,options={}){
+  const res=await fetch(API+path,{
+    ...options,
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,...(options.headers||{})},
+    cache:'no-store'
+  });
+  let data={};try{data=await res.json()}catch{}
+  if(res.status===401){logout();throw new Error('رمز الإدارة غير صحيح')}
+  if(!res.ok)throw new Error(data.message||'تعذر تنفيذ العملية');
+  return data;
+}
+
+function logout(){
+  token='';
+  sessionStorage.removeItem('rasd_admin_token');
+  app.classList.add('hidden');
+  loginBox.classList.remove('hidden');
+}
+
+async function login(){
+  token=$('tokenInput').value.trim();
+  $('loginMsg').textContent='جارٍ التحقق...';
+  try{
+    await api('/admin/stats');
+    sessionStorage.setItem('rasd_admin_token',token);
+    loginBox.classList.add('hidden');
+    app.classList.remove('hidden');
+    $('loginMsg').textContent='';
+    await refresh();
+  }catch(e){
+    $('loginMsg').textContent=e.message;
+    $('loginMsg').className='msg err';
+  }
+}
+
+async function loadStats(){
+  const {stats}=await api('/admin/stats');
+  $('sTotal').textContent=stats.total||0;
+  $('sUnused').textContent=stats.unused||0;
+  $('sActive').textContent=stats.active||0;
+  $('sExpired').textContent=stats.expired||0;
+  $('sRevoked').textContent=stats.revoked||0;
+}
+
+async function loadCards(){
+  const q=encodeURIComponent($('searchInput').value.trim());
+  const status=encodeURIComponent($('statusFilter').value);
+  const {licenses}=await api(`/admin/licenses?q=${q}&status=${status}&limit=300`);
+
+  if(!licenses.length){
+    $('cards').innerHTML='<div class="empty">لا توجد تراخيص مطابقة.</div>';
+    return;
+  }
+
+  $('cards').innerHTML=licenses.map(x=>{
+    const remaining=remainingInfo(x.expires_at,x.status);
+    const safeCode=escapeHtml(x.code);
+    const safeNotes=escapeHtml(x.notes||'لا توجد ملاحظات');
+    return `<article class="license-card">
+      <div class="card-top">
+        <div class="code">${safeCode}</div>
+        <span class="badge ${escapeHtml(x.status)}">${statusName(x.status)}</span>
+      </div>
+
+      <div class="copy-row">
+        <button class="btn small secondary" onclick='copyCode(${JSON.stringify(x.code)})'>نسخ الرمز</button>
+      </div>
+
+      <div class="details">
+        <div class="detail">
+          <span>تاريخ التفعيل</span>
+          <b>${fmt(x.activated_at)}</b>
+        </div>
+        <div class="detail">
+          <span>تاريخ الانتهاء</span>
+          <b>${fmt(x.expires_at)}</b>
+        </div>
+        <div class="detail">
+          <span>المدة المتبقية</span>
+          <b class="remaining ${remaining.cls}">${remaining.text}</b>
+        </div>
+        <div class="detail">
+          <span>حالة الجهاز</span>
+          <b>${x.device_id?'مرتبط بجهاز':'غير مرتبط'}</b>
+        </div>
+      </div>
+
+      <div class="notes">
+        <span>الملاحظات</span>
+        <b>${safeNotes}</b>
+      </div>
+
+      <div class="actions">
+        <button class="btn small secondary" onclick='act("reset",${JSON.stringify(x.code)})'>إعادة تعيين الجهاز</button>
+        ${x.status==='revoked'
+          ? `<button class="btn small" onclick='act("restore",${JSON.stringify(x.code)})'>تفعيل الترخيص</button>`
+          : `<button class="btn small warning" onclick='act("revoke",${JSON.stringify(x.code)})'>إيقاف الترخيص</button>`
+        }
+        <button class="btn small danger" onclick='act("delete",${JSON.stringify(x.code)})'>حذف</button>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+async function refresh(){
+  setMsg('جارٍ التحديث...');
+  try{
+    await Promise.all([loadStats(),loadCards()]);
+    setMsg('تم التحديث','ok');
+  }catch(e){
+    setMsg(e.message,'err');
+  }
+}
+
+async function createCodes(){
+  const count=Number($('countInput').value||1);
+  const notes=$('notesInput').value.trim();
+  setMsg('جارٍ إنشاء التراخيص...');
+  try{
+    const r=await api('/admin/create',{
+      method:'POST',
+      body:JSON.stringify({count,prefix:'RASD',notes})
+    });
+    setMsg(r.message+' '+r.created.join('، '),'ok');
+    $('notesInput').value='';
+    await refresh();
+  }catch(e){
+    setMsg(e.message,'err');
+  }
+}
+
+async function copyCode(code){
+  try{
+    await navigator.clipboard.writeText(code);
+  }catch{
+    const area=document.createElement('textarea');
+    area.value=code;
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand('copy');
+    area.remove();
+  }
+  setMsg('تم نسخ رمز التفعيل','ok');
+}
+
+async function act(action,code){
+  const confirmText={
+    reset:'سيتم فصل الترخيص عن الجهاز الحالي وإعادته إلى حالة غير مستخدم. هل أنت متأكد؟',
+    revoke:'سيتم إيقاف الترخيص. هل أنت متأكد؟',
+    restore:'سيتم تفعيل الترخيص من جديد. هل أنت متأكد؟',
+    delete:'سيتم حذف الترخيص نهائيًا. هل أنت متأكد؟'
+  };
+  if(!confirm(confirmText[action]||'هل أنت متأكد؟'))return;
+  try{
+    await api('/admin/'+action,{method:'POST',body:JSON.stringify({code})});
+    await refresh();
+  }catch(e){
+    setMsg(e.message,'err');
+  }
+}
+
+$('loginBtn').onclick=login;
+$('tokenInput').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
+$('refreshBtn').onclick=refresh;
+$('createBtn').onclick=createCodes;
+$('searchInput').oninput=()=>{clearTimeout(window.t);window.t=setTimeout(loadCards,300)};
+$('statusFilter').onchange=loadCards;
+
+if(token){
+  loginBox.classList.add('hidden');
+  app.classList.remove('hidden');
+  refresh().catch(logout);
+}
 </script>
 </body>
 </html>
