@@ -34,7 +34,7 @@ button.secondary{background:#e2eef0;color:var(--p2)}button.danger{background:#fe
 <div id="app" class="wrap hidden">
   <div class="top">
     <h1>لوحة إدارة تراخيص رَصْد</h1>
-    <div class="sub">إنشاء الرموز، متابعة التفعيل، وإعادة تعيين الأجهزة.</div>
+    <div class="sub">إنشاء الرموز، متابعة التفعيل، وإعادة تعيين الأجهزة. <strong>v1.0</strong></div>
   </div>
 
   <div class="grid">
@@ -68,7 +68,7 @@ button.secondary{background:#e2eef0;color:var(--p2)}button.danger{background:#fe
 
     <div class="tableWrap">
       <table class="table">
-        <thead><tr><th>الرمز</th><th>الملاحظات</th><th>الحالة</th><th>تاريخ التفعيل</th><th>الانتهاء</th><th>الإجراءات</th></tr></thead>
+        <thead><tr><th>الرمز</th><th>الحالة</th><th>تاريخ التفعيل</th><th>الانتهاء</th><th>الملاحظات</th><th>الإجراءات</th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
@@ -127,10 +127,10 @@ async function loadRows(){
       <b>${x.code}</b>
       <button class="small secondary" style="margin-right:6px" onclick="copyCode('${x.code}')">نسخ</button>
     </td>
-    <td>${x.notes||'—'}</td>
     <td><span class="badge ${x.status}">${statusName(x.status)}</span></td>
     <td>${fmt(x.activated_at)}</td>
     <td>${fmt(x.expires_at)}</td>
+    <td>${x.notes||'—'}</td>
     <td><div class="actions">
       <button class="small secondary" onclick="act('reset','${x.code}')">إعادة تعيين</button>
       ${x.status==='revoked'?`<button class="small" onclick="act('restore','${x.code}')">استعادة</button>`:`<button class="small danger" onclick="act('revoke','${x.code}')">إيقاف</button>`}
