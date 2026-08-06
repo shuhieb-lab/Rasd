@@ -34,7 +34,7 @@ button.secondary{background:#e2eef0;color:var(--p2)}button.danger{background:#fe
 <div id="app" class="wrap hidden">
   <div class="top">
     <h1>لوحة إدارة تراخيص رَصْد</h1>
-    <div class="sub">إنشاء الرموز، متابعة التفعيل، وإعادة تعيين الأجهزة. <strong>v1.0</strong></div>
+    <div class="sub">إنشاء الرموز، متابعة التفعيل، وإعادة تعيين الجهاز الأجهزة.</div>
   </div>
 
   <div class="grid">
@@ -59,7 +59,7 @@ button.secondary{background:#e2eef0;color:var(--p2)}button.danger{background:#fe
     </div>
 
   <div class="create" style="grid-template-columns:1fr 130px auto">
-      <input id="notesInput" placeholder="ملاحظات على الترخيص">
+      <input id="notesInput" placeholder="ملاحظات">
       <input id="countInput" type="number" min="1" max="200" value="1">
       <button id="createBtn">إنشاء الترخيص</button>
     </div>
@@ -68,7 +68,7 @@ button.secondary{background:#e2eef0;color:var(--p2)}button.danger{background:#fe
 
     <div class="tableWrap">
       <table class="table">
-        <thead><tr><th>الرمز</th><th>الحالة</th><th>تاريخ التفعيل</th><th>الانتهاء</th><th>الملاحظات</th><th>الإجراءات</th></tr></thead>
+        <thead><tr><th>الرمز</th><th>الملاحظات</th><th>الحالة</th><th>تاريخ التفعيل</th><th>الانتهاء</th><th>الإجراءات</th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
@@ -127,13 +127,13 @@ async function loadRows(){
       <b>${x.code}</b>
       <button class="small secondary" style="margin-right:6px" onclick="copyCode('${x.code}')">نسخ</button>
     </td>
+    <td>${x.notes||'—'}</td>
     <td><span class="badge ${x.status}">${statusName(x.status)}</span></td>
     <td>${fmt(x.activated_at)}</td>
     <td>${fmt(x.expires_at)}</td>
-    <td>${x.notes||'—'}</td>
     <td><div class="actions">
-      <button class="small secondary" onclick="act('reset','${x.code}')">إعادة تعيين</button>
-      ${x.status==='revoked'?`<button class="small" onclick="act('restore','${x.code}')">استعادة</button>`:`<button class="small danger" onclick="act('revoke','${x.code}')">إيقاف</button>`}
+      <button class="small secondary" onclick="act('reset','${x.code}')">إعادة تعيين الجهاز</button>
+      ${x.status==='revoked'?`<button class="small" onclick="act('restore','${x.code}')">استعادة</button>`:`<button class="small danger" onclick="act('revoke','${x.code}')">إيقاف الترخيص</button>`}
       <button class="small danger" onclick="act('delete','${x.code}',true)">حذف</button>
     </div></td>
   </tr>`).join('');
