@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>لوحة إدارة تراخيص رَصْد</title>
+<style>
+:root{--p:#0f766e;--p2:#164e63;--bg:#f4f8fa;--card:#fff;--text:#17324d;--muted:#64748b;--line:#dbe5ea;--danger:#b91c1c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;color:var(--text)}
+.wrap{max-width:1100px;margin:auto;padding:18px}.top{background:linear-gradient(135deg,var(--p2),var(--p));color:#fff;padding:22px;border-radius:22px;margin-bottom:16px;box-shadow:0 14px 35px #0f766e25}
+h1{margin:0 0 6px;font-size:26px}.sub{opacity:.85}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}
+.stat,.card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:15px}.stat b{font-size:28px;display:block}.stat span{color:var(--muted);font-size:13px}
+.toolbar{display:grid;grid-template-columns:1fr 150px auto;gap:10px}.field,input,select,button{font:inherit}
+input,select{width:100%;height:45px;border:1px solid var(--line);border-radius:12px;padding:0 12px;background:#fff}
+button{height:45px;border:0;border-radius:12px;padding:0 16px;background:var(--p);color:#fff;font-weight:800;cursor:pointer}
+button.secondary{background:#e2eef0;color:var(--p2)}button.danger{background:#fee2e2;color:var(--danger)}button.small{height:34px;padding:0 10px;font-size:12px}
+.create{display:grid;grid-template-columns:1fr 120px auto;gap:10px;margin-top:10px}
+.tableWrap{overflow:auto;margin-top:12px}.table{width:100%;border-collapse:collapse;background:#fff}.table th,.table td{padding:11px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-size:13px}
+.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800}.unused{background:#e0f2fe;color:#0369a1}.active{background:#dcfce7;color:#15803d}.expired,.revoked{background:#fee2e2;color:#b91c1c}
+.actions{display:flex;gap:6px}.login{max-width:430px;margin:80px auto;background:#fff;border-radius:22px;padding:22px;border:1px solid var(--line);box-shadow:0 20px 50px #17324d18}
+.msg{min-height:24px;margin-top:10px;font-size:13px;font-weight:700}.ok{color:#15803d}.err{color:#b91c1c}.hidden{display:none!important}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}.toolbar,.create{grid-template-columns:1fr}.wrap{padding:10px}}
+</style>
+</head>
+<body>
+<div id="loginBox" class="login">
+  <h2>دخول لوحة التراخيص</h2>
+  <p style="color:#64748b">أدخل رمز إدارة Cloudflare السري.</p>
+  <input id="tokenInput" type="password" placeholder="رمز الإدارة">
+  <button id="loginBtn" style="width:100%;margin-top:10px">دخول</button>
+  <div id="loginMsg" class="msg"></div>
+</div>
+
+<div id="app" class="wrap hidden">
+  <div class="top">
+    <h1>لوحة إدارة تراخيص رَصْد</h1>
+    <div class="sub">إنشاء الرموز، متابعة التفعيل، وإعادة تعيين الأجهزة.</div>
+  </div>
+
+  <div class="grid">
+    <div class="stat"><b id="sTotal">0</b><span>إجمالي الرموز</span></div>
+    <div class="stat"><b id="sUnused">0</b><span>غير مستخدمة</span></div>
+    <div class="stat"><b id="sActive">0</b><span>مفعّلة</span></div>
+    <div class="stat"><b id="sExpired">0</b><span>منتهية</span></div>
+    <div class="stat"><b id="sRevoked">0</b><span>موقوفة</span></div>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <input id="searchInput" placeholder="ابحث برمز التفعيل أو معرّف الجهاز">
+      <select id="statusFilter">
+        <option value="">كل الحالات</option>
+        <option value="unused">غير مستخدم</option>
+        <option value="active">مفعّل</option>
+        <option value="expired">منتهي</option>
+        <option value="revoked">موقوف</option>
+      </select>
+      <button id="refreshBtn">تحديث</button>
+    </div>
+
+    <div class="create">
+      <input id="prefixInput" value="RASD" placeholder="بادئة الرمز">
+      <input id="countInput" type="number" min="1" max="200" value="10">
+      <button id="createBtn">إنشاء رموز</button>
+    </div>
+
+    <div id="msg" class="msg"></div>
+
+    <div class="tableWrap">
+      <table class="table">
+        <thead><tr><th>الرمز</th><th>الحالة</th><th>تاريخ التفعيل</th><th>الانتهاء</th><th>الإجراءات</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const API='https://rasd-license-system.shuhieb.workers.dev';
+let token=sessionStorage.getItem('rasd_admin_token')||'';
+
+const $=id=>document.getElementById(id);
+const loginBox=$('loginBox'),app=$('app'),msg=$('msg');
+
+function setMsg(text,type=''){msg.textContent=text;msg.className='msg '+type}
+function statusName(s){return ({unused:'غير مستخدم',active:'مفعّل',expired:'منتهي',revoked:'موقوف'})[s]||s}
+function fmt(v){if(!v)return '—';try{return new Date(v).toLocaleString('ar-SA')}catch{return v}}
+
+async function api(path,options={}){
+  const res=await fetch(API+path,{
+    ...options,
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,...(options.headers||{})},
+    cache:'no-store'
+  });
+  let data={};try{data=await res.json()}catch{}
+  if(res.status===401){logout();throw new Error('رمز الإدارة غير صحيح')}
+  if(!res.ok)throw new Error(data.message||'تعذر تنفيذ العملية');
+  return data;
+}
+
+function logout(){token='';sessionStorage.removeItem('rasd_admin_token');app.classList.add('hidden');loginBox.classList.remove('hidden')}
+
+async function login(){
+  token=$('tokenInput').value.trim();
+  $('loginMsg').textContent='جارٍ التحقق...';
+  try{
+    await api('/admin/stats');
+    sessionStorage.setItem('rasd_admin_token',token);
+    loginBox.classList.add('hidden');app.classList.remove('hidden');
+    $('loginMsg').textContent='';
+    await refresh();
+  }catch(e){$('loginMsg').textContent=e.message;$('loginMsg').className='msg err'}
+}
+
+async function loadStats(){
+  const {stats}=await api('/admin/stats');
+  $('sTotal').textContent=stats.total||0;$('sUnused').textContent=stats.unused||0;
+  $('sActive').textContent=stats.active||0;$('sExpired').textContent=stats.expired||0;$('sRevoked').textContent=stats.revoked||0;
+}
+
+async function loadRows(){
+  const q=encodeURIComponent($('searchInput').value.trim());
+  const status=encodeURIComponent($('statusFilter').value);
+  const {licenses}=await api(`/admin/licenses?q=${q}&status=${status}&limit=300`);
+  $('rows').innerHTML=licenses.map(x=>`<tr>
+    <td><b>${x.code}</b></td><td><span class="badge ${x.status}">${statusName(x.status)}</span></td>
+    <td>${fmt(x.activated_at)}</td><td>${fmt(x.expires_at)}</td>
+    <td><div class="actions">
+      <button class="small secondary" onclick="act('reset','${x.code}')">إعادة تعيين</button>
+      ${x.status==='revoked'?`<button class="small" onclick="act('restore','${x.code}')">استعادة</button>`:`<button class="small danger" onclick="act('revoke','${x.code}')">إيقاف</button>`}
+      <button class="small danger" onclick="act('delete','${x.code}',true)">حذف</button>
+    </div></td>
+  </tr>`).join('');
+}
+
+async function refresh(){setMsg('جارٍ التحديث...');try{await Promise.all([loadStats(),loadRows()]);setMsg('تم التحديث','ok')}catch(e){setMsg(e.message,'err')}}
+
+async function createCodes(){
+  const count=Number($('countInput').value||1),prefix=$('prefixInput').value.trim();
+  setMsg('جارٍ إنشاء الرموز...');
+  try{
+    const r=await api('/admin/create',{method:'POST',body:JSON.stringify({count,prefix})});
+    setMsg(r.message+' '+r.created.join('، '),'ok');await refresh();
+  }catch(e){setMsg(e.message,'err')}
+}
+
+async function act(action,code,confirmDelete=false){
+  if(confirmDelete&&!confirm('سيتم حذف الرمز نهائيًا. هل أنت متأكد؟'))return;
+  try{await api('/admin/'+action,{method:'POST',body:JSON.stringify({code})});await refresh()}
+  catch(e){setMsg(e.message,'err')}
+}
+
+$('loginBtn').onclick=login;$('refreshBtn').onclick=refresh;$('createBtn').onclick=createCodes;
+$('searchInput').oninput=()=>{clearTimeout(window.t);window.t=setTimeout(loadRows,300)};
+$('statusFilter').onchange=loadRows;
+if(token){loginBox.classList.add('hidden');app.classList.remove('hidden');refresh().catch(logout)}
+</script>
+</body>
+</html>
