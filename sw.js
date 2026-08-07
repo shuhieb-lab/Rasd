@@ -1,4 +1,4 @@
-const APP_VERSION = 'v8.2.2';
+const APP_VERSION = 'v8.3.1';
 const CACHE_NAME = `rasd-${APP_VERSION}`;
 const APP_SHELL = [
   './',
